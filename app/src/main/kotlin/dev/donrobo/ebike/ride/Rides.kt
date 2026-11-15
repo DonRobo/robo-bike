@@ -31,12 +31,12 @@ object RideStore {
     /** Newest first; files with fewer than 2 samples are skipped. Blocking; prefer [RideRepository.summaries]. */
     fun list(ctx: Context, bikeId: String): List<RideSummary> = RideRepository.index(ctx, bikeId).load()
 
-    /** Writes a GPX file into cacheDir/export and returns a FileProvider content Uri (authority dev.donrobo.ebike.files). */
+    /** Writes a GPX file into cacheDir/export and returns a FileProvider content Uri (authority <applicationId>.files). */
     fun exportGpx(ctx: Context, ride: RideSummary): Uri {
         val name = ride.file.nameWithoutExtension
         val out = File(File(ctx.cacheDir, "export").apply { mkdirs() }, "$name.gpx")
         out.writeText(RideCsv.gpx(name, RideCsv.parse(ride.file)))
-        return FileProvider.getUriForFile(ctx, "dev.donrobo.ebike.files", out)
+        return FileProvider.getUriForFile(ctx, "${ctx.packageName}.files", out)
     }
 
     fun delete(ride: RideSummary) { ride.file.delete(); RideRepository.notifyChanged() }

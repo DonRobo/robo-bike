@@ -39,6 +39,11 @@ android {
     }
 
     buildTypes {
+        debug {
+            // Own app id: the debug build (simulator, quick tests) installs next to the real app instead of over it,
+            // so it never touches the rider's data and never needs the release key.
+            applicationIdSuffix = ".debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true

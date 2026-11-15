@@ -253,6 +253,9 @@ display has a lamp switch; else LOCKED / NOT_CONNECTED / NO_LAMP).
 
 ## Simulated bike (debug builds only)
 
+The debug build has its own app id, `dev.donrobo.ebike.debug` ("Robo-Bike Debug"), so it installs next to a
+release install with separate data; the release app (`dev.donrobo.ebike`) only takes release-signed updates.
+
 For an emulator (or any phone without the bike): a fake EKD01 display that `BikeService` talks to instead of
 Bluetooth, controlled with `adb`. Code: `app/src/debug/kotlin/dev/donrobo/ebike/sim/`, bundled ride
 `app/src/debug/assets/sim/ride.csv`, receiver in `app/src/debug/AndroidManifest.xml`. The release APK contains none
@@ -288,7 +291,7 @@ process restarts (preferences file `sim_display`); light goes off and speed to 0
 
 ```sh
 ./gradlew :app:installDebug
-P=dev.donrobo.ebike
+P=dev.donrobo.ebike.debug
 for p in BLUETOOTH_CONNECT BLUETOOTH_SCAN POST_NOTIFICATIONS ACCESS_FINE_LOCATION ACCESS_COARSE_LOCATION; do
   adb shell pm grant $P android.permission.$p; done
 adb shell dumpsys deviceidle whitelist +$P      # lets the receiver start the foreground service from the background

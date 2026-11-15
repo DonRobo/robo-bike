@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Debug build (app id dev.donrobo.ebike.debug) shows its own name next to the real app. -->
+    <string name="app_name" translatable="false">Robo-Bike Debug</string>
+</resources>
