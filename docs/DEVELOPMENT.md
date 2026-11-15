@@ -387,6 +387,14 @@ requests): it checks that the tag matches `versionName`, runs the unit tests, bu
 verifies the signature and attaches `robo-bike-<version>.apk` plus its SHA-256 to a GitHub Release whose notes are
 the en-US changelog.
 
+Creating a release key (once; keep the keystore and its password safe — every future update must be signed with
+the same key):
+
+```
+keytool -genkeypair -keystore release.jks -storetype PKCS12 -alias robobike -keyalg RSA -keysize 4096 \
+  -validity 36500 -dname "CN=Robo Bike"
+```
+
 Repository secrets for the release workflow:
 
 | Secret | Content |
