@@ -1,0 +1,13 @@
+.gradle/
+.kotlin/
+build/
+local.properties
+*.apk
+*.aab
+# release signing (see docs/DEVELOPMENT.md)
+keystore.properties
+*.jks
+*.keystore
+.idea/
+*.iml
+.claude/

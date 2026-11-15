@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Distance counters (names are shown on Start, the widget, the handlebar tiles and in Settings). -->
+    <string name="counters_this_ride">This ride</string>
+    <string name="counters_display_trip">Display trip</string>
+    <string name="counters_since_charge">Since full charge</string>
+    <string name="counters_since_home">Since leaving home</string>
+    <string name="counters_total">Total</string>
+    <string name="counters_this_ride_desc">The current ride; between rides your last one</string>
+    <string name="counters_display_trip_desc">The display\'s trip counter, reset only on the display</string>
+    <string name="counters_since_charge_desc">Counts from the first connection with a full battery after charging</string>
+    <string name="counters_since_home_desc">Counts from the last ride that started at home; needs your home and location</string>
+    <string name="counters_total_desc">The odometer</string>
+    <string name="counters_setting_start">Distance on Start</string>
+    <string name="counters_setting_widget">Distance on the widget</string>
+    <string name="counters_hint_charge">Starts with the next full charge</string>
+    <string name="counters_hint_home">Starts when you next set off from home</string>
+    <string name="counters_hint_last_ride">Between rides: your last ride</string>
+</resources>

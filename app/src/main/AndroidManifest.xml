@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-feature android:name="android.hardware.bluetooth_le" android:required="true" />
+    <uses-feature android:name="android.software.companion_device_setup" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" android:usesPermissionFlags="neverForLocation" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- E2 "Standort immer erlauben": location for BikeService when the companion presence event starts it while the
+         phone is in the pocket (the companion exemption covers the start, not while-in-use location). Asked only after
+         the prominent disclosure (ui/disclosure). No
+         REQUEST_IGNORE_BATTERY_OPTIMIZATIONS: the companion association puts the app on the power allowlist. -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
+    <!-- Companion Device Manager: presence observation of the associated display + starting BikeService from it -->
+    <uses-permission android:name="android.permission.REQUEST_OBSERVE_COMPANION_DEVICE_PRESENCE" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_RUN_IN_BACKGROUND" />
+    <uses-permission android:name="android.permission.REQUEST_COMPANION_START_FOREGROUND_SERVICES_FROM_BACKGROUND" />
+
+    <application
+        android:name=".App"
+        android:allowBackup="false"
+        android:icon="@drawable/ic_bike"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.RoboBike">
+        <activity android:name=".ui.MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <service
+            android:name=".BikeService"
+            android:exported="false"
+            android:foregroundServiceType="connectedDevice|location" />
+        <service
+            android:name=".PresenceService"
+            android:exported="true"
+            android:permission="android.permission.BIND_COMPANION_DEVICE_SERVICE">
+            <intent-filter>
+                <action android:name="android.companion.CompanionDeviceService" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".nav.MapsListener"
+            android:exported="true"
+            android:label="@string/notif_listener_label"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+        <!-- K1 home-screen widget, K2 light tile, and the light action of widget and notification (widget/) -->
+        <receiver
+            android:name=".widget.BikeWidgetProvider"
+            android:exported="false"
+            android:label="@string/widget_label">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_bike_info" />
+        </receiver>
+        <receiver android:name=".widget.SurfaceActionReceiver" android:exported="false" />
+        <service
+            android:name=".widget.LightTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_light"
+            android:label="@string/widget_tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data android:name="android.service.quicksettings.TOGGLEABLE_TILE" android:value="true" />
+        </service>
+        <!-- Stores the in-app language on API 31/32 (API 33+ uses the system per-app language) -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data android:name="autoStoreLocales" android:value="true" />
+        </service>
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="dev.donrobo.ebike.files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths" />
+        </provider>
+    </application>
+</manifest>

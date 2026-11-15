@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Notifications module (notify/): channels, connection notification (K3), alerts, its settings rows. -->
+    <string name="notif_listener_label">Robo-Bike navigation</string>
+
+    <string name="notif_channel_connection">Bike connection</string>
+    <string name="notif_channel_connection_desc">Shown while the app is connected to the bike. Android requires this notification.</string>
+    <string name="notif_channel_home">Way home</string>
+    <string name="notif_channel_home_desc">When the range gets too short for the way home</string>
+    <string name="notif_channel_charge">Charging</string>
+    <string name="notif_channel_charge_desc">After a ride that left the battery low</string>
+    <string name="notif_channel_maintenance">Maintenance</string>
+    <string name="notif_channel_maintenance_desc">When a maintenance item is due</string>
+    <string name="notif_channel_error">Drive errors</string>
+    <string name="notif_channel_error_desc">When the drive reports an error while riding</string>
+    <string name="notif_channel_handlebar">Handlebar mode</string>
+    <string name="notif_channel_handlebar_desc">Offers to open the handlebar mode when the bike connects and Android blocks opening it directly</string>
+
+    <!-- Connection notification -->
+    <string name="notif_connected_title">%1$s is connected</string>
+    <string name="notif_part_battery">%1$d %% battery</string>
+    <string name="notif_part_range">%1$s left</string>
+    <string name="notif_part_light_on">light on</string>
+    <string name="notif_part_light_off">light off</string>
+    <string name="notif_part_locked">locked</string>
+    <string name="notif_part_separator" translatable="false">", "</string>
+
+    <!-- Alerts -->
+    <string name="notif_home_title">Battery is getting low for the way home</string>
+    <string name="notif_home_text">%1$s range left, %2$s to home</string>
+    <string name="notif_bike_generic">your bike</string>
+    <string name="notif_charge_title">Charge %1$s</string>
+    <string name="notif_charge_text">%1$d %% left in the battery after the ride.</string>
+    <string name="notif_maint_title">Maintenance due: %1$s</string>
+    <string name="notif_error_code">Error %1$s</string>
+
+    <!-- Settings rows (Einstellungen › Mitteilungen), wired by the settings screen -->
+    <string name="notif_setting_details_title">Battery in the connection notification</string>
+    <string name="notif_setting_details_sub">Battery, range and light, while connected</string>
+    <string name="notif_setting_details_off">Off: the notification only says that the bike is connected. Android requires it while the app is connected.</string>
+    <string name="notif_setting_reminders_title">Reminders</string>
+    <string name="notif_setting_reminders_sub">Maintenance, charging, way home</string>
+    <string name="notif_setting_home">Way home</string>
+    <string name="notif_setting_home_sub">Warn when the range gets too short for the way home</string>
+    <string name="notif_setting_charge">Charging</string>
+    <string name="notif_setting_charge_sub">Remind me after a ride when the battery is low</string>
+    <string name="notif_setting_maintenance">Maintenance</string>
+    <string name="notif_setting_maintenance_sub">Remind me when a maintenance item is due</string>
+    <string name="notif_setting_error">Drive errors</string>
+    <string name="notif_setting_error_sub">Tell me when the drive reports an error</string>
+</resources>

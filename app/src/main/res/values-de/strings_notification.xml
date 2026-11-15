@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="notif_listener_label">Robo-Bike Navigation</string>
+
+    <string name="notif_channel_connection">Verbindung zum Rad</string>
+    <string name="notif_channel_connection_desc">Solange die App mit dem Rad verbunden ist. Android verlangt diese Mitteilung.</string>
+    <string name="notif_channel_home">Heimweg</string>
+    <string name="notif_channel_home_desc">Wenn die Reichweite für den Heimweg knapp wird</string>
+    <string name="notif_channel_charge">Laden</string>
+    <string name="notif_channel_charge_desc">Nach einer Fahrt mit wenig Akku</string>
+    <string name="notif_channel_maintenance">Wartung</string>
+    <string name="notif_channel_maintenance_desc">Wenn eine Wartung fällig ist</string>
+    <string name="notif_channel_error">Antriebsfehler</string>
+    <string name="notif_channel_error_desc">Wenn der Antrieb während der Fahrt einen Fehler meldet</string>
+    <string name="notif_channel_handlebar">Lenkermodus</string>
+    <string name="notif_channel_handlebar_desc">Bietet den Lenkermodus an, wenn das Rad verbunden ist und Android das direkte Öffnen blockiert</string>
+
+    <string name="notif_connected_title">%1$s ist verbunden</string>
+    <string name="notif_part_battery">%1$d %% Akku</string>
+    <string name="notif_part_range">noch %1$s</string>
+    <string name="notif_part_light_on">Licht an</string>
+    <string name="notif_part_light_off">Licht aus</string>
+    <string name="notif_part_locked">gesperrt</string>
+
+    <string name="notif_home_title">Der Akku wird knapp für den Heimweg</string>
+    <string name="notif_home_text">Noch %1$s Reichweite, %2$s bis nach Hause</string>
+    <string name="notif_bike_generic">dein Rad</string>
+    <string name="notif_charge_title">%1$s aufladen</string>
+    <string name="notif_charge_text">Nach der Fahrt sind noch %1$d %% im Akku.</string>
+    <string name="notif_maint_title">Wartung fällig: %1$s</string>
+    <string name="notif_error_code">Fehler %1$s</string>
+
+    <string name="notif_setting_details_title">Akku in der Verbindungsmitteilung</string>
+    <string name="notif_setting_details_sub">Akku, Reichweite und Licht, solange verbunden</string>
+    <string name="notif_setting_details_off">Aus: Die Mitteilung sagt nur, dass das Rad verbunden ist. Android verlangt sie, solange die App verbunden ist.</string>
+    <string name="notif_setting_reminders_title">Erinnerungen</string>
+    <string name="notif_setting_reminders_sub">Wartung, Laden, Heimweg</string>
+    <string name="notif_setting_home">Heimweg</string>
+    <string name="notif_setting_home_sub">Warnen, wenn die Reichweite für den Heimweg knapp wird</string>
+    <string name="notif_setting_charge">Laden</string>
+    <string name="notif_setting_charge_sub">Nach der Fahrt erinnern, wenn der Akku leer wird</string>
+    <string name="notif_setting_maintenance">Wartung</string>
+    <string name="notif_setting_maintenance_sub">Erinnern, wenn eine Wartung fällig ist</string>
+    <string name="notif_setting_error">Antriebsfehler</string>
+    <string name="notif_setting_error_sub">Melden, wenn der Antrieb einen Fehler meldet</string>
+</resources>

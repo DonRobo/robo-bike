@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="counters_this_ride">Diese Fahrt</string>
+    <string name="counters_display_trip">Trip am Display</string>
+    <string name="counters_since_charge">Seit Vollladen</string>
+    <string name="counters_since_home">Seit daheim</string>
+    <string name="counters_total">Gesamt</string>
+    <string name="counters_this_ride_desc">Die laufende Fahrt, zwischen Fahrten deine letzte</string>
+    <string name="counters_display_trip_desc">Der Trip-Zähler des Displays, nur am Display rücksetzbar</string>
+    <string name="counters_since_charge_desc">Zählt ab der ersten Verbindung mit vollem Akku nach dem Laden</string>
+    <string name="counters_since_home_desc">Zählt ab der letzten Fahrt, die daheim begonnen hat; braucht dein Zuhause und deinen Standort</string>
+    <string name="counters_total_desc">Der Kilometerstand</string>
+    <string name="counters_setting_start">Strecke auf Start</string>
+    <string name="counters_setting_widget">Strecke im Widget</string>
+    <string name="counters_hint_charge">Beginnt mit der nächsten vollen Ladung</string>
+    <string name="counters_hint_home">Beginnt, wenn du das nächste Mal daheim losfährst</string>
+    <string name="counters_hint_last_ride">Zwischen Fahrten: deine letzte Fahrt</string>
+</resources>

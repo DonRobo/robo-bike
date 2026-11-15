@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Prominent disclosures before sensitive permissions (ui/disclosure): what is read, what for and where it goes. -->
+<resources>
+    <string name="disclosure_agree">Agree</string>
+    <string name="disclosure_not_now">Not now</string>
+    <string name="disclosure_bullet">•  %1$s</string>
+
+    <string name="disclosure_bg_location_title">Use your location in the background?</string>
+    <string name="disclosure_bg_location_lead">Robo-Bike collects your phone’s location also when the app is closed or not in use, while your bike is connected and right after you switch it off. It uses it to:</string>
+    <string name="disclosure_bg_location_track">record the route of each ride in your ride log</string>
+    <string name="disclosure_bg_location_parked">remember where you parked (“Where is my bike?”)</string>
+    <string name="disclosure_bg_location_home">count the distance since you left home and warn you when the battery may not get you back</string>
+    <string name="disclosure_bg_location_light">switch the light by sunrise, sunset and rain</string>
+    <string name="disclosure_bg_location_data">Your location stays on your phone. Only for the rain check, a position rounded to about 1 km goes to the weather service Open-Meteo. No ads, no analytics.</string>
+    <string name="disclosure_bg_location_optional">This is optional. Without it, these features only work when you open the app before riding.</string>
+    <string name="disclosure_bg_location_next">Next, Android asks you: choose “%1$s”.</string>
+    <string name="disclosure_bg_location_next_generic">Next, Android asks for the permission.</string>
+
+    <string name="disclosure_listener_title">Read Google Maps notifications?</string>
+    <string name="disclosure_listener_lead">To show turn arrows and distances on the display, Robo-Bike reads the navigation notification of Google Maps while you navigate.</string>
+    <string name="disclosure_listener_only_maps">It ignores all other notifications, such as messages, calls or other apps.</string>
+    <string name="disclosure_listener_data">Nothing leaves your phone. The directions only go to your bike’s display over Bluetooth and into the app’s own diagnostics log, which you share only if you choose to.</string>
+    <string name="disclosure_listener_optional">This is optional: everything else works without it.</string>
+    <string name="disclosure_listener_next">Next, Android opens its notification access settings: turn on Robo-Bike there.</string>
+</resources>

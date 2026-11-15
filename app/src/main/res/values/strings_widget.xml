@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home-screen widget (K1) and quick-settings tile (K2), package widget/. -->
+    <string name="widget_label">Battery and light</string>
+    <string name="widget_description">Battery, range and light at a glance</string>
+    <string name="widget_no_value" translatable="false">–</string>
+    <string name="widget_no_data">No data yet</string>
+    <string name="widget_no_bike">No bike set up</string>
+    <string name="widget_battery">%1$d %% battery</string>
+    <string name="widget_battery_as_of">%1$d %% battery · as of %2$s</string>
+    <string name="widget_light_turn_off">Turn light off</string>
+    <string name="widget_light_turn_on">Turn light on</string>
+    <string name="widget_light_unavailable">The light can only be switched while connected</string>
+
+    <string name="widget_tile_label">Bike light</string>
+    <string name="widget_tile_on">On</string>
+    <string name="widget_tile_off">Off</string>
+    <string name="widget_tile_locked">Bike locked</string>
+    <string name="widget_tile_no_lamp">No lamp switch</string>
+</resources>

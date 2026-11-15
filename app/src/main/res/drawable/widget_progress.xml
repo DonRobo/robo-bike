@@ -1,0 +1,17 @@
+<!-- Battery bar: rounded track and rounded fill (scaled, so the fill keeps its round end); tinted at runtime. -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF" />
+            <corners android:radius="5dp" />
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <scale android:scaleWidth="100%" android:scaleGravity="start|center_vertical">
+            <shape android:shape="rectangle">
+                <solid android:color="#FFFFFF" />
+                <corners android:radius="5dp" />
+            </shape>
+        </scale>
+    </item>
+</layer-list>

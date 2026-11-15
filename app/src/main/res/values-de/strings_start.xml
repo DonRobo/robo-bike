@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="start_as_of">Letzter Stand von %1$s</string>
+    <string name="start_switch_bike">Rad wechseln</string>
+    <string name="start_handlebar">Lenkermodus</string>
+    <string name="start_range_label">Restreichweite</string>
+    <string name="start_range_full">Voll geladen %1$s</string>
+    <string name="start_range_consumption">Ø %1$s %% pro %2$s</string>
+    <string name="start_range_learning">Wird aus deinen ersten Fahrten gelernt</string>
+    <string name="start_home_ok">Du kommst heim: %1$s bis nach Hause</string>
+    <string name="start_home_tight">Der Akku wird knapp für den Heimweg: %1$s bis nach Hause</string>
+    <string name="start_speed">Tempo</string>
+    <string name="start_assist">Unterstützung</string>
+    <string name="start_assist_of">von %1$d</string>
+    <string name="start_total">Gesamt</string>
+    <string name="start_no_value">–</string>
+    <string name="start_light_toggle">Licht</string>
+    <string name="start_sun_curve">Sonnenkurve einstellen</string>
+    <string name="start_nav_turn">In %1$s %2$s</string>
+    <string name="start_nav_from_maps">Aus Google Maps, wird am Display gezeigt</string>
+    <string name="start_nav_not_sent">Aus Google Maps, nicht ans Display gesendet</string>
+    <string name="start_nav_test">Test-Manöver, wird am Display gezeigt</string>
+</resources>

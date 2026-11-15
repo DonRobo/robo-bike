@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Start screen (artboard Main). -->
+    <string name="start_as_of">Last known state from %1$s</string>
+    <string name="start_switch_bike">Switch bike</string>
+    <string name="start_handlebar">Handlebar mode</string>
+    <string name="start_range_label">Remaining range</string>
+    <string name="start_range_full">Fully charged %1$s</string>
+    <string name="start_range_consumption">avg. %1$s %% per %2$s</string>
+    <string name="start_range_learning">Learned from your first rides</string>
+    <string name="start_home_ok">You will make it home: %1$s to go</string>
+    <string name="start_home_tight">Battery is getting tight for the way home: %1$s to go</string>
+    <string name="start_speed">Speed</string>
+    <string name="start_assist">Assist</string>
+    <string name="start_assist_of">of %1$d</string>
+    <string name="start_total">Total</string>
+    <string name="start_no_value">–</string>
+    <string name="start_light_toggle">Light</string>
+    <string name="start_sun_curve">Adjust sun curve</string>
+    <string name="start_nav_turn">In %1$s %2$s</string>
+    <string name="start_nav_from_maps">From Google Maps, shown on the display</string>
+    <string name="start_nav_not_sent">From Google Maps, not sent to the display</string>
+    <string name="start_nav_test">Test maneuver, shown on the display</string>
+</resources>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="handlebar_title">Lenkermodus</string>
+    <string name="handlebar_tile_battery">Akku</string>
+    <string name="handlebar_tile_range">Reichweite</string>
+    <string name="handlebar_tile_assist">Stufe</string>
+    <string name="handlebar_tile_speed">Tempo</string>
+    <string name="handlebar_tile_clock">Uhrzeit</string>
+    <string name="handlebar_tile_light">Licht</string>
+    <string name="handlebar_tile_home">Bis nach Hause</string>
+    <string name="handlebar_assist_of">von %1$d</string>
+    <string name="handlebar_value_on">An</string>
+    <string name="handlebar_value_off">Aus</string>
+    <string name="handlebar_no_value">–</string>
+    <string name="handlebar_as_of">Werte von %1$s</string>
+    <string name="handlebar_no_data">Noch keine Werte</string>
+    <string name="handlebar_light_locked">Gesperrt</string>
+    <string name="handlebar_light_unavailable">Licht</string>
+    <string name="handlebar_light_toggle">Scheinwerfer schalten</string>
+    <string name="handlebar_locked_hint">Das Rad ist gesperrt. Entsperre es am Display, um das Licht zu schalten.</string>
+    <string name="handlebar_customize">Kacheln anpassen</string>
+    <string name="handlebar_exit">Lenkermodus beenden</string>
+
+    <string name="handlebar_tiles_title">Kacheln anpassen</string>
+    <string name="handlebar_tiles_preview">Vorschau</string>
+    <string name="handlebar_tiles_preview_empty">Nur das Tempo wird angezeigt</string>
+    <string name="handlebar_tiles_for_bike">Gilt für %1$s</string>
+    <string name="handlebar_tiles_shown">Angezeigt · %1$d von %2$d</string>
+    <string name="handlebar_tiles_none">Keine Kacheln. Füge Werte aus der Liste unten hinzu.</string>
+    <string name="handlebar_tiles_more">Weitere Werte</string>
+    <string name="handlebar_tiles_full">Höchstens %1$d Kacheln: Entferne zuerst eine.</string>
+    <string name="handlebar_tiles_move_up">%1$s nach oben</string>
+    <string name="handlebar_tiles_move_down">%1$s nach unten</string>
+    <string name="handlebar_tiles_remove">%1$s entfernen</string>
+    <string name="handlebar_tiles_add">%1$s hinzufügen</string>
+    <string name="handlebar_tiles_reset">Standard wiederherstellen</string>
+    <string name="handlebar_tiles_range_learning">Erscheint, sobald genug Fahrten gelernt sind</string>
+    <string name="handlebar_tiles_home_unset">Braucht einen Heimatort unter Reichweite</string>
+    <string name="handlebar_tiles_live_only">Nur bei Verbindung</string>
+    <string name="handlebar_section_auto">Automatik</string>
+    <string name="handlebar_auto_title">Automatisch starten</string>
+    <string name="handlebar_auto_sub">Öffnet den Lenkermodus, sobald das Rad verbunden ist. Lässt Android das nicht zu, öffnest du ihn mit einem Tipp auf die Benachrichtigung.</string>
+    <string name="handlebar_notif_title">Rad verbunden</string>
+    <string name="handlebar_notif_text">Tippe, um den Lenkermodus zu öffnen</string>
+</resources>

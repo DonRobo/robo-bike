@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stats_week">Woche</string>
+    <string name="stats_month">Monat</string>
+    <string name="stats_year">Jahr</string>
+    <string name="stats_week_title">Woche ab %1$s</string>
+    <string name="stats_week_day_pattern">d. MMMM</string>
+    <string name="stats_month_pattern">LLLL yyyy</string>
+    <string name="stats_km">Kilometer</string>
+    <string name="stats_mi">Meilen</string>
+    <string name="stats_hours">Stunden</string>
+    <string name="stats_charges">Akkuladungen</string>
+    <string name="stats_day_label">%1$d.</string>
+    <string name="stats_chart_desc">Gefahrene Strecke pro Abschnitt, am meisten %1$s</string>
+    <string name="stats_no_rides">Keine Fahrten in diesem Zeitraum.</string>
+
+    <string name="stats_cost_title">Stromkosten</string>
+    <string name="stats_cost_week">diese Woche</string>
+    <string name="stats_cost_month">im %1$s</string>
+    <string name="stats_cost_year">im Jahr %1$d</string>
+    <string name="stats_cost_detail">%1$s, %2$s Cent pro %3$s</string>
+    <string name="stats_cost_needs_capacity">Für die Stromkosten braucht die App die Akkukapazität deines Rads in Wattstunden. Trag sie unter Rad ein.</string>
+    <string name="stats_cost_to_bike">Zum Rad</string>
+    <string name="stats_price">Strompreis</string>
+    <string name="stats_price_value">%1$s Cent pro kWh</string>
+    <string name="stats_price_suffix">Cent pro kWh</string>
+
+    <string name="stats_routes_title">Wiederkehrende Strecken</string>
+    <string name="stats_routes_empty">Noch keine Strecke mehrmals gefahren. Sobald du eine Strecke zum zweiten Mal mit GPS fährst, erscheint sie hier.</string>
+    <string name="stats_routes_no_gps">Wiederkehrende Strecken erkennt die App an der GPS-Strecke. Schalte in der Liste „Strecke per GPS aufzeichnen“ ein.</string>
+
+    <string name="stats_heat_title">Deine Wege</string>
+    <string name="stats_heat_body">Je kräftiger die Linie, desto öfter bist du dort gefahren.</string>
+    <string name="stats_heat_empty">Noch keine Wege mit GPS aufgezeichnet. Mit „Strecke per GPS aufzeichnen“ erscheinen sie hier.</string>
+    <string name="stats_heat_desc">Karte, auf der häufig gefahrene Wege kräftiger eingefärbt sind</string>
+    <string name="stats_routes_no_positions">Die GPS-Aufzeichnung ist an, aber bisher hat keine Fahrt Positionen. Wiederkehrende Strecken erscheinen, sobald Fahrten mit Positionen aufgezeichnet sind. Bleibt es leer, erlaube den Standort „Immer“, damit die Strecke auch im Hintergrund aufgezeichnet wird.</string>
+    <string name="stats_heat_no_positions">Die GPS-Aufzeichnung ist an, aber bisher hat keine Fahrt Positionen. Bleibt es leer, erlaube den Standort „Immer“, damit deine Wege auch im Hintergrund aufgezeichnet werden.</string>
+</resources>

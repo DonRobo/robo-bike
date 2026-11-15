@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_label">Akku und Licht</string>
+    <string name="widget_description">Akku, Reichweite und Licht auf einen Blick</string>
+    <string name="widget_no_data">Noch keine Daten</string>
+    <string name="widget_no_bike">Kein Rad eingerichtet</string>
+    <string name="widget_battery">%1$d %% Akku</string>
+    <string name="widget_battery_as_of">%1$d %% Akku · Stand %2$s</string>
+    <string name="widget_light_turn_off">Licht ausschalten</string>
+    <string name="widget_light_turn_on">Licht einschalten</string>
+    <string name="widget_light_unavailable">Das Licht lässt sich nur schalten, wenn das Rad verbunden ist</string>
+
+    <string name="widget_tile_label">Fahrradlicht</string>
+    <string name="widget_tile_on">An</string>
+    <string name="widget_tile_off">Aus</string>
+    <string name="widget_tile_locked">Rad gesperrt</string>
+    <string name="widget_tile_no_lamp">Kein Lichtschalter</string>
+</resources>

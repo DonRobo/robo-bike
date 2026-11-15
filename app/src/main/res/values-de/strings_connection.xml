@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="conn_connected">Verbunden mit %1$s</string>
+    <string name="conn_display_generic">dem Display</string>
+    <string name="conn_sheet_title">Verbindung</string>
+    <string name="conn_connect">Verbinden</string>
+    <string name="conn_auto">Automatisch verbinden</string>
+    <string name="conn_auto_sub">Sobald das Rad eingeschaltet wird</string>
+    <string name="conn_hint_auto_off">Automatisch verbinden ist aus.</string>
+    <string name="conn_hint_pair">Tippe einmal bei eingeschaltetem Rad auf Verbinden, um das Display für das automatische Verbinden zu koppeln.</string>
+    <string name="conn_hint_paused">Durch Trennen pausiert, bis das Rad aus- und wieder eingeschaltet wird oder du auf Verbinden tippst.</string>
+    <string name="conn_hint_disconnect">Trennen gilt, bis das Rad aus- und wieder eingeschaltet wird.</string>
+    <string name="conn_missing_location">Kein Standort: Fahrten werden ohne GPS-Strecke aufgezeichnet und die Lichtautomatik kann den Sonnenuntergang nicht berechnen.</string>
+    <string name="conn_coarse_location">Nur ungefährer Standort: Strecken werden ungenau.</string>
+    <string name="conn_missing_notifications">Keine Mitteilungen: Die Verbindung läuft ohne sichtbare Statusmitteilung.</string>
+    <string name="conn_bt_required">Für die Verbindung zum Display braucht die App die Bluetooth-Berechtigungen.</string>
+    <string name="conn_pair_failed">Display nicht für automatisches Verbinden gekoppelt: %1$s</string>
+    <string name="conn_unknown_error">unbekannter Fehler</string>
+    <string name="conn_command_failed">%1$s fehlgeschlagen: %2$s</string>
+    <string name="conn_light_failed">Licht konnte nicht geschaltet werden</string>
+</resources>

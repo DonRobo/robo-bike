@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: the Diagnose card of the simulated display (sim/SimulatorHook). -->
+<resources>
+    <string name="sim_title">Simulated display</string>
+    <string name="sim_sub">Debug build only: a fake EKD01 display instead of Bluetooth</string>
+    <string name="sim_not_paired">The active bike is not paired with the simulated display.</string>
+    <string name="sim_pair">Pair simulated display</string>
+    <string name="sim_power">Display switched on</string>
+    <string name="sim_power_sub">On: switches the display on and connects. Off: like switching the bike off.</string>
+    <string name="sim_scenario_still">Standing</string>
+    <string name="sim_scenario_ride">Ride</string>
+    <string name="sim_scenario_ride_fast">Ride 10×</string>
+</resources>

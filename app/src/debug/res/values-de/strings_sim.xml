@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sim_title">Simuliertes Display</string>
+    <string name="sim_sub">Nur im Debug-Build: ein nachgebautes EKD01-Display statt Bluetooth</string>
+    <string name="sim_not_paired">Das aktive Rad ist nicht mit dem simulierten Display gekoppelt.</string>
+    <string name="sim_pair">Simuliertes Display koppeln</string>
+    <string name="sim_power">Display eingeschaltet</string>
+    <string name="sim_power_sub">An: schaltet das Display ein und verbindet. Aus: wie das Rad ausschalten.</string>
+    <string name="sim_scenario_still">Stillstand</string>
+    <string name="sim_scenario_ride">Fahrt</string>
+    <string name="sim_scenario_ride_fast">Fahrt 10×</string>
+</resources>

@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "packageRules": [
+    {
+      "description": "Patch updates merge themselves once CI (Android workflow) is green; minor/major wait for review",
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "automerge": true
+    },
+    {
+      "description": "androidx.core 1.19+ needs compileSdk 37 and AGP 9.1; hold until the app moves to them",
+      "matchPackageNames": [
+        "androidx.core:core-ktx",
+        "androidx.core:core"
+      ],
+      "allowedVersions": "<1.19.0"
+    }
+  ]
+}

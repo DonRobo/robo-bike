@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="stats_week">Week</string>
+    <string name="stats_month">Month</string>
+    <string name="stats_year">Year</string>
+    <string name="stats_week_title">Week from %1$s</string>
+    <string name="stats_week_day_pattern">MMMM d</string>
+    <string name="stats_month_pattern">LLLL yyyy</string>
+    <string name="stats_km">Kilometres</string>
+    <string name="stats_mi">Miles</string>
+    <string name="stats_hours">Hours</string>
+    <string name="stats_charges">Battery charges</string>
+    <string name="stats_day_label">%1$d</string>
+    <string name="stats_chart_desc">Distance ridden per part, at most %1$s</string>
+    <string name="stats_no_rides">No rides in this period.</string>
+
+    <string name="stats_cost_title">Electricity cost</string>
+    <string name="stats_cost_week">this week</string>
+    <string name="stats_cost_month">in %1$s</string>
+    <string name="stats_cost_year">in %1$d</string>
+    <string name="stats_cost_detail">%1$s, %2$s cents per %3$s</string>
+    <string name="stats_cost_needs_capacity">For the electricity cost the app needs your bike’s battery capacity in watt-hours. Enter it under Bike.</string>
+    <string name="stats_cost_to_bike">Go to Bike</string>
+    <string name="stats_price">Electricity price</string>
+    <string name="stats_price_value">%1$s cents per kWh</string>
+    <string name="stats_price_suffix">cents per kWh</string>
+
+    <string name="stats_routes_title">Recurring routes</string>
+    <string name="stats_routes_empty">No route ridden more than once yet. As soon as you ride a route a second time with GPS, it appears here.</string>
+    <string name="stats_routes_no_gps">The app recognises recurring routes by their GPS route. Turn on “Record route with GPS” in the list.</string>
+
+    <string name="stats_heat_title">Your ways</string>
+    <string name="stats_heat_body">The stronger the line, the more often you rode there.</string>
+    <string name="stats_heat_empty">No ways recorded with GPS yet. With “Record route with GPS” they appear here.</string>
+    <string name="stats_heat_desc">Map where frequently ridden ways are drawn stronger</string>
+    <string name="stats_routes_no_positions">GPS recording is on, but no ride has positions yet. Recurring routes appear once rides are recorded with positions. If it stays empty, allow location “all the time”, so the route is also recorded while the app runs in the background.</string>
+    <string name="stats_heat_no_positions">GPS recording is on, but no ride has positions yet. If it stays empty, allow location “all the time”, so your ways are also recorded while the app runs in the background.</string>
+</resources>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="backup_title">Export and backup</string>
+    <string name="backup_intro">A backup holds all bikes, rides, settings and error logs in one file. Use it to move to a new phone, too.</string>
+    <string name="backup_on_phone">On this phone: %1$s, %2$s</string>
+    <plurals name="backup_bikes">
+        <item quantity="one">%1$d bike</item>
+        <item quantity="other">%1$d bikes</item>
+    </plurals>
+    <plurals name="backup_rides">
+        <item quantity="one">%1$d ride</item>
+        <item quantity="other">%1$d rides</item>
+    </plurals>
+    <string name="backup_create_title">Create backup</string>
+    <string name="backup_create">Save backup</string>
+    <string name="backup_creating">Saving …</string>
+    <string name="backup_created">Backup saved. Keep the file somewhere off the phone, e.g. in your cloud.</string>
+    <string name="backup_create_failed">The backup could not be saved.</string>
+    <string name="backup_restore_title">Restore</string>
+    <string name="backup_restore_body">Replaces everything stored on this phone now: bikes, rides and settings. Nothing is merged.</string>
+    <string name="backup_restore">Choose backup</string>
+    <string name="backup_checking">Checking backup …</string>
+    <string name="backup_restoring">Restoring …</string>
+    <string name="backup_restored">Backup restored.</string>
+    <string name="backup_restore_failed">Restoring failed. Restart the app and it will be completed.</string>
+    <string name="backup_recording">Nothing can be restored while a ride is being recorded. Try again after the ride.</string>
+    <string name="backup_problem_foreign">This file is not a Robo-Bike backup. Nothing on the phone was changed.</string>
+    <string name="backup_problem_corrupt">This backup is damaged or incomplete. Nothing on the phone was changed.</string>
+    <string name="backup_problem_newer">This backup comes from a newer app version. Update the app first. Nothing on the phone was changed.</string>
+    <string name="backup_problem_too_large">This file is too large for a backup. Nothing on the phone was changed.</string>
+    <string name="backup_confirm_title">Replace all data?</string>
+    <string name="backup_confirm_body">Backup from %1$s: %2$s (%3$s), %4$s.\n\nEverything on this phone (%5$s, %6$s and all settings) is deleted and replaced by the backup. This cannot be undone.</string>
+    <string name="backup_confirm">Replace</string>
+    <string name="backup_pairing_title">Moving to a new phone</string>
+    <string name="backup_pairing_body">The pairing with the display belongs to the old phone. After restoring, the app still knows your display; you confirm it once when connecting the first time. The new phone asks for permissions again.</string>
+</resources>

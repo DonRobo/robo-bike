@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_group_driving">Fahren</string>
+    <string name="settings_group_general">Allgemein</string>
+    <string name="settings_group_advanced">Für Fortgeschrittene</string>
+    <string name="settings_language">Sprache</string>
+    <string name="settings_language_system">Systemsprache</string>
+    <string name="settings_units">Einheiten</string>
+    <string name="settings_units_metric">Kilometer</string>
+    <string name="settings_units_imperial">Meilen</string>
+    <string name="settings_diagnostics_sub">Test-Manöver, Maps-Debug, Protokoll</string>
+    <string name="settings_group_recording">Aufzeichnung</string>
+    <string name="settings_group_notifications">Mitteilungen</string>
+    <string name="settings_group_bikes">Räder und Geräte</string>
+    <string name="settings_light_auto_rain">Automatik mit Sonnenkurve und Regen</string>
+    <string name="settings_light_auto">Automatik mit Sonnenkurve</string>
+    <string name="settings_light_always">Tagfahrlicht: immer an</string>
+    <string name="settings_light_off">Aus: du schaltest selbst</string>
+    <string name="settings_range_sub">Letzte %1$d Fahrten, %2$d %% Abschlag</string>
+    <string name="settings_range_sub_home">Letzte %1$d Fahrten, %2$d %% Abschlag, Heimweg</string>
+    <string name="settings_nav_off">Aus: Das Display bekommt nichts</string>
+    <string name="settings_nav_always">Google Maps, jeder Hinweis</string>
+    <string name="settings_nav_from">Google Maps, Hinweis ab %1$s</string>
+    <string name="settings_handlebar_sub">Kacheln wählen, automatisch starten</string>
+    <string name="settings_rides">Fahrtenbuch</string>
+    <string name="settings_rides_gps_on">Strecke per GPS aufzeichnen: an</string>
+    <string name="settings_rides_gps_off">Strecke per GPS aufzeichnen: aus</string>
+    <string name="settings_backup_sub">Alle Daten sichern und wiederherstellen</string>
+    <string name="settings_bikes">Meine Räder</string>
+    <string name="settings_clock">Uhr am Display stellen</string>
+    <string name="settings_clock_sub">Bei jeder Verbindung</string>
+    <string name="settings_wallpaper_colors">Farben vom Hintergrundbild</string>
+    <string name="settings_wallpaper_colors_sub">Statt Robo-Bike-Grün die Farben deines Hintergrunds verwenden</string>
+</resources>

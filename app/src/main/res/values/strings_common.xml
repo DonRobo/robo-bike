@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Shared by all features: app name, units, navigation chrome, shared words and states. -->
+    <string name="app_name" translatable="false">Robo-Bike</string>
+    <string name="bike_default_name">My bike</string>
+    <string name="common_back">Back</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_save">Save</string>
+    <string name="unit_km" translatable="false">km</string>
+    <string name="unit_mi" translatable="false">mi</string>
+    <string name="unit_kmh" translatable="false">km/h</string>
+    <string name="unit_mph" translatable="false">mph</string>
+    <string name="unit_m" translatable="false">m</string>
+    <string name="unit_ft" translatable="false">ft</string>
+    <string name="unit_percent" translatable="false">%</string>
+    <string name="percent_value">%1$d %%</string>
+    <string name="tab_start">Start</string>
+    <string name="tab_rides">Rides</string>
+    <string name="tab_bike">Bike</string>
+    <string name="tab_settings">Settings</string>
+    <!-- Connection state (ConnectionStatus.textRes): the one text per state for every surface. -->
+    <string name="status_connected">Connected</string>
+    <string name="status_locked">Connected, locked</string>
+    <string name="status_connecting">Connecting …</string>
+    <string name="status_waiting">Waiting for the bike</string>
+    <string name="status_lost">Disconnected</string>
+    <string name="status_lost_detail">Disconnected · bike off or out of range</string>
+    <string name="status_off">Not connected</string>
+    <!-- Words and states several features show; one key each (no copies under feature keys). -->
+    <string name="common_allow">Allow</string>
+    <string name="common_light_on">Light on</string>
+    <string name="common_light_off">Light off</string>
+    <string name="common_light_is_on">Light is on</string>
+    <string name="common_light_is_off">Light is off</string>
+    <string name="common_disconnect">Disconnect</string>
+    <string name="common_forget_display">Forget display</string>
+    <string name="common_forget_display_hint">Removes the pairing. The next connection searches again.</string>
+</resources>

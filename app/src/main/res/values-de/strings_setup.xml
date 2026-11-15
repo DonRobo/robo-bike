@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_permissions_title">Berechtigungen</string>
+    <string name="setup_step">Schritt %1$d von %2$d</string>
+
+    <string name="setup_pair_title">Schalte dein Rad ein</string>
+    <string name="setup_pair_body">Die App sucht nach dem Display am Lenker und merkt es sich. Danach verbindet sie sich von selbst.</string>
+    <string name="setup_found">%1$s gefunden</string>
+    <string name="setup_signal_good">Gute Verbindung, ganz in der Nähe</string>
+    <string name="setup_signal_ok">In Reichweite</string>
+    <string name="setup_signal_weak">Schwaches Signal, geh näher ans Rad</string>
+    <string name="setup_searching">Suche nach dem Display …</string>
+    <string name="setup_searching_sub">Das Display muss eingeschaltet sein.</string>
+    <string name="setup_not_found">Kein Display gefunden</string>
+    <string name="setup_not_found_sub">Ist das Rad eingeschaltet? Die Suche läuft weiter.</string>
+    <string name="setup_need_bluetooth">Bluetooth erlauben</string>
+    <string name="setup_need_bluetooth_sub">Damit die App das Display in der Nähe findet.</string>
+    <string name="setup_bluetooth_off">Bluetooth ist aus</string>
+    <string name="setup_bluetooth_off_sub">Schalte Bluetooth ein, um das Display zu finden.</string>
+    <string name="setup_bluetooth_on">Einschalten</string>
+    <string name="setup_name_label">Wie soll dein Rad heißen?</string>
+    <string name="setup_name_numbered">Rad %1$d</string>
+    <string name="setup_pair">Koppeln und weiter</string>
+    <string name="setup_other_display">Anderes Display suchen</string>
+    <string name="setup_pair_failed">Koppeln hat nicht geklappt: %1$s</string>
+    <string name="setup_pair_cancelled">Koppeln abgebrochen.</string>
+    <string name="setup_already_paired">Dieses Display gehört schon zu %1$s.</string>
+
+    <string name="setup_perm_title">Was die App darf</string>
+    <string name="setup_perm_body">Du entscheidest einzeln. Jede Erlaubnis schaltet genau eine Funktion frei.</string>
+    <string name="setup_perm_granted">Erlaubt</string>
+    <string name="setup_perm_allow_precise">Genau erlauben</string>
+    <string name="setup_perm_bluetooth">Bluetooth</string>
+    <string name="setup_perm_bluetooth_sub">Verbindet die App mit dem Display.</string>
+    <string name="setup_perm_listener">Benachrichtigungen lesen</string>
+    <string name="setup_perm_listener_sub">Bringt Abbiegehinweise aus Google Maps aufs Display.</string>
+    <string name="setup_perm_location">Standort</string>
+    <string name="setup_perm_location_sub">Für Sonnenstand, Regen, Reichweite auf der Karte und die Strecke im Fahrtenbuch.</string>
+    <string name="setup_perm_location_partial">Bisher nur ungefähr: Strecken im Fahrtenbuch bleiben grob.</string>
+    <string name="setup_perm_bg_location">Standort immer erlauben</string>
+    <string name="setup_perm_bg_location_sub">Für Strecke, Heimweg-Warnung und „Wo steht mein Rad?“, auch ohne geöffnete App.</string>
+    <string name="setup_perm_bg_location_how">Wähle in den Einstellungen „%1$s“.</string>
+    <string name="setup_perm_bg_location_blocked">Erlaube zuerst den Standort.</string>
+    <string name="setup_perm_background">Im Hintergrund laufen</string>
+    <string name="setup_perm_background_sub">Damit alles funktioniert, während das Handy in der Tasche steckt.</string>
+    <string name="setup_perm_notifications">Benachrichtigungen zeigen</string>
+    <string name="setup_perm_notifications_sub">Zeigt Akku und Reichweite, solange das Rad verbunden ist, mit „Trennen“.</string>
+    <string name="setup_perm_continue">Weiter</string>
+    <string name="setup_perm_later">Alles lässt sich später in den Einstellungen ändern.</string>
+    <string name="setup_perm_bluetooth_required">Ohne Bluetooth erreicht die App das Display nicht.</string>
+
+    <string name="setup_done_title">Alles bereit</string>
+    <string name="setup_done_body">Schalte dein Rad ein, dann verbindet sich die App von selbst, auch wenn das Handy in der Tasche steckt.</string>
+    <string name="setup_done_body_manual">Schalte dein Rad ein und tippe auf der Startseite auf „Verbinden“.</string>
+    <string name="setup_done_ready">Eingerichtet</string>
+    <string name="setup_done_skipped">Übersprungen</string>
+    <string name="setup_done_paired">Gekoppelt mit %1$s</string>
+    <string name="setup_done_display_generic">dem Display</string>
+    <string name="setup_done_skip_bluetooth">Die App kann sich nicht mit dem Display verbinden.</string>
+    <string name="setup_done_skip_listener">Keine Abbiegehinweise auf dem Display.</string>
+    <string name="setup_done_skip_location">Kein Sonnenstand und Regen fürs Licht, keine Reichweite auf der Karte, keine Strecke im Fahrtenbuch.</string>
+    <string name="setup_done_skip_location_partial">Strecken im Fahrtenbuch bleiben grob.</string>
+    <string name="setup_done_skip_bg_location">Strecke, Heimweg-Warnung und „Wo steht mein Rad?“ nur, wenn du die App vor der Fahrt öffnest.</string>
+    <string name="setup_done_skip_background">Die Verbindung kann abreißen, während das Handy in der Tasche steckt.</string>
+    <string name="setup_done_skip_notifications">Kein Verbindungsstatus in der Benachrichtigungsleiste.</string>
+    <string name="setup_done_change">Berechtigungen ändern</string>
+    <string name="setup_done_start">Zur Startseite</string>
+
+    <string name="setup_settings_permissions_sub">Was die App darf</string>
+
+    <string name="setup_light_display_only">Licht am Display schalten</string>
+</resources>

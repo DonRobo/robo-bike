@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="setup_permissions_title">Permissions</string>
+    <string name="setup_step">Step %1$d of %2$d</string>
+
+    <!-- Step 1: find and pair the display -->
+    <string name="setup_pair_title">Switch on your bike</string>
+    <string name="setup_pair_body">The app looks for the display on your handlebar and remembers it. After that it connects by itself.</string>
+    <string name="setup_found">%1$s found</string>
+    <string name="setup_signal_good">Good connection, very close</string>
+    <string name="setup_signal_ok">In range</string>
+    <string name="setup_signal_weak">Weak signal, move closer to the bike</string>
+    <string name="setup_searching">Looking for the display …</string>
+    <string name="setup_searching_sub">The display has to be switched on.</string>
+    <string name="setup_not_found">No display found</string>
+    <string name="setup_not_found_sub">Is the bike switched on? The search goes on.</string>
+    <string name="setup_need_bluetooth">Allow Bluetooth</string>
+    <string name="setup_need_bluetooth_sub">So the app can find the display nearby.</string>
+    <string name="setup_bluetooth_off">Bluetooth is off</string>
+    <string name="setup_bluetooth_off_sub">Switch on Bluetooth to find the display.</string>
+    <string name="setup_bluetooth_on">Switch on</string>
+    <string name="setup_name_label">What should your bike be called?</string>
+    <string name="setup_name_numbered">Bike %1$d</string>
+    <string name="setup_pair">Pair and continue</string>
+    <string name="setup_other_display">Search for another display</string>
+    <string name="setup_pair_failed">Pairing did not work: %1$s</string>
+    <string name="setup_pair_cancelled">Pairing cancelled.</string>
+    <string name="setup_already_paired">This display already belongs to %1$s.</string>
+
+    <!-- Step 2: permissions -->
+    <string name="setup_perm_title">What the app may do</string>
+    <string name="setup_perm_body">You decide one by one. Each permission unlocks exactly one feature.</string>
+    <string name="setup_perm_granted">Allowed</string>
+    <string name="setup_perm_allow_precise">Allow precise</string>
+    <string name="setup_perm_bluetooth">Bluetooth</string>
+    <string name="setup_perm_bluetooth_sub">Connects the app to the display.</string>
+    <string name="setup_perm_listener">Read notifications</string>
+    <string name="setup_perm_listener_sub">Brings turn instructions from Google Maps to the display.</string>
+    <string name="setup_perm_location">Location</string>
+    <string name="setup_perm_location_sub">For sun position, rain, range on the map and the route in your ride log.</string>
+    <string name="setup_perm_location_partial">Only approximate so far: routes in the ride log stay coarse.</string>
+    <string name="setup_perm_bg_location">Always allow location</string>
+    <string name="setup_perm_bg_location_sub">For routes, the way-home warning and “Where is my bike?”, even without opening the app.</string>
+    <string name="setup_perm_bg_location_how">In the settings, choose “%1$s”.</string>
+    <string name="setup_perm_bg_location_blocked">Allow location first.</string>
+    <string name="setup_perm_background">Run in the background</string>
+    <string name="setup_perm_background_sub">So everything works while the phone is in your pocket.</string>
+    <string name="setup_perm_notifications">Show notifications</string>
+    <string name="setup_perm_notifications_sub">Shows battery and range while the bike is connected, with Disconnect.</string>
+    <string name="setup_perm_continue">Continue</string>
+    <string name="setup_perm_later">You can change everything later in the settings.</string>
+    <string name="setup_perm_bluetooth_required">Without Bluetooth the app cannot reach the display.</string>
+
+    <!-- Step 3: done -->
+    <string name="setup_done_title">All set</string>
+    <string name="setup_done_body">Switch on your bike and the app connects by itself, even with the phone in your pocket.</string>
+    <string name="setup_done_body_manual">Switch on your bike and tap Connect on the start page.</string>
+    <string name="setup_done_ready">Set up</string>
+    <string name="setup_done_skipped">Skipped</string>
+    <string name="setup_done_paired">Paired with %1$s</string>
+    <string name="setup_done_display_generic">the display</string>
+    <string name="setup_done_skip_bluetooth">The app cannot connect to the display.</string>
+    <string name="setup_done_skip_listener">No turn instructions on the display.</string>
+    <string name="setup_done_skip_location">No sun position or rain for the light, no range map, no route in the ride log.</string>
+    <string name="setup_done_skip_location_partial">Routes in the ride log stay coarse.</string>
+    <string name="setup_done_skip_bg_location">Route, way-home warning and “Where is my bike?” only when you open the app before riding.</string>
+    <string name="setup_done_skip_background">The connection may drop while the phone is in your pocket.</string>
+    <string name="setup_done_skip_notifications">No connection status in the notification shade.</string>
+    <string name="setup_done_change">Change permissions</string>
+    <string name="setup_done_start">Go to start</string>
+
+    <!-- Entries in the settings -->
+    <string name="setup_settings_permissions_sub">What the app may do</string>
+
+    <!-- Start: light card when the display cannot switch the lamp (Q4) -->
+    <string name="setup_light_display_only">Switch the light on the display</string>
+</resources>

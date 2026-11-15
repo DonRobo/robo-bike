@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light screen (artboard Licht) and the light status shown on Start. -->
+    <string name="light_title">Light</string>
+
+    <string name="light_mode_label">Light mode</string>
+    <string name="light_mode_auto">Automatic</string>
+    <string name="light_mode_always">Always on</string>
+    <string name="light_mode_off">Off</string>
+
+    <!-- Why the light is on or off (L6), long form on the Light screen -->
+    <string name="light_why_dark">Because it is dark.</string>
+    <string name="light_why_rain">Because it is raining.</string>
+    <string name="light_why_day">Because it is light outside.</string>
+    <string name="light_why_no_position">No location known yet, the sun curve needs your position.</string>
+    <string name="light_why_manual_on">Switched on by hand. The automation takes over again at the next change.</string>
+    <string name="light_why_manual_off">Switched off by hand. The automation takes over again at the next change.</string>
+    <string name="light_why_mode_off">The automation is off, you switch the light yourself.</string>
+    <string name="light_why_always">Daytime running light: on whenever the bike is connected.</string>
+    <string name="light_why_locked">The bike is locked. The light is switched once it is unlocked.</string>
+    <string name="light_why_offline">The bike is not connected. The light is switched as soon as it is.</string>
+    <string name="light_why_failed">Switching did not work. Next try at the next change.</string>
+    <string name="light_rain_dry">Rain: dry at the moment.</string>
+    <string name="light_rain_below">Rain: too light for your setting.</string>
+    <string name="light_rain_wet">Rain: it is raining.</string>
+    <string name="light_rain_unknown">Rain: no weather data.</string>
+    <string name="light_rain_disabled">Rain does not switch the light.</string>
+
+    <!-- Short form, subtitle of the light card on Start -->
+    <string name="light_short_dark_since">Automatic, dark since %1$s</string>
+    <string name="light_short_dark_until">Automatic, dark until %1$s</string>
+    <string name="light_short_dark">Automatic, dark</string>
+    <string name="light_short_day_until">Automatic, light until %1$s</string>
+    <string name="light_short_day">Automatic, light outside</string>
+    <string name="light_short_rain">Automatic, raining</string>
+    <string name="light_short_no_position">Automatic, no location yet</string>
+    <string name="light_short_manual_on">Switched on by hand</string>
+    <string name="light_short_manual_off">Switched off by hand</string>
+    <string name="light_short_mode_off">Automatic off</string>
+    <string name="light_short_always">Always on</string>
+    <string name="light_short_locked">Bike locked, switchable once unlocked</string>
+    <string name="light_short_offline">Can be switched while connected</string>
+    <string name="light_short_failed">Switching failed</string>
+
+    <!-- Sun curve card -->
+    <string name="light_curve_title">Sun today</string>
+    <string name="light_curve_hint">Drag the two points to where the light should switch. It is on in the tinted areas.</string>
+    <string name="light_curve_a11y">Sun elevation over the day with the light\'s switching points</string>
+    <string name="light_horizon">Horizon</string>
+    <string name="light_now">Now</string>
+    <string name="light_axis_start">0 h</string>
+    <string name="light_axis_end">24 h</string>
+    <string name="light_morning_off">Off in the morning at</string>
+    <string name="light_evening_on">On in the evening at</string>
+    <string name="light_sun_above">Sun %1$d° above the horizon</string>
+    <string name="light_sun_below">Sun %1$d° below the horizon</string>
+    <string name="light_sun_not_reached">The sun does not reach %1$s° today</string>
+    <string name="light_sun_not_low">The sun does not sink to %1$s° today</string>
+    <string name="light_all_day_on">On all day today</string>
+    <string name="light_all_day_off">Off all day today</string>
+    <string name="light_time_none">–</string>
+    <string name="light_morning_earlier">Switch off earlier in the morning</string>
+    <string name="light_morning_later">Switch off later in the morning</string>
+    <string name="light_evening_earlier">Switch on earlier in the evening</string>
+    <string name="light_evening_later">Switch on later in the evening</string>
+    <string name="light_curve_footnote">The sun elevation is stored, not the clock time, so the switching point fits all year round.</string>
+    <string name="light_no_position_title">No location yet</string>
+    <string name="light_no_position_text">As soon as the phone knows where you are, today\'s sun curve appears here. You can already set the switching points in degrees.</string>
+
+    <!-- Rain card -->
+    <string name="light_rain_title">Switch on in rain</string>
+    <string name="light_rain_level_label">From which intensity</string>
+    <string name="light_rain_level_a11y">Rain intensity</string>
+    <string name="light_rain_drizzle">Drizzle</string>
+    <string name="light_rain_rain">Rain</string>
+    <string name="light_rain_heavy">Heavy rain</string>
+    <string name="light_no_lamp_title">Your display has no lamp switch</string>
+    <string name="light_no_lamp_text">The display tells the app that it cannot switch the headlight. Switch the light on the bike; the app does not control it.</string>
+</resources>

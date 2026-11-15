@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bike_default_name">Mein Rad</string>
+    <string name="common_back">Zurück</string>
+    <string name="common_cancel">Abbrechen</string>
+    <string name="common_save">Speichern</string>
+    <string name="percent_value">%1$d %%</string>
+    <string name="tab_start">Start</string>
+    <string name="tab_rides">Fahrten</string>
+    <string name="tab_bike">Rad</string>
+    <string name="tab_settings">Einstellungen</string>
+    <string name="status_connected">Verbunden</string>
+    <string name="status_locked">Verbunden, gesperrt</string>
+    <string name="status_connecting">Verbindet …</string>
+    <string name="status_waiting">Wartet auf das Rad</string>
+    <string name="status_lost">Getrennt</string>
+    <string name="status_lost_detail">Getrennt · Rad aus oder außer Reichweite</string>
+    <string name="status_off">Nicht verbunden</string>
+    <string name="common_allow">Erlauben</string>
+    <string name="common_light_on">Licht an</string>
+    <string name="common_light_off">Licht aus</string>
+    <string name="common_light_is_on">Licht ist an</string>
+    <string name="common_light_is_off">Licht ist aus</string>
+    <string name="common_disconnect">Trennen</string>
+    <string name="common_forget_display">Display vergessen</string>
+    <string name="common_forget_display_hint">Löst die Kopplung. Beim nächsten Verbinden wird neu gesucht.</string>
+</resources>

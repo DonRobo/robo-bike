@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rides_title">Rides</string>
+    <string name="rides_tab_list">List</string>
+    <string name="rides_tab_stats">Statistics</string>
+    <string name="ride_title">Ride</string>
+
+    <!-- Fahrten list -->
+    <string name="rides_week">This week</string>
+    <string name="rides_km_caption">Kilometres</string>
+    <string name="rides_mi_caption">Miles</string>
+    <string name="rides_hours_caption">Hours</string>
+    <string name="rides_battery_used_caption">Battery used</string>
+    <string name="rides_gps_title">Record route with GPS</string>
+    <string name="rides_gps_sub">For map, elevation and GPX. Applies from the next ride.</string>
+    <string name="rides_gps_no_permission">The app may not use your location, so no route is recorded.</string>
+    <string name="rides_gps_system_off">Location is switched off on the phone, so no route is recorded.</string>
+    <string name="rides_gps_needs_background">Without “Allow all the time” the route is only recorded when the app is open as you set off.</string>
+    <string name="rides_gps_needs_precise">Only approximate location allowed: the route will be inaccurate. Allow precise location.</string>
+    <string name="rides_gps_open_settings">Turn on</string>
+    <string name="rides_day_pattern">EEEE, MMMM d</string>
+    <string name="rides_day_pattern_year">EEEE, MMMM d, yyyy</string>
+    <string name="rides_time_pattern">HH:mm</string>
+    <string name="rides_time">%1$s</string>
+    <string name="rides_distance_in">%1$s in %2$s</string>
+    <string name="rides_battery_from_to">Battery %1$d %% → %2$d %%</string>
+    <string name="rides_recording">Recording</string>
+    <string name="rides_recurring">Recurring</string>
+    <string name="rides_empty_title">No rides yet</string>
+    <string name="rides_empty_body">Every ride is recorded automatically once the display is connected and you set off.</string>
+
+    <!-- durations -->
+    <string name="rides_minutes">%1$d min</string>
+    <string name="rides_hours_minutes">%1$d:%2$02d h</string>
+
+    <!-- Fahrtdetail -->
+    <string name="ride_time_range">%1$s to %2$s</string>
+    <string name="ride_distance">Distance</string>
+    <string name="ride_duration">Duration</string>
+    <string name="ride_average">Average</string>
+    <string name="ride_consumption">Consumption</string>
+    <string name="ride_pct_per_km" formatted="false">% per km</string>
+    <string name="ride_pct_per_mi" formatted="false">% per mi</string>
+    <string name="ride_unit_min">min</string>
+    <string name="ride_unit_h">h</string>
+    <string name="ride_battery_line">Battery %1$d %% → %2$d %%</string>
+    <string name="ride_battery_used">%1$d %% used</string>
+    <string name="ride_chart_speed">Speed</string>
+    <string name="ride_chart_battery">Battery</string>
+    <string name="ride_chart_altitude">Elevation</string>
+    <string name="ride_chart_level">Level</string>
+    <string name="ride_chart_speed_note">Speed in %1$s. The dashed line is the average.</string>
+    <string name="ride_chart_battery_note">Battery level in percent along the route.</string>
+    <string name="ride_chart_altitude_note">Elevation in %1$s above sea level, from GPS.</string>
+    <string name="ride_chart_level_note">Assist level along the route, 0 is no assist.</string>
+    <string name="ride_chart_no_altitude_gps">No elevation: this ride was recorded without GPS.</string>
+    <string name="ride_chart_no_altitude_old">No elevation: this ride was recorded before the app stored elevation.</string>
+    <string name="ride_chart_desc">%1$s along the route</string>
+    <string name="ride_compare">Compare with earlier rides</string>
+    <string name="ride_share_gpx">Share GPX</string>
+    <string name="ride_share_title">Share ride</string>
+    <string name="ride_share_failed">Could not create the GPX file</string>
+    <string name="ride_delete">Delete ride</string>
+    <string name="ride_delete_title">Delete ride?</string>
+    <string name="ride_delete_body">The ride and its route are deleted permanently.</string>
+    <string name="ride_delete_confirm">Delete</string>
+    <string name="ride_expand_map">Enlarge map</string>
+    <string name="ride_map_desc">Map with the route ridden</string>
+    <string name="ride_no_gps_title">Recorded without GPS</string>
+    <string name="ride_no_gps_body">For map, elevation and GPX, turn on “Record route with GPS” in the list. It applies from the next ride.</string>
+    <string name="ride_not_found">This ride no longer exists.</string>
+    <string name="ride_loading">Loading …</string>
+
+    <!-- Route comparison -->
+    <string name="route_unnamed">Unnamed route</string>
+    <string name="route_name_row">Name</string>
+    <string name="route_name_set">Name it</string>
+    <string name="route_name_title">Name route</string>
+    <string name="route_name_hint">e.g. Commute</string>
+    <string name="route_last">Last time</string>
+    <string name="route_average">On average</string>
+    <string name="route_time_battery">%1$s, %2$d %% battery</string>
+    <string name="route_rides_count">%1$d rides on this route</string>
+    <string name="route_day_pattern">EEE, MMM d</string>
+    <string name="route_rides">Rides</string>
+    <string name="route_delta_faster">%1$s faster than average</string>
+    <string name="route_delta_slower">%1$s slower than average</string>
+    <string name="route_delta_same">as fast as average</string>
+    <string name="route_how">Recognised by start, destination and course of the GPS route, in both directions.</string>
+    <string name="route_gone">This route is no longer recognised.</string>
+</resources>

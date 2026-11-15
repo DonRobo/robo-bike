@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The drive-error texts are looked up by name (notify/DriveErrors.kt: getIdentifier("error_NN_<suffix>")),
+     so neither lint nor resource shrinking can see that they are used. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@string/error_*" />

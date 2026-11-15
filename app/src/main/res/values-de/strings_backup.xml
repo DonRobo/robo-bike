@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="backup_title">Export und Sicherung</string>
+    <string name="backup_intro">Eine Sicherung enthält alle Räder, Fahrten, Einstellungen und Fehlerprotokolle in einer Datei. Damit ziehst du auch auf ein neues Handy um.</string>
+    <string name="backup_on_phone">Auf diesem Handy: %1$s, %2$s</string>
+    <plurals name="backup_bikes">
+        <item quantity="one">%1$d Rad</item>
+        <item quantity="other">%1$d Räder</item>
+    </plurals>
+    <plurals name="backup_rides">
+        <item quantity="one">%1$d Fahrt</item>
+        <item quantity="other">%1$d Fahrten</item>
+    </plurals>
+    <string name="backup_create_title">Sicherung erstellen</string>
+    <string name="backup_create">Sicherung speichern</string>
+    <string name="backup_creating">Wird gespeichert …</string>
+    <string name="backup_created">Sicherung gespeichert. Bewahr die Datei außerhalb des Handys auf, etwa in deiner Cloud.</string>
+    <string name="backup_create_failed">Die Sicherung konnte nicht gespeichert werden.</string>
+    <string name="backup_restore_title">Wiederherstellen</string>
+    <string name="backup_restore_body">Ersetzt alles, was jetzt auf diesem Handy gespeichert ist: Räder, Fahrten und Einstellungen. Nichts wird zusammengeführt.</string>
+    <string name="backup_restore">Sicherung auswählen</string>
+    <string name="backup_checking">Sicherung wird geprüft …</string>
+    <string name="backup_restoring">Wird wiederhergestellt …</string>
+    <string name="backup_restored">Sicherung wiederhergestellt.</string>
+    <string name="backup_restore_failed">Wiederherstellen ist fehlgeschlagen. Starte die App neu, dann wird es abgeschlossen.</string>
+    <string name="backup_recording">Während eine Fahrt aufgezeichnet wird, kann nichts wiederhergestellt werden. Versuch es nach der Fahrt.</string>
+    <string name="backup_problem_foreign">Diese Datei ist keine Sicherung der Robo-Bike-App. Auf dem Handy wurde nichts verändert.</string>
+    <string name="backup_problem_corrupt">Diese Sicherung ist beschädigt oder unvollständig. Auf dem Handy wurde nichts verändert.</string>
+    <string name="backup_problem_newer">Diese Sicherung stammt aus einer neueren App-Version. Aktualisiere zuerst die App. Auf dem Handy wurde nichts verändert.</string>
+    <string name="backup_problem_too_large">Diese Datei ist zu groß für eine Sicherung. Auf dem Handy wurde nichts verändert.</string>
+    <string name="backup_confirm_title">Alle Daten ersetzen?</string>
+    <string name="backup_confirm_body">Sicherung vom %1$s: %2$s (%3$s), %4$s.\n\nAlles auf diesem Handy (%5$s, %6$s und alle Einstellungen) wird gelöscht und durch die Sicherung ersetzt. Das lässt sich nicht rückgängig machen.</string>
+    <string name="backup_confirm">Ersetzen</string>
+    <string name="backup_pairing_title">Umzug auf ein neues Handy</string>
+    <string name="backup_pairing_body">Die Kopplung mit dem Display gehört zum alten Handy. Nach dem Wiederherstellen kennt die App dein Display weiter; beim ersten Verbinden bestätigst du es einmal. Die Berechtigungen fragt das neue Handy neu ab.</string>
+</resources>

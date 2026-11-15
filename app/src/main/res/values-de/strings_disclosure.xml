@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disclosure_agree">Zustimmen</string>
+    <string name="disclosure_not_now">Nicht jetzt</string>
+    <string name="disclosure_bullet">•  %1$s</string>
+
+    <string name="disclosure_bg_location_title">Standort im Hintergrund nutzen?</string>
+    <string name="disclosure_bg_location_lead">Robo-Bike erfasst den Standort deines Handys auch, wenn die App geschlossen ist oder nicht verwendet wird – solange dein Rad verbunden ist und kurz nachdem du es ausschaltest. Damit kann die App:</string>
+    <string name="disclosure_bg_location_track">die Strecke jeder Fahrt in deinem Fahrtenbuch aufzeichnen</string>
+    <string name="disclosure_bg_location_parked">sich merken, wo du geparkt hast („Wo steht mein Rad?“)</string>
+    <string name="disclosure_bg_location_home">die Strecke seit daheim zählen und dich warnen, wenn der Akku nicht mehr für den Heimweg reicht</string>
+    <string name="disclosure_bg_location_light">das Licht nach Sonnenaufgang, Sonnenuntergang und Regen schalten</string>
+    <string name="disclosure_bg_location_data">Dein Standort bleibt auf deinem Handy. Nur für die Regenprüfung geht eine auf etwa 1 km gerundete Position an den Wetterdienst Open-Meteo. Keine Werbung, keine Analyse.</string>
+    <string name="disclosure_bg_location_optional">Das ist freiwillig. Ohne funktionieren diese Funktionen nur, wenn du die App vor der Fahrt öffnest.</string>
+    <string name="disclosure_bg_location_next">Danach fragt Android: Wähle „%1$s“.</string>
+    <string name="disclosure_bg_location_next_generic">Danach fragt Android nach der Berechtigung.</string>
+
+    <string name="disclosure_listener_title">Google-Maps-Benachrichtigungen lesen?</string>
+    <string name="disclosure_listener_lead">Damit Abbiegepfeile und Entfernungen aufs Display kommen, liest Robo-Bike die Navigationsbenachrichtigung von Google Maps, während du navigierst.</string>
+    <string name="disclosure_listener_only_maps">Alle anderen Benachrichtigungen ignoriert die App, etwa Nachrichten, Anrufe oder andere Apps.</string>
+    <string name="disclosure_listener_data">Nichts verlässt dein Handy. Die Hinweise gehen nur per Bluetooth an dein Display und ins Diagnoseprotokoll der App, das du nur teilst, wenn du willst.</string>
+    <string name="disclosure_listener_optional">Das ist freiwillig: Alles andere funktioniert auch ohne.</string>
+    <string name="disclosure_listener_next">Danach öffnet Android die Einstellungen für den Benachrichtigungszugriff: Schalte dort Robo-Bike ein.</string>
+</resources>

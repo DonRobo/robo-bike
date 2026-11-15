@@ -1,0 +1,9 @@
+<!--
+  Headlight bulb (AppIcons.Bulb); white line icon, tinted where used (tile, widget, notification action).
+  The two arcs of the SVG path are written as cubic Béziers (same circle, centre 12,9, r 6): the arc form
+  rendered inconsistently in the screenshot harness.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="24dp" android:height="24dp" android:viewportWidth="24" android:viewportHeight="24">
+    <path android:pathData="M9,18h6M10,21h4M12,3C9.508,3 7.276,4.539 6.391,6.869C5.506,9.199 6.153,11.833 8,13.5c0.7,0.7 1,1.5 1,2.5h6c0,-1 0.3,-1.8 1,-2.5C17.847,11.833 18.494,9.199 17.609,6.869C16.724,4.539 14.492,3 12,3z"
+        android:strokeColor="#FFFFFF" android:strokeWidth="1.8" android:strokeLineCap="round" android:strokeLineJoin="round" />
+</vector>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bike_title">Bike</string>
+    <string name="bike_total">%1$s total</string>
+    <string name="bike_total_unknown">Odometer not known yet</string>
+    <string name="bike_date_pattern">MMMM d</string>
+    <string name="bike_date_pattern_year">MMMM d, yyyy</string>
+    <string name="bike_less">Less</string>
+    <string name="bike_more">More</string>
+
+    <!-- Bike management (A2) -->
+    <string name="bike_switch">Switch bike</string>
+    <string name="bike_sheet_title">Your bikes</string>
+    <string name="bike_rename">Rename</string>
+    <string name="bike_add">Add another bike</string>
+    <string name="bike_add_sub">Pair the display of another bike</string>
+    <string name="bike_remove">Remove bike</string>
+    <string name="bike_rename_title">Rename bike</string>
+    <string name="bike_name_label">Name</string>
+    <string name="bike_remove_title">Remove %1$s?</string>
+    <string name="bike_remove_body">All rides, maintenance items, error messages and settings of this bike are deleted for good. This cannot be undone.</string>
+    <string name="bike_remove_last">It is your only bike: afterwards the app starts the setup again.</string>
+    <string name="bike_remove_confirm">Delete for good</string>
+
+    <!-- Where is my bike (W3) -->
+    <string name="bike_parked_title">Your bike is here</string>
+    <string name="bike_parked_today">Switched off today at %1$s</string>
+    <string name="bike_parked_yesterday">Switched off yesterday at %1$s</string>
+    <string name="bike_parked_date">Switched off on %1$s at %2$s</string>
+    <string name="bike_parked_navigate">Take me there</string>
+    <string name="bike_parked_stale">Last known position from %1$s, it may have been elsewhere</string>
+    <string name="bike_parked_coarse">Approximate, within about %1$d m</string>
+    <string name="bike_parked_map">Map with the place where the bike was switched off</string>
+    <string name="bike_parked_connected_title">Your bike is connected</string>
+    <string name="bike_parked_connected_sub">When you switch it off, the app remembers where it is.</string>
+    <string name="bike_parked_never_title">No position yet</string>
+    <string name="bike_parked_never_sub">Once you switch the bike off after a connection, you will see here where it is.</string>
+    <string name="bike_parked_nopos_title">Position unknown</string>
+    <string name="bike_parked_reason_permission">Without location access the app cannot remember where the bike is.</string>
+    <string name="bike_parked_reason_background">Allow location \"all the time\" so the app also remembers the spot when the phone stays in your pocket.</string>
+    <string name="bike_parked_reason_unavailable">No position was available when the bike was switched off.</string>
+    <string name="bike_parked_no_app">No maps app found</string>
+
+    <!-- Maintenance (W1) -->
+    <string name="bike_maint_title">Maintenance</string>
+    <string name="bike_maint_chain">Lubricate chain</string>
+    <string name="bike_maint_brakes">Check brake pads</string>
+    <string name="bike_maint_gear">Grease gear hub</string>
+    <string name="bike_maint_done">Done</string>
+    <!-- The one due wording of maintenance items (Rad card, Start card, alert; maintenance/MaintenanceText). -->
+    <string name="maint_due_in">Due in %1$s</string>
+    <string name="maint_due_now">Due now</string>
+    <string name="maint_overdue">Overdue by %1$s</string>
+    <string name="bike_maint_in">in %1$s</string>
+    <string name="bike_maint_every">every %1$s</string>
+    <string name="bike_maint_no_odo">Connect the bike once and the app counts the distance to each service.</string>
+    <string name="bike_maint_empty">No maintenance items.</string>
+    <string name="bike_maint_add">Add your own item</string>
+    <string name="bike_maint_edit_title">Maintenance item</string>
+    <string name="bike_maint_add_title">Your own item</string>
+    <string name="bike_maint_name">What needs doing?</string>
+    <string name="bike_maint_name_hint">e.g. Check tyre pressure</string>
+    <string name="bike_maint_interval">Every</string>
+    <string name="bike_maint_interval_invalid">Enter a distance between %1$s and %2$s.</string>
+    <string name="bike_maint_progress">%1$s of %2$s since the last service</string>
+    <string name="bike_maint_mark_done">Done now</string>
+    <string name="bike_maint_mark_done_sub">Restarts the interval at %1$s</string>
+    <string name="bike_maint_remove">Remove item</string>
+
+    <!-- Error messages (W2) -->
+    <string name="bike_errors_title">Error messages</string>
+    <string name="bike_errors_ok">All good</string>
+    <string name="bike_errors_fault">Fault</string>
+    <string name="bike_errors_none">No error messages so far.</string>
+    <string name="bike_errors_unknown">After the first connection you will see the drive\'s error messages here.</string>
+    <string name="bike_errors_code">code %1$d</string>
+    <string name="bike_errors_raw">raw value 0x%1$s</string>
+    <string name="bike_errors_now">Now, %1$s</string>
+    <string name="bike_errors_now_since">Since %1$s, %2$s</string>
+    <string name="bike_errors_last_connection">At the last connection, %1$s</string>
+    <string name="bike_errors_live_line">%1$s, %2$s</string>
+    <string name="bike_errors_history_line">Stored in the display, %1$s</string>
+    <string name="bike_errors_history_note">When it happened is unknown; the app found it on %1$s.</string>
+    <string name="bike_errors_more">Show all %1$d</string>
+    <string name="bike_errors_less">Show fewer</string>
+
+    <!-- Charge reminder (W4) and battery capacity (A1/F7) -->
+    <string name="bike_charge_title">Remind me to charge</string>
+    <string name="bike_charge_sub">When the battery is below %1$d %% after a ride</string>
+    <string name="bike_charge_threshold">Remind below</string>
+    <string name="bike_charge_threshold_title">Charge reminder</string>
+    <string name="bike_charge_threshold_body">Remind me when the battery is below this level after a ride.</string>
+    <string name="bike_capacity">Battery capacity</string>
+    <string name="bike_capacity_unset">Not set</string>
+    <string name="bike_capacity_value">%1$d Wh</string>
+    <string name="bike_capacity_intro">It is printed on the battery, as watt-hours (Wh) or as volts and ampere-hours, e.g. \"36 V 14 Ah\".</string>
+    <string name="bike_capacity_mode_wh">Watt-hours</string>
+    <string name="bike_capacity_mode_vah">Volts and Ah</string>
+    <string name="bike_capacity_wh">Capacity</string>
+    <string name="bike_capacity_volt">Voltage</string>
+    <string name="bike_capacity_ah">Ampere-hours</string>
+    <string name="bike_capacity_result">That is %1$d Wh</string>
+    <string name="bike_capacity_invalid">Please enter a number.</string>
+    <string name="bike_capacity_range">That does not fit an e-bike battery.</string>
+    <string name="bike_capacity_clear">Clear</string>
+
+    <!-- Display (W5) and forget (E6) -->
+    <string name="bike_display_title">Display</string>
+    <string name="bike_display_model">Model</string>
+    <string name="bike_display_hardware">Hardware</string>
+    <string name="bike_display_software">Software</string>
+    <string name="bike_display_serial">Serial number</string>
+    <string name="bike_display_serial_end">ends in %1$s</string>
+    <string name="bike_display_controller">Controller</string>
+    <string name="bike_display_unknown">Model, hardware, software and serial number appear here after the first connection.</string>
+    <string name="bike_display_none_sub">Pair this bike\'s display so the app can connect to it.</string>
+    <string name="bike_display_pair">Pair display</string>
+    <string name="bike_forget_title">Forget display?</string>
+    <string name="bike_forget_body">The pairing with the display is removed; the next connection searches for a display again. Rides, maintenance and settings of %1$s are kept.</string>
+    <string name="bike_forget_confirm">Forget</string>
+    <string name="bike_drive_error_banner_code">Drive error %1$d: %2$s</string>
+    <string name="bike_drive_error_banner">Drive error: %1$s</string>
+    <string name="bike_drive_error_explain">Explain</string>
+</resources>

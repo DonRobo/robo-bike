@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Launch-frame background before Compose draws: Material You background, dark (neutral 6 ~ neutral1_900). -->
+    <color name="page_background">@android:color/system_neutral1_900</color>
+</resources>

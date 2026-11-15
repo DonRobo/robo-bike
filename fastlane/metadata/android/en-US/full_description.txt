@@ -1,0 +1,19 @@
+<p>Robo Bike is an unofficial companion app for e-bikes with an <b>EKD01</b> display (as used on some Bafang drive systems). It talks to the display over Bluetooth LE and works without an account, a cloud service or tracking.</p>
+
+<p><b>Features</b></p>
+<ul>
+<li>Live data: speed, battery, assist level, trip and odometer</li>
+<li>Remaining range learned from your own rides, with a warning when the battery gets tight for the way home</li>
+<li>Automatic headlight by sunset/sunrise (and optionally rain), switch from the app, widget, quick-settings tile or notification</li>
+<li>Turn-by-turn hints from Google Maps' navigation notification shown on the bike's display</li>
+<li>Ride log with optional GPS track, charts, statistics, recurring routes and GPX export</li>
+<li>Handlebar mode for a phone mount, home-screen widget, maintenance reminders, drive error codes with explanations</li>
+<li>Several bikes, km or miles, English and German, backup and restore</li>
+<li>Connects automatically when the display switches on (companion device pairing)</li>
+</ul>
+
+<p><b>Privacy</b>: all data stays on your phone. The app only contacts Open-Meteo (weather for the rain light, with a rounded position) and OpenFreeMap (map tiles).</p>
+
+<p><b>Safety</b>: the app only uses the display's documented, harmless commands (headlight, clock, navigation hints, reads). It never changes speed limits or motor parameters and never sends firmware commands. No warranty; use at your own risk.</p>
+
+<p>Robo Bike is not affiliated with Bafang or the display manufacturer. Product names are used only to describe compatibility.</p>

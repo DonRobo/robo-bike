@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Home-screen widget (artboard Widgets, "Widget für den Startbildschirm"). Sizes follow the artboard; colours
+  and texts are set by BikeWidget.views() from AppColors and the current BikeGlance. The defaults below are
+  the empty state, which is also what the widget picker previews.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@android:id/background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/widget_shape_bg"
+    android:clipToOutline="true"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:padding="18dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/widget_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:text="@string/app_name"
+            android:textColor="#18241F"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/widget_dot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:importantForAccessibility="no"
+            android:src="@drawable/widget_shape_oval" />
+
+        <TextView
+            android:id="@+id/widget_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="6dp"
+            android:fontFamily="sans-serif-medium"
+            android:maxLines="1"
+            android:textColor="#55635C"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:baselineAligned="false"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <!-- Negative margins trim Outfit's ascent/descent to the artboard's CSS line-height: 1 box. -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-8dp"
+                android:baselineAligned="false"
+                android:gravity="bottom"
+                android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:baselineAligned="true"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/widget_range"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-medium"
+                    android:includeFontPadding="false"
+                    android:letterSpacing="-0.02"
+                    android:maxLines="1"
+                    android:text="@string/widget_no_value"
+                    android:textColor="#18241F"
+                    android:textSize="56sp" />
+
+                <TextView
+                    android:id="@+id/widget_unit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="@string/unit_km"
+                    android:textColor="#55635C"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <!-- The rider's chosen distance counter (Einstellungen > Strecke im Widget), right of the range. -->
+            <LinearLayout
+                android:id="@+id/widget_counter"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginBottom="6dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/widget_counter_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="@string/counters_since_charge"
+                    android:textColor="#55635C"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/widget_counter_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:fontFamily="sans-serif-medium"
+                    android:maxLines="1"
+                    android:text="@string/widget_no_value"
+                    android:textColor="#18241F"
+                    android:textSize="18sp" />
+            </LinearLayout>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/widget_battery_bar"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:layout_marginTop="1dp"
+                android:max="100"
+                android:progress="0"
+                android:progressDrawable="@drawable/widget_progress" />
+
+            <TextView
+                android:id="@+id/widget_battery"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:ellipsize="end"
+                android:fontFamily="sans-serif-medium"
+                android:maxLines="1"
+                android:text="@string/widget_no_data"
+                android:textColor="#55635C"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/widget_light"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/widget_shape_oval"
+            android:contentDescription="@string/widget_light_unavailable"
+            android:padding="16dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_light" />
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- AppCompat theme: MainActivity is an AppCompatActivity (per-app language on API 31/32). Compose draws everything.
+         DayNight so the launch frame matches the system mode. Its background is the system's neutral page colour
+         (colors.xml); Compose then draws the Robo Bike scheme, or the wallpaper's only with the opt-in setting
+         "Farben vom Hintergrundbild" (GeneralSettings.wallpaperColors). -->
+    <style name="Theme.RoboBike" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:windowBackground">@color/page_background</item>
+    </style>
+</resources>

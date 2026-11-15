@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="nav_title">Navigation</string>
+    <string name="nav_maneuver_unknown">weiterfahren</string>
+    <string name="nav_maneuver_straight">geradeaus</string>
+    <string name="nav_maneuver_left">links abbiegen</string>
+    <string name="nav_maneuver_right">rechts abbiegen</string>
+    <string name="nav_maneuver_slight_left">leicht links</string>
+    <string name="nav_maneuver_slight_right">leicht rechts</string>
+    <string name="nav_maneuver_sharp_left">scharf links abbiegen</string>
+    <string name="nav_maneuver_sharp_right">scharf rechts abbiegen</string>
+    <string name="nav_maneuver_uturn">wenden</string>
+    <string name="nav_maneuver_arrived">Ziel erreicht</string>
+
+    <string name="nav_card_title">Das zeigt dein Display</string>
+    <string name="nav_status_running">Läuft</string>
+    <string name="nav_status_waiting">Wartet</string>
+    <string name="nav_status_ready">Bereit</string>
+    <string name="nav_status_off">Aus</string>
+    <string name="nav_arrow_cd">Pfeil: %1$s</string>
+    <string name="nav_idle_title">Normale Anzeige</string>
+    <string name="nav_idle_sub">Tempo, Akku und Unterstützung</string>
+    <string name="nav_sent_ago">Zuletzt gesendet %1$s, %2$s.</string>
+    <string name="nav_origin_maps">aus Google Maps</string>
+    <string name="nav_origin_test">aus dem Test-Manöver</string>
+    <plurals name="nav_ago_seconds">
+        <item quantity="one">vor %d Sekunde</item>
+        <item quantity="other">vor %d Sekunden</item>
+    </plurals>
+    <plurals name="nav_ago_minutes">
+        <item quantity="one">vor %d Minute</item>
+        <item quantity="other">vor %d Minuten</item>
+    </plurals>
+    <plurals name="nav_ago_hours">
+        <item quantity="one">vor %d Stunde</item>
+        <item quantity="other">vor %d Stunden</item>
+    </plurals>
+    <plurals name="nav_ago_days">
+        <item quantity="one">vor %d Tag</item>
+        <item quantity="other">vor %d Tagen</item>
+    </plurals>
+    <string name="nav_waiting">Nächster Hinweis in %1$s. Ab %2$s erscheint er am Display.</string>
+    <string name="nav_ready">Sobald Google Maps dich eine Route führt, erscheinen Pfeil und Distanz hier und am Display.</string>
+    <string name="nav_not_connected">Das Display ist nicht verbunden. Hinweise gehen raus, sobald es verbunden ist.</string>
+    <string name="nav_off">Abbiegehinweise senden ist ausgeschaltet.</string>
+
+    <string name="nav_forward_title">Abbiegehinweise senden</string>
+    <string name="nav_forward_sub">Pfeil und Distanz erscheinen am Display deines Rads.</string>
+    <string name="nav_show_from_title">Hinweis zeigen ab</string>
+    <string name="nav_show_from_sub">Davor bleibt das Display bei der normalen Anzeige.</string>
+    <string name="nav_show_from_always">Immer</string>
+    <string name="nav_access_granted">Zugriff auf Benachrichtigungen ist erlaubt</string>
+    <string name="nav_access_missing">Zugriff auf Benachrichtigungen fehlt, die App kann Google Maps nicht lesen</string>
+    <string name="nav_access_change">Ändern</string>
+</resources>

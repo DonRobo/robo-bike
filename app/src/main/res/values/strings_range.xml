@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="range_title">Range</string>
+
+    <!-- summary card -->
+    <string name="range_now">Now, at %1$d %%</string>
+    <string name="range_now_plain">Now</string>
+    <string name="range_full">Fully charged</string>
+    <plurals name="range_learned_from">
+        <item quantity="one">Learned from your last ride: on average %2$s %% battery per %3$s.</item>
+        <item quantity="other">Learned from your last %1$d rides: on average %2$s %% battery per %3$s.</item>
+    </plurals>
+    <plurals name="range_learned_from_level">
+        <item quantity="one">Learned from your last ride: on average %2$s %% battery per %3$s in level %4$d.</item>
+        <item quantity="other">Learned from your last %1$d rides: on average %2$s %% battery per %3$s in level %4$d.</item>
+    </plurals>
+    <string name="range_unit_word_km">kilometre</string>
+    <string name="range_unit_word_mi">mile</string>
+    <string name="range_learning_title">Learned from your first rides</string>
+    <string name="range_learning_progress">So far %1$s ridden and %2$s %% battery used. The first estimate comes after about %3$s and %4$s %%.</string>
+    <string name="range_learning_none">Rides are recorded automatically. The first estimate comes after about %1$s and %2$s %% battery.</string>
+    <string name="range_no_battery">How far you can go right now is known once the bike is connected and reports its battery level.</string>
+
+    <!-- per level -->
+    <string name="range_levels_title">Per assist level</string>
+    <string name="range_level">Level %1$d</string>
+    <string name="range_level_current">You are riding in level %1$d.</string>
+    <string name="range_level_last">Last ridden in level %1$d.</string>
+    <string name="range_level_full_battery">With a full battery.</string>
+    <string name="range_level_approx">≈%1$s</string>
+    <string name="range_level_unknown">–</string>
+    <string name="range_levels_legend_estimated">≈ = little data in this level, estimated.</string>
+    <string name="range_levels_legend_unknown">– = not ridden in this level yet.</string>
+    <string name="range_levels_empty">Once the first rides are learned, the range of every level appears here.</string>
+
+    <!-- ring -->
+    <string name="range_ring_title">How far you can still go</string>
+    <string name="range_ring_text">The ring shows %1$s in a straight line, i.e. there and back with the current battery.</string>
+    <string name="range_ring_parked">Measured from where the bike was last parked.</string>
+    <string name="range_ring_no_range">The ring appears once the range has been learned.</string>
+    <string name="range_ring_no_battery">The ring appears once the bike is connected and the battery level is known.</string>
+    <string name="range_ring_no_position">Without a current position the app cannot draw the ring.</string>
+
+    <!-- home -->
+    <string name="range_home_title">Will I make it home?</string>
+    <string name="range_home_subtitle">Warns before the battery gets tight for the way home.</string>
+    <string name="range_home_ok">Way home %1$s, %2$s left over</string>
+    <string name="range_home_tight">Way home %1$s, only %2$s left over, less than the reserve</string>
+    <string name="range_home_short">Way home %1$s, the battery no longer covers it</string>
+    <string name="range_home_no_range">Way home %1$s. Whether the battery covers it is known once the range is learned.</string>
+    <string name="range_home_no_battery">Way home %1$s. Whether the battery covers it is known once the bike is connected.</string>
+    <string name="range_home_estimate_note">The way home is an estimate: straight line × %1$s for detours.</string>
+    <string name="range_home_no_home">Set your home location and the app includes the way home.</string>
+    <string name="range_home_no_position">No current position, so no answer about the way home right now.</string>
+    <string name="range_home_needs_background">No position on the road: allow location “all the time”, or open the app when you set off.</string>
+    <string name="range_home_no_permission">Without location access the app does not know where you are.</string>
+    <string name="range_home_location_off">Location is switched off on the phone.</string>
+    <string name="range_home_place">Home location</string>
+    <string name="range_home_place_set">Set</string>
+    <string name="range_home_place_unset">Not set</string>
+    <string name="range_reserve">Reserve</string>
+    <string name="range_reserve_less">Decrease reserve</string>
+    <string name="range_reserve_more">Increase reserve</string>
+
+    <!-- home picker -->
+    <string name="range_pick_title">Set home location</string>
+    <string name="range_pick_hint">Tap the map to place your home.</string>
+    <string name="range_pick_use_position">Use my location</string>
+    <string name="range_pick_locating">Finding your location …</string>
+    <string name="range_pick_no_fix">No location available.</string>
+    <string name="range_pick_save">Save</string>
+    <string name="range_pick_cancel">Cancel</string>
+    <string name="range_pick_clear">Remove home location</string>
+
+    <!-- R6 -->
+    <string name="range_health_title">Battery health</string>
+    <string name="range_health_subtitle">Maximum range over the last six months</string>
+    <string name="range_health_caveat">Season, temperature and riding style move this value as much as the battery itself.</string>
+    <string name="range_health_not_enough">A trend needs rides from at least two months, about %1$s per month.</string>
+    <string name="range_health_one_month">%1$s: %2$s on a full battery.</string>
+    <string name="range_health_chart">Maximum range from %1$s to %2$s: from %3$s to %4$s</string>
+
+    <!-- R7 -->
+    <string name="range_model_title">How it is calculated</string>
+    <string name="range_model_basis">Basis</string>
+    <string name="range_model_rides">%1$d rides</string>
+    <string name="range_model_margin">Safety margin</string>
+    <string name="range_model_margin_value">%1$d %%</string>
+    <string name="range_model_note">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used. How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, the average applies. A way by road is about %2$s times the straight line; the ring and the way home use that.</string>
+
+</resources>

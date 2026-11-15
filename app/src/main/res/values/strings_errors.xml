@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Bafang drive error codes (see docs/PROTOCOL.md "Error codes").
+  BikeGo ships no code-to-text table; meanings follow Bafang's public display error table
+  (DP E12 user manual, section 7.7, same list as the other Bafang CAN displays). Advice is condensed
+  from that table, plus OpenBafangTool's hints for 08, 14 and 21. Key: error_<two-digit code>_title/_advice.
+-->
+<resources>
+    <string name="error_unknown_title">Unknown error code</string>
+    <string name="error_unknown_advice">This code is not in the Bafang list. Switch the system off and on again. If it comes back, note the code and have a dealer check the bike.</string>
+
+    <string name="error_04_title">Throttle not back in its rest position</string>
+    <string name="error_04_advice">Check that the throttle springs back fully when you let go. If it does and the error stays, the throttle needs replacing.</string>
+    <string name="error_05_title">Throttle fault</string>
+    <string name="error_05_advice">Check that the throttle connector is plugged in properly. Unplug the throttle: if the error still appears, have a dealer check the bike.</string>
+    <string name="error_07_title">Overvoltage protection</string>
+    <string name="error_07_advice">Remove the battery and insert it again. If the error persists, have a dealer check the bike (wrong battery or charger?).</string>
+    <string name="error_08_title">Motor hall sensor error</string>
+    <string name="error_08_advice">Fault in the hall sensor signal inside the motor (not the speed sensor). Check the motor cable and its connector for damage. Usually a dealer repair.</string>
+    <string name="error_09_title">Motor phase error</string>
+    <string name="error_09_advice">Problem with the motor phase wires. Check the motor cable for damage; otherwise have a dealer check the bike.</string>
+    <string name="error_10_title">Motor overheated</string>
+    <string name="error_10_advice">The motor has reached its protection temperature. Switch off and let it cool down. If it keeps happening, have a dealer check it.</string>
+    <string name="error_11_title">Motor temperature sensor error</string>
+    <string name="error_11_advice">The temperature sensor inside the motor reports a fault. Have a dealer check the bike.</string>
+    <string name="error_12_title">Controller current sensor error</string>
+    <string name="error_12_advice">The current sensor in the controller reports a fault. Have a dealer check the bike.</string>
+    <string name="error_13_title">Battery temperature sensor error</string>
+    <string name="error_13_advice">The temperature sensor inside the battery reports a fault. Have a dealer check the battery.</string>
+    <string name="error_14_title">Controller overheated</string>
+    <string name="error_14_advice">The controller has reached its protection temperature. Switch off and let the bike cool down. Also check the motor connectors for dirt or damage. If it persists, have a dealer check it.</string>
+    <string name="error_15_title">Controller temperature sensor error</string>
+    <string name="error_15_advice">The temperature sensor inside the controller reports a fault. Have a dealer check the bike.</string>
+    <string name="error_21_title">Speed sensor error</string>
+    <string name="error_21_advice">Restart the system. Check that the spoke magnet is in place and passes the speed sensor at 10 to 20 mm, and that the sensor connector is plugged in properly.</string>
+    <string name="error_25_title">Torque signal error</string>
+    <string name="error_25_advice">The torque sensor signal is faulty. Check that all connectors are plugged in properly. If it persists, have a dealer check the bike.</string>
+    <string name="error_26_title">Torque sensor speed signal error</string>
+    <string name="error_26_advice">Check that the speed sensor connector is plugged in properly and that the sensor is not damaged. If it persists, have a dealer check the bike.</string>
+    <string name="error_27_title">Controller overcurrent</string>
+    <string name="error_27_advice">The controller detected too much current. Restart the system; if it comes back, have a dealer check the bike.</string>
+    <string name="error_30_title">Communication problem</string>
+    <string name="error_30_advice">The display cannot talk to the motor controller and the motor will not assist. Check all connectors between display, controller and battery. If it persists, have a dealer check the bike.</string>
+    <string name="error_33_title">Brake sensor error</string>
+    <string name="error_33_advice">The brake signal is faulty (only with brake sensors). Check the brake sensor connectors and that the levers return fully. If it persists, have a dealer check it.</string>
+    <string name="error_35_title">15 V detection circuit error</string>
+    <string name="error_35_advice">Internal electronics fault. Have a dealer check the bike.</string>
+    <string name="error_36_title">Keypad detection circuit error</string>
+    <string name="error_36_advice">The button pad reports a fault. Check that no button is stuck or pressed while switching on. If it persists, have a dealer check it.</string>
+    <string name="error_37_title">Watchdog circuit fault</string>
+    <string name="error_37_advice">Internal electronics fault. Have a dealer check the bike.</string>
+    <string name="error_41_title">Battery voltage too high</string>
+    <string name="error_41_advice">The total battery voltage is too high. Check that the right battery and charger are used. Have a dealer check the battery.</string>
+    <string name="error_42_title">Battery voltage too low</string>
+    <string name="error_42_advice">The total battery voltage is too low. Charge the battery. If it persists, have a dealer check the battery.</string>
+    <string name="error_43_title">Battery cell power too high</string>
+    <string name="error_43_advice">The battery reports too much power from its cells. Have a dealer check the battery.</string>
+    <string name="error_44_title">Single cell voltage too high</string>
+    <string name="error_44_advice">One battery cell has too high a voltage. Have a dealer check the battery.</string>
+    <string name="error_45_title">Battery too hot</string>
+    <string name="error_45_advice">Let the battery cool down, out of direct sun. If it persists, have a dealer check the battery.</string>
+    <string name="error_46_title">Battery too cold</string>
+    <string name="error_46_advice">Let the battery warm up to room temperature before riding or charging. If it persists, have a dealer check the battery.</string>
+    <string name="error_47_title">Battery charge level too high</string>
+    <string name="error_47_advice">The battery reports a charge level that is too high. Have a dealer check the battery and charger.</string>
+    <string name="error_48_title">Battery charge level too low</string>
+    <string name="error_48_advice">Charge the battery. If it persists, have a dealer check the battery.</string>
+    <string name="error_61_title">Gear shift detection fault</string>
+    <string name="error_61_advice">The shift sensor reports a fault (only with this function). Have a dealer check the bike.</string>
+    <string name="error_62_title">Electronic derailleur cannot release</string>
+    <string name="error_62_advice">Only with an electronic derailleur. Have a dealer check the bike.</string>
+    <string name="error_71_title">Electronic lock jammed</string>
+    <string name="error_71_advice">Only with an electronic lock. Try to lock and unlock again; otherwise have a dealer check it.</string>
+    <string name="error_81_title">Bluetooth module error</string>
+    <string name="error_81_advice">The Bluetooth module of the display reports a fault. Restart the system; if it persists, have a dealer check the display.</string>
+</resources>

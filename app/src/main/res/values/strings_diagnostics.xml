@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_title">Diagnostics</string>
+    <string name="diag_intro">Tools for development and troubleshooting. You do not need them day to day.</string>
+
+    <string name="diag_test_title">Test maneuver</string>
+    <string name="diag_test_sub">Shows a turn hint on the display without Google Maps running.</string>
+    <string name="diag_test_distance">Distance</string>
+    <string name="diag_test_send">Send to display</string>
+    <string name="diag_test_stop">Stop</string>
+    <string name="diag_test_active">On the display: %1$s, %2$s. Ends after 30 s.</string>
+    <string name="diag_test_waiting">Waiting for the display: %1$s, %2$s is sent once it is connected. Ends after 30 s.</string>
+    <string name="diag_icon_straight">Straight</string>
+    <string name="diag_icon_left">Left</string>
+    <string name="diag_icon_right">Right</string>
+    <string name="diag_icon_slight_left">Slight left</string>
+    <string name="diag_icon_slight_right">Slight right</string>
+    <string name="diag_icon_sharp_left">Sharp left</string>
+    <string name="diag_icon_sharp_right">Sharp right</string>
+    <string name="diag_icon_uturn">U-turn</string>
+    <string name="diag_icon_arrived">Arrived</string>
+    <string name="diag_icon_unknown">Unknown</string>
+
+    <string name="diag_maps_title">Maps debug</string>
+    <string name="diag_maps_none">No Google Maps notification seen yet.</string>
+    <string name="diag_maps_recognised">Recognised: %1$s, %2$s</string>
+    <string name="diag_maps_not_recognised">Not recognised, not sent</string>
+    <string name="diag_maps_icon_shape">Icon %1$d × %2$d px, read from the arrow shape</string>
+    <string name="diag_maps_icon_text">Icon %1$d × %2$d px, read from the text</string>
+    <string name="diag_maps_no_icon">No icon in the notification</string>
+    <string name="diag_maps_icon_cd">Maps arrow</string>
+    <string name="diag_maps_all">Show all raw data</string>
+    <string name="diag_maps_less">Show less</string>
+
+    <string name="diag_clock_title">Display clock</string>
+    <string name="diag_clock_set">Set clock now</string>
+    <string name="diag_clock_alt">Alternate byte order</string>
+    <string name="diag_clock_alt_sub">In case the display shows a nonsense time afterwards</string>
+    <string name="diag_clock_ok">Set at %1$s%2$s; the display returned this value.</string>
+    <string name="diag_clock_bad">Set at %1$s%2$s; the display returned %3$s.</string>
+    <string name="diag_clock_no_read">Set at %1$s%2$s; reading it back failed.</string>
+    <string name="diag_clock_auto">" (on connecting)"</string>
+    <string name="diag_clock_failed">Setting the clock</string>
+
+    <string name="diag_errors_title">Drive error raw data</string>
+    <string name="diag_errors_sub">To compare with the number on the bike display until the byte encoding is confirmed.</string>
+    <string name="diag_errors_current">Current error (live data, byte 0)</string>
+    <string name="diag_errors_none">no error</string>
+    <string name="diag_errors_not_connected">not connected</string>
+    <string name="diag_errors_decoded">code %1$s</string>
+    <string name="diag_errors_invalid">not a valid code</string>
+    <string name="diag_errors_history">Error memory 0xA5:120</string>
+    <string name="diag_errors_read">Read error memory</string>
+    <string name="diag_errors_not_read">Not read yet.</string>
+    <string name="diag_errors_answer">Answer: %1$d bytes, the first %2$d are evaluated.</string>
+    <string name="diag_errors_history_empty">No entries.</string>
+    <string name="diag_errors_history_codes">Decoded: %1$s</string>
+    <string name="diag_errors_read_failed">Reading failed: %1$s</string>
+
+    <string name="diag_log_title">Log</string>
+    <string name="diag_log_empty">Nothing logged yet.</string>
+    <string name="diag_log_open">Open in full</string>
+    <string name="diag_log_share">Share</string>
+    <string name="diag_log_share_subject">Robo Bike app log</string>
+
+</resources>

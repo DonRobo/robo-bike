@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="diagnostics_title">Diagnose</string>
+    <string name="diag_intro">Werkzeuge für Entwicklung und Fehlersuche. Im Alltag brauchst du sie nicht.</string>
+
+    <string name="diag_test_title">Test-Manöver</string>
+    <string name="diag_test_sub">Zeigt einen Abbiegehinweis am Display, ohne dass Google Maps läuft.</string>
+    <string name="diag_test_distance">Distanz</string>
+    <string name="diag_test_send">Ans Display senden</string>
+    <string name="diag_test_stop">Stopp</string>
+    <string name="diag_test_active">Am Display: %1$s, %2$s. Endet nach 30 s.</string>
+    <string name="diag_test_waiting">Wartet aufs Display: %1$s, %2$s wird gesendet, sobald es verbunden ist. Endet nach 30 s.</string>
+    <string name="diag_icon_straight">Geradeaus</string>
+    <string name="diag_icon_left">Links</string>
+    <string name="diag_icon_right">Rechts</string>
+    <string name="diag_icon_slight_left">Leicht links</string>
+    <string name="diag_icon_slight_right">Leicht rechts</string>
+    <string name="diag_icon_sharp_left">Scharf links</string>
+    <string name="diag_icon_sharp_right">Scharf rechts</string>
+    <string name="diag_icon_uturn">Wenden</string>
+    <string name="diag_icon_arrived">Ziel erreicht</string>
+    <string name="diag_icon_unknown">Unbekannt</string>
+
+    <string name="diag_maps_title">Maps-Debug</string>
+    <string name="diag_maps_none">Noch keine Google-Maps-Benachrichtigung gesehen.</string>
+    <string name="diag_maps_recognised">Erkannt: %1$s, %2$s</string>
+    <string name="diag_maps_not_recognised">Nicht erkannt, wird nicht gesendet</string>
+    <string name="diag_maps_icon_shape">Symbol %1$d × %2$d px, aus der Pfeilform gelesen</string>
+    <string name="diag_maps_icon_text">Symbol %1$d × %2$d px, aus dem Text gelesen</string>
+    <string name="diag_maps_no_icon">Kein Symbol in der Benachrichtigung</string>
+    <string name="diag_maps_icon_cd">Maps-Pfeil</string>
+    <string name="diag_maps_all">Alle Rohdaten zeigen</string>
+    <string name="diag_maps_less">Weniger zeigen</string>
+
+    <string name="diag_clock_title">Uhr am Display</string>
+    <string name="diag_clock_set">Uhr jetzt stellen</string>
+    <string name="diag_clock_alt">Andere Byte-Reihenfolge</string>
+    <string name="diag_clock_alt_sub">Falls das Display danach eine unsinnige Zeit zeigt</string>
+    <string name="diag_clock_ok">Gestellt um %1$s%2$s, das Display hat den Wert übernommen.</string>
+    <string name="diag_clock_bad">Gestellt um %1$s%2$s, das Display meldet %3$s zurück.</string>
+    <string name="diag_clock_no_read">Gestellt um %1$s%2$s, Zurücklesen fehlgeschlagen.</string>
+    <string name="diag_clock_auto">" (beim Verbinden)"</string>
+    <string name="diag_clock_failed">Uhr stellen</string>
+
+    <string name="diag_errors_title">Fehler-Rohdaten</string>
+    <string name="diag_errors_sub">Zum Vergleich mit der Nummer am Display, bis die Kodierung der Bytes bestätigt ist.</string>
+    <string name="diag_errors_current">Aktueller Fehler (Live-Daten, Byte 0)</string>
+    <string name="diag_errors_none">kein Fehler</string>
+    <string name="diag_errors_not_connected">nicht verbunden</string>
+    <string name="diag_errors_decoded">Code %1$s</string>
+    <string name="diag_errors_invalid">kein gültiger Code</string>
+    <string name="diag_errors_history">Fehlerspeicher 0xA5:120</string>
+    <string name="diag_errors_read">Fehlerspeicher lesen</string>
+    <string name="diag_errors_not_read">Noch nicht gelesen.</string>
+    <string name="diag_errors_answer">Antwort: %1$d Bytes, ausgewertet werden die ersten %2$d.</string>
+    <string name="diag_errors_history_empty">Keine Einträge.</string>
+    <string name="diag_errors_history_codes">Ausgewertet: %1$s</string>
+    <string name="diag_errors_read_failed">Lesen fehlgeschlagen: %1$s</string>
+
+    <string name="diag_log_title">Protokoll</string>
+    <string name="diag_log_empty">Noch nichts protokolliert.</string>
+    <string name="diag_log_open">Ganz öffnen</string>
+    <string name="diag_log_share">Teilen</string>
+    <string name="diag_log_share_subject">Robo-Bike-App-Protokoll</string>
+
+</resources>

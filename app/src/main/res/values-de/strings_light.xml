@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="light_title">Licht</string>
+
+    <string name="light_mode_label">Lichtmodus</string>
+    <string name="light_mode_auto">Automatik</string>
+    <string name="light_mode_always">Immer an</string>
+    <string name="light_mode_off">Aus</string>
+
+    <string name="light_why_dark">Weil es dunkel ist.</string>
+    <string name="light_why_rain">Weil es regnet.</string>
+    <string name="light_why_day">Weil es hell ist.</string>
+    <string name="light_why_no_position">Noch kein Standort bekannt, die Sonnenkurve braucht deinen Ort.</string>
+    <string name="light_why_manual_on">Von Hand eingeschaltet. Die Automatik übernimmt beim nächsten Wechsel wieder.</string>
+    <string name="light_why_manual_off">Von Hand ausgeschaltet. Die Automatik übernimmt beim nächsten Wechsel wieder.</string>
+    <string name="light_why_mode_off">Die Automatik ist aus, du schaltest das Licht selbst.</string>
+    <string name="light_why_always">Tagfahrlicht: an, solange das Rad verbunden ist.</string>
+    <string name="light_why_locked">Das Rad ist gesperrt. Geschaltet wird nach dem Entsperren.</string>
+    <string name="light_why_offline">Das Rad ist nicht verbunden. Geschaltet wird, sobald es verbunden ist.</string>
+    <string name="light_why_failed">Schalten hat nicht geklappt. Neuer Versuch beim nächsten Wechsel.</string>
+    <string name="light_rain_dry">Regen: derzeit trocken.</string>
+    <string name="light_rain_below">Regen: zu schwach für deine Einstellung.</string>
+    <string name="light_rain_wet">Regen: es regnet.</string>
+    <string name="light_rain_unknown">Regen: keine Wetterdaten.</string>
+    <string name="light_rain_disabled">Regen schaltet nicht.</string>
+
+    <string name="light_short_dark_since">Automatik, dunkel seit %1$s</string>
+    <string name="light_short_dark_until">Automatik, dunkel bis %1$s</string>
+    <string name="light_short_dark">Automatik, dunkel</string>
+    <string name="light_short_day_until">Automatik, hell bis %1$s</string>
+    <string name="light_short_day">Automatik, hell</string>
+    <string name="light_short_rain">Automatik, Regen</string>
+    <string name="light_short_no_position">Automatik, noch kein Standort</string>
+    <string name="light_short_manual_on">Von Hand eingeschaltet</string>
+    <string name="light_short_manual_off">Von Hand ausgeschaltet</string>
+    <string name="light_short_mode_off">Automatik aus</string>
+    <string name="light_short_always">Immer an</string>
+    <string name="light_short_locked">Rad gesperrt, schaltbar nach dem Entsperren</string>
+    <string name="light_short_offline">Schaltbar, sobald verbunden</string>
+    <string name="light_short_failed">Schalten fehlgeschlagen</string>
+
+    <string name="light_curve_title">Sonnenstand heute</string>
+    <string name="light_curve_hint">Zieh die beiden Punkte dorthin, wo das Licht schalten soll. In den getönten Bereichen ist es an.</string>
+    <string name="light_curve_a11y">Sonnenstand im Tagesverlauf mit den Schaltpunkten für das Licht</string>
+    <string name="light_horizon">Horizont</string>
+    <string name="light_now">Jetzt</string>
+    <string name="light_axis_start">0 Uhr</string>
+    <string name="light_axis_end">24 Uhr</string>
+    <string name="light_morning_off">Morgens aus um</string>
+    <string name="light_evening_on">Abends an um</string>
+    <string name="light_sun_above">Sonne %1$d° über dem Horizont</string>
+    <string name="light_sun_below">Sonne %1$d° unter dem Horizont</string>
+    <string name="light_sun_not_reached">Die Sonne erreicht heute keine %1$s°</string>
+    <string name="light_sun_not_low">Die Sonne sinkt heute nicht auf %1$s°</string>
+    <string name="light_all_day_on">Heute ganztags an</string>
+    <string name="light_all_day_off">Heute ganztags aus</string>
+    <string name="light_time_none">–</string>
+    <string name="light_morning_earlier">Morgens früher ausschalten</string>
+    <string name="light_morning_later">Morgens später ausschalten</string>
+    <string name="light_evening_earlier">Abends früher einschalten</string>
+    <string name="light_evening_later">Abends später einschalten</string>
+    <string name="light_curve_footnote">Gespeichert wird der Sonnenstand, nicht die Uhrzeit. So passt der Schaltpunkt das ganze Jahr.</string>
+    <string name="light_no_position_title">Noch kein Standort</string>
+    <string name="light_no_position_text">Sobald das Handy deinen Ort kennt, erscheint hier der Sonnenstand von heute. Die Schaltpunkte kannst du schon jetzt in Grad einstellen.</string>
+
+    <string name="light_rain_title">Bei Regen einschalten</string>
+    <string name="light_rain_level_label">Ab welcher Stärke</string>
+    <string name="light_rain_level_a11y">Regenstärke</string>
+    <string name="light_rain_drizzle">Nieseln</string>
+    <string name="light_rain_rain">Regen</string>
+    <string name="light_rain_heavy">Starkregen</string>
+    <string name="light_no_lamp_title">Dein Display hat keinen Lichtschalter</string>
+    <string name="light_no_lamp_text">Das Display meldet, dass es den Scheinwerfer nicht schalten kann. Schalte das Licht am Rad; die App steuert es nicht.</string>
+</resources>

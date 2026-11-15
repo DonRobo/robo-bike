@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="bike_title">Rad</string>
+    <string name="bike_total">%1$s gesamt</string>
+    <string name="bike_total_unknown">Kilometerstand noch unbekannt</string>
+    <string name="bike_date_pattern">d. MMMM</string>
+    <string name="bike_date_pattern_year">d. MMMM yyyy</string>
+    <string name="bike_less">Weniger</string>
+    <string name="bike_more">Mehr</string>
+
+    <!-- Räder verwalten (A2) -->
+    <string name="bike_switch">Rad wechseln</string>
+    <string name="bike_sheet_title">Deine Räder</string>
+    <string name="bike_rename">Umbenennen</string>
+    <string name="bike_add">Weiteres Rad hinzufügen</string>
+    <string name="bike_add_sub">Das Display eines anderen Rads koppeln</string>
+    <string name="bike_remove">Rad entfernen</string>
+    <string name="bike_rename_title">Rad umbenennen</string>
+    <string name="bike_name_label">Name</string>
+    <string name="bike_remove_title">%1$s entfernen?</string>
+    <string name="bike_remove_body">Alle Fahrten, Wartungspunkte, Fehlermeldungen und Einstellungen dieses Rads werden endgültig gelöscht. Das lässt sich nicht rückgängig machen.</string>
+    <string name="bike_remove_last">Es ist dein einziges Rad: Danach startet die App die Einrichtung neu.</string>
+    <string name="bike_remove_confirm">Endgültig löschen</string>
+
+    <!-- Wo steht mein Rad (W3) -->
+    <string name="bike_parked_title">Hier steht dein Rad</string>
+    <string name="bike_parked_today">Ausgeschaltet heute um %1$s</string>
+    <string name="bike_parked_yesterday">Ausgeschaltet gestern um %1$s</string>
+    <string name="bike_parked_date">Ausgeschaltet am %1$s um %2$s</string>
+    <string name="bike_parked_navigate">Hinführen</string>
+    <string name="bike_parked_stale">Letzter bekannter Standort von %1$s, das Rad kann woanders stehen</string>
+    <string name="bike_parked_coarse">Ungefähr, auf etwa %1$d m genau</string>
+    <string name="bike_parked_map">Karte mit dem letzten Standort des Rads</string>
+    <string name="bike_parked_connected_title">Dein Rad ist verbunden</string>
+    <string name="bike_parked_connected_sub">Wenn du es ausschaltest, merkt sich die App, wo es steht.</string>
+    <string name="bike_parked_never_title">Noch kein Standort</string>
+    <string name="bike_parked_never_sub">Sobald du das Rad nach einer Verbindung ausschaltest, siehst du hier, wo es steht.</string>
+    <string name="bike_parked_nopos_title">Standort unbekannt</string>
+    <string name="bike_parked_reason_permission">Ohne Standortfreigabe kann sich die App nicht merken, wo das Rad steht.</string>
+    <string name="bike_parked_reason_background">Erlaube den Standort „immer“, dann merkt sich die App den Platz auch, wenn das Handy in der Tasche bleibt.</string>
+    <string name="bike_parked_reason_unavailable">Beim Ausschalten war kein Standort verfügbar.</string>
+    <string name="bike_parked_no_app">Keine Karten-App gefunden</string>
+
+    <!-- Wartung (W1) -->
+    <string name="bike_maint_title">Wartung</string>
+    <string name="bike_maint_chain">Kette schmieren</string>
+    <string name="bike_maint_brakes">Bremsbeläge prüfen</string>
+    <string name="bike_maint_gear">Getriebe fetten</string>
+    <string name="bike_maint_done">Erledigt</string>
+    <string name="maint_due_in">Fällig in %1$s</string>
+    <string name="maint_due_now">Jetzt fällig</string>
+    <string name="maint_overdue">Überfällig seit %1$s</string>
+    <string name="bike_maint_in">in %1$s</string>
+    <string name="bike_maint_every">alle %1$s</string>
+    <string name="bike_maint_no_odo">Verbinde das Rad einmal, dann zählt die App die Kilometer bis zur nächsten Wartung.</string>
+    <string name="bike_maint_empty">Keine Wartungspunkte.</string>
+    <string name="bike_maint_add">Eigenen Punkt hinzufügen</string>
+    <string name="bike_maint_edit_title">Wartungspunkt</string>
+    <string name="bike_maint_add_title">Eigener Punkt</string>
+    <string name="bike_maint_name">Was ist zu tun?</string>
+    <string name="bike_maint_name_hint">z. B. Reifendruck prüfen</string>
+    <string name="bike_maint_interval">Alle</string>
+    <string name="bike_maint_interval_invalid">Gib eine Strecke zwischen %1$s und %2$s ein.</string>
+    <string name="bike_maint_progress">%1$s von %2$s seit der letzten Wartung</string>
+    <string name="bike_maint_mark_done">Jetzt erledigt</string>
+    <string name="bike_maint_mark_done_sub">Startet das Intervall bei %1$s neu</string>
+    <string name="bike_maint_remove">Punkt entfernen</string>
+
+    <!-- Fehlermeldungen (W2) -->
+    <string name="bike_errors_title">Fehlermeldungen</string>
+    <string name="bike_errors_ok">Alles in Ordnung</string>
+    <string name="bike_errors_fault">Störung</string>
+    <string name="bike_errors_none">Bisher keine Fehlermeldungen.</string>
+    <string name="bike_errors_unknown">Nach der ersten Verbindung siehst du hier die Fehlermeldungen des Antriebs.</string>
+    <string name="bike_errors_code">Code %1$d</string>
+    <string name="bike_errors_raw">Rohwert 0x%1$s</string>
+    <string name="bike_errors_now">Jetzt, %1$s</string>
+    <string name="bike_errors_now_since">Seit %1$s, %2$s</string>
+    <string name="bike_errors_last_connection">Beim letzten Verbinden, %1$s</string>
+    <string name="bike_errors_live_line">%1$s, %2$s</string>
+    <string name="bike_errors_history_line">Im Display gespeichert, %1$s</string>
+    <string name="bike_errors_history_note">Wann es passiert ist, ist unbekannt; die App hat es am %1$s entdeckt.</string>
+    <string name="bike_errors_more">Alle %1$d anzeigen</string>
+    <string name="bike_errors_less">Weniger anzeigen</string>
+
+    <!-- Ans Laden erinnern (W4) und Akkukapazität (A1/F7) -->
+    <string name="bike_charge_title">Ans Laden erinnern</string>
+    <string name="bike_charge_sub">Wenn der Akku nach einer Fahrt unter %1$d %% liegt</string>
+    <string name="bike_charge_threshold">Erinnern unter</string>
+    <string name="bike_charge_threshold_title">Ans Laden erinnern</string>
+    <string name="bike_charge_threshold_body">Erinnere mich, wenn der Akku nach einer Fahrt unter diesem Stand liegt.</string>
+    <string name="bike_capacity">Akkukapazität</string>
+    <string name="bike_capacity_unset">Nicht angegeben</string>
+    <string name="bike_capacity_value">%1$d Wh</string>
+    <string name="bike_capacity_intro">Steht auf dem Akku, als Wattstunden (Wh) oder als Volt und Amperestunden, etwa „36 V 14 Ah“.</string>
+    <string name="bike_capacity_mode_wh">Wattstunden</string>
+    <string name="bike_capacity_mode_vah">Volt und Ah</string>
+    <string name="bike_capacity_wh">Kapazität</string>
+    <string name="bike_capacity_volt">Spannung</string>
+    <string name="bike_capacity_ah">Amperestunden</string>
+    <string name="bike_capacity_result">Ergibt %1$d Wh</string>
+    <string name="bike_capacity_invalid">Bitte gib eine Zahl ein.</string>
+    <string name="bike_capacity_range">Das passt zu keinem E-Bike-Akku.</string>
+    <string name="bike_capacity_clear">Angabe löschen</string>
+
+    <!-- Display (W5) und Display vergessen (E6) -->
+    <string name="bike_display_title">Display</string>
+    <string name="bike_display_model">Modell</string>
+    <string name="bike_display_hardware">Hardware</string>
+    <string name="bike_display_software">Software</string>
+    <string name="bike_display_serial">Seriennummer</string>
+    <string name="bike_display_serial_end">endet auf %1$s</string>
+    <string name="bike_display_controller">Controller</string>
+    <string name="bike_display_unknown">Nach der ersten Verbindung stehen hier Modell, Hardware, Software und Seriennummer.</string>
+    <string name="bike_display_none_sub">Kopple das Display dieses Rads, damit sich die App verbinden kann.</string>
+    <string name="bike_display_pair">Display koppeln</string>
+    <string name="bike_forget_title">Display vergessen?</string>
+    <string name="bike_forget_body">Die Kopplung mit dem Display wird gelöst, beim nächsten Verbinden wird neu gesucht. Fahrten, Wartung und Einstellungen von %1$s bleiben erhalten.</string>
+    <string name="bike_forget_confirm">Vergessen</string>
+    <string name="bike_drive_error_banner_code">Antriebsfehler %1$d: %2$s</string>
+    <string name="bike_drive_error_banner">Antriebsfehler: %1$s</string>
+    <string name="bike_drive_error_explain">Erklärung</string>
+</resources>

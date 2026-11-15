@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Connection status (E4) and the connection sheet on Start. -->
+    <string name="conn_connected">Connected to %1$s</string>
+    <string name="conn_display_generic">the display</string>
+    <string name="conn_sheet_title">Connection</string>
+    <string name="conn_connect">Connect</string>
+    <string name="conn_auto">Connect automatically</string>
+    <string name="conn_auto_sub">As soon as the bike is switched on</string>
+    <string name="conn_hint_auto_off">Automatic connection is off.</string>
+    <string name="conn_hint_pair">Tap Connect once with the bike on to pair the display for automatic connection.</string>
+    <string name="conn_hint_paused">Paused by Disconnect until the bike is switched off and on again, or you tap Connect.</string>
+    <string name="conn_hint_disconnect">Disconnect lasts until the bike is switched off and on again.</string>
+    <string name="conn_missing_location">No location: rides are recorded without a GPS track and the automatic light cannot compute sunset.</string>
+    <string name="conn_coarse_location">Only approximate location: ride tracks will be coarse.</string>
+    <string name="conn_missing_notifications">No notifications: the connection runs without a visible status notification.</string>
+    <string name="conn_bt_required">Bluetooth permissions are required to connect to the display.</string>
+    <string name="conn_pair_failed">Display not paired for auto-connect: %1$s</string>
+    <string name="conn_unknown_error">unknown error</string>
+    <string name="conn_command_failed">%1$s failed: %2$s</string>
+    <string name="conn_light_failed">Could not switch the light</string>
+</resources>

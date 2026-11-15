@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="range_title">Reichweite</string>
+
+    <!-- summary card -->
+    <string name="range_now">Jetzt, mit %1$d %%</string>
+    <string name="range_now_plain">Jetzt</string>
+    <string name="range_full">Voll geladen</string>
+    <plurals name="range_learned_from">
+        <item quantity="one">Gelernt aus deiner letzten Fahrt: im Schnitt %2$s %% Akku pro %3$s.</item>
+        <item quantity="other">Gelernt aus deinen letzten %1$d Fahrten: im Schnitt %2$s %% Akku pro %3$s.</item>
+    </plurals>
+    <plurals name="range_learned_from_level">
+        <item quantity="one">Gelernt aus deiner letzten Fahrt: im Schnitt %2$s %% Akku pro %3$s in Stufe %4$d.</item>
+        <item quantity="other">Gelernt aus deinen letzten %1$d Fahrten: im Schnitt %2$s %% Akku pro %3$s in Stufe %4$d.</item>
+    </plurals>
+    <string name="range_unit_word_km">Kilometer</string>
+    <string name="range_unit_word_mi">Meile</string>
+    <string name="range_learning_title">Wird aus deinen ersten Fahrten gelernt</string>
+    <string name="range_learning_progress">Bisher %1$s gefahren und %2$s %% Akku verbraucht. Die erste Schätzung gibt es nach etwa %3$s und %4$s %%.</string>
+    <string name="range_learning_none">Fahrten werden automatisch aufgezeichnet. Die erste Schätzung gibt es nach etwa %1$s und %2$s %% Akku.</string>
+    <string name="range_no_battery">Wie weit du jetzt noch kommst, weiß die App, sobald das Rad verbunden ist und seinen Akkustand meldet.</string>
+
+    <!-- per level -->
+    <string name="range_levels_title">Pro Unterstützungsstufe</string>
+    <string name="range_level">Stufe %1$d</string>
+    <string name="range_level_current">Du fährst gerade in Stufe %1$d.</string>
+    <string name="range_level_last">Zuletzt in Stufe %1$d gefahren.</string>
+    <string name="range_level_full_battery">Mit vollem Akku.</string>
+    <string name="range_level_approx">≈%1$s</string>
+    <string name="range_level_unknown">–</string>
+    <string name="range_levels_legend_estimated">≈ = wenig Daten in dieser Stufe, geschätzt.</string>
+    <string name="range_levels_legend_unknown">– = in dieser Stufe noch nicht gefahren.</string>
+    <string name="range_levels_empty">Sobald die ersten Fahrten gelernt sind, steht hier die Reichweite jeder Stufe.</string>
+
+    <!-- ring -->
+    <string name="range_ring_title">So weit kommst du noch</string>
+    <string name="range_ring_text">Der Ring zeigt %1$s Luftlinie, also Hin- und Rückweg mit dem aktuellen Akku.</string>
+    <string name="range_ring_parked">Gemessen ab dem Ort, an dem das Rad zuletzt abgestellt wurde.</string>
+    <string name="range_ring_no_range">Der Ring erscheint, sobald die Reichweite gelernt ist.</string>
+    <string name="range_ring_no_battery">Der Ring erscheint, sobald das Rad verbunden und der Akkustand bekannt ist.</string>
+    <string name="range_ring_no_position">Ohne aktuelle Position kann die App den Ring nicht zeichnen.</string>
+
+    <!-- home -->
+    <string name="range_home_title">Komme ich heim?</string>
+    <string name="range_home_subtitle">Warnt, bevor der Akku für den Heimweg knapp wird.</string>
+    <string name="range_home_ok">Heimweg %1$s, es bleiben %2$s übrig</string>
+    <string name="range_home_tight">Heimweg %1$s, es bleiben nur %2$s übrig, weniger als die Reserve</string>
+    <string name="range_home_short">Heimweg %1$s, dafür reicht der Akku nicht mehr</string>
+    <string name="range_home_no_range">Heimweg %1$s. Ob der Akku reicht, weiß die App, sobald die Reichweite gelernt ist.</string>
+    <string name="range_home_no_battery">Heimweg %1$s. Ob der Akku reicht, weiß die App, sobald das Rad verbunden ist.</string>
+    <string name="range_home_estimate_note">Der Heimweg ist geschätzt: Luftlinie × %1$s für Umwege.</string>
+    <string name="range_home_no_home">Lege deinen Heimatort fest, dann rechnet die App den Heimweg mit.</string>
+    <string name="range_home_no_position">Keine aktuelle Position, deshalb gerade keine Aussage zum Heimweg.</string>
+    <string name="range_home_needs_background">Unterwegs fehlt die Position: Erlaube den Standort „immer“, oder öffne die App beim Losfahren.</string>
+    <string name="range_home_no_permission">Ohne Standortfreigabe weiß die App nicht, wo du bist.</string>
+    <string name="range_home_location_off">Der Standort ist am Handy ausgeschaltet.</string>
+    <string name="range_home_place">Heimatort</string>
+    <string name="range_home_place_set">Festgelegt</string>
+    <string name="range_home_place_unset">Nicht festgelegt</string>
+    <string name="range_reserve">Reserve</string>
+    <string name="range_reserve_less">Reserve verringern</string>
+    <string name="range_reserve_more">Reserve erhöhen</string>
+
+    <!-- home picker -->
+    <string name="range_pick_title">Heimatort festlegen</string>
+    <string name="range_pick_hint">Tippe auf die Karte, um deinen Heimatort zu setzen.</string>
+    <string name="range_pick_use_position">Meinen Standort verwenden</string>
+    <string name="range_pick_locating">Standort wird gesucht …</string>
+    <string name="range_pick_no_fix">Kein Standort verfügbar.</string>
+    <string name="range_pick_save">Übernehmen</string>
+    <string name="range_pick_cancel">Abbrechen</string>
+    <string name="range_pick_clear">Heimatort entfernen</string>
+
+    <!-- R6 -->
+    <string name="range_health_title">Akku-Gesundheit</string>
+    <string name="range_health_subtitle">Maximale Reichweite der letzten sechs Monate</string>
+    <string name="range_health_caveat">Jahreszeit, Temperatur und Fahrweise bewegen diesen Wert genauso wie der Akku selbst.</string>
+    <string name="range_health_not_enough">Für einen Verlauf braucht es Fahrten aus mindestens zwei Monaten, etwa %1$s pro Monat.</string>
+    <string name="range_health_one_month">%1$s: %2$s mit vollem Akku.</string>
+    <string name="range_health_chart">Maximale Reichweite von %1$s bis %2$s: von %3$s auf %4$s</string>
+
+    <!-- R7 -->
+    <string name="range_model_title">So wird gerechnet</string>
+    <string name="range_model_basis">Grundlage</string>
+    <string name="range_model_rides">%1$d Fahrten</string>
+    <string name="range_model_margin">Sicherheitsabschlag</string>
+    <string name="range_model_margin_value">%1$d %%</string>
+    <string name="range_model_note">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht. Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, gilt der Durchschnitt. Auf der Straße ist ein Weg etwa %2$s-mal so lang wie die Luftlinie; Ring und Heimweg rechnen damit.</string>
+
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_group_driving">Riding</string>
+    <string name="settings_group_general">General</string>
+    <string name="settings_group_advanced">Advanced</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_language_system">System default</string>
+    <string name="settings_language_de" translatable="false">Deutsch</string>
+    <string name="settings_language_en" translatable="false">English</string>
+    <string name="settings_units">Units</string>
+    <string name="settings_units_metric">Kilometres</string>
+    <string name="settings_units_imperial">Miles</string>
+    <string name="settings_diagnostics_sub">Test maneuver, Maps debug, log</string>
+    <string name="settings_group_recording">Recording</string>
+    <string name="settings_group_notifications">Notifications</string>
+    <string name="settings_group_bikes">Bikes and devices</string>
+    <string name="settings_light_auto_rain">Automatic with sun curve and rain</string>
+    <string name="settings_light_auto">Automatic with sun curve</string>
+    <string name="settings_light_always">Daytime running light: always on</string>
+    <string name="settings_light_off">Off: you switch it yourself</string>
+    <string name="settings_range_sub">Last %1$d rides, %2$d %% margin</string>
+    <string name="settings_range_sub_home">Last %1$d rides, %2$d %% margin, way home</string>
+    <string name="settings_nav_off">Off: nothing is sent to the display</string>
+    <string name="settings_nav_always">Google Maps, every hint</string>
+    <string name="settings_nav_from">Google Maps, hint from %1$s</string>
+    <string name="settings_handlebar_sub">Choose tiles, start automatically</string>
+    <string name="settings_rides">Ride log</string>
+    <string name="settings_rides_gps_on">Record route with GPS: on</string>
+    <string name="settings_rides_gps_off">Record route with GPS: off</string>
+    <string name="settings_backup_sub">Back up and restore all data</string>
+    <string name="settings_bikes">My bikes</string>
+    <string name="settings_clock">Set the display clock</string>
+    <string name="settings_clock_sub">At every connection</string>
+    <string name="settings_wallpaper_colors">Wallpaper colours</string>
+    <string name="settings_wallpaper_colors_sub">Use the colours of your wallpaper instead of Robo Bike green</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Debug builds only: remote control of the simulated bike (sim/SimControlReceiver, android/README.md "Simulated bike").
+     Exported for `adb shell am broadcast`, but only senders holding DUMP (the adb shell, the system) get through. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <receiver
+            android:name=".sim.SimControlReceiver"
+            android:exported="true"
+            android:permission="android.permission.DUMP" />
+    </application>
+</manifest>

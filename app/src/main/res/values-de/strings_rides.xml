@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="rides_title">Fahrten</string>
+    <string name="rides_tab_list">Liste</string>
+    <string name="rides_tab_stats">Statistik</string>
+    <string name="ride_title">Fahrt</string>
+
+    <!-- Fahrten list -->
+    <string name="rides_week">Diese Woche</string>
+    <string name="rides_km_caption">Kilometer</string>
+    <string name="rides_mi_caption">Meilen</string>
+    <string name="rides_hours_caption">Stunden</string>
+    <string name="rides_battery_used_caption">Akku verbraucht</string>
+    <string name="rides_gps_title">Strecke per GPS aufzeichnen</string>
+    <string name="rides_gps_sub">Für Karte, Höhe und GPX. Gilt ab der nächsten Fahrt.</string>
+    <string name="rides_gps_no_permission">Die App darf deinen Standort nicht verwenden, deshalb wird keine Strecke aufgezeichnet.</string>
+    <string name="rides_gps_system_off">Der Standort ist am Handy ausgeschaltet, deshalb wird keine Strecke aufgezeichnet.</string>
+    <string name="rides_gps_needs_background">Ohne „Standort immer erlauben“ wird die Strecke nur aufgezeichnet, wenn die App beim Losfahren offen ist.</string>
+    <string name="rides_gps_needs_precise">Nur ungefährer Standort erlaubt: Die Strecke wird ungenau. Erlaube den genauen Standort.</string>
+    <string name="rides_gps_open_settings">Einschalten</string>
+    <string name="rides_day_pattern">EEEE, d. MMMM</string>
+    <string name="rides_day_pattern_year">EEEE, d. MMMM yyyy</string>
+    <string name="rides_time_pattern">HH:mm</string>
+    <string name="rides_time">%1$s Uhr</string>
+    <string name="rides_distance_in">%1$s in %2$s</string>
+    <string name="rides_battery_from_to">Akku %1$d %% → %2$d %%</string>
+    <string name="rides_recording">Läuft</string>
+    <string name="rides_recurring">Wiederkehrend</string>
+    <string name="rides_empty_title">Noch keine Fahrten</string>
+    <string name="rides_empty_body">Jede Fahrt wird automatisch aufgezeichnet, sobald das Display verbunden ist und du losfährst.</string>
+
+    <!-- durations -->
+    <string name="rides_minutes">%1$d min</string>
+    <string name="rides_hours_minutes">%1$d:%2$02d h</string>
+
+    <!-- Fahrtdetail -->
+    <string name="ride_time_range">%1$s bis %2$s Uhr</string>
+    <string name="ride_distance">Distanz</string>
+    <string name="ride_duration">Dauer</string>
+    <string name="ride_average">Durchschnitt</string>
+    <string name="ride_consumption">Verbrauch</string>
+    <string name="ride_pct_per_km" formatted="false">% pro km</string>
+    <string name="ride_pct_per_mi" formatted="false">% pro mi</string>
+    <string name="ride_unit_min">min</string>
+    <string name="ride_unit_h">h</string>
+    <string name="ride_battery_line">Akku %1$d %% → %2$d %%</string>
+    <string name="ride_battery_used">%1$d %% verbraucht</string>
+    <string name="ride_chart_speed">Tempo</string>
+    <string name="ride_chart_battery">Akku</string>
+    <string name="ride_chart_altitude">Höhe</string>
+    <string name="ride_chart_level">Stufe</string>
+    <string name="ride_chart_speed_note">Tempo in %1$s. Die gestrichelte Linie ist der Durchschnitt.</string>
+    <string name="ride_chart_battery_note">Akkustand in Prozent über die Strecke.</string>
+    <string name="ride_chart_altitude_note">Höhe in %1$s über dem Meer, aus dem GPS.</string>
+    <string name="ride_chart_level_note">Unterstützungsstufe über die Strecke, 0 ist ohne Unterstützung.</string>
+    <string name="ride_chart_no_altitude_gps">Keine Höhe: Diese Fahrt wurde ohne GPS aufgezeichnet.</string>
+    <string name="ride_chart_no_altitude_old">Keine Höhe: Diese Fahrt wurde aufgezeichnet, bevor die App die Höhe gespeichert hat.</string>
+    <string name="ride_chart_desc">%1$s über die Strecke</string>
+    <string name="ride_compare">Mit früheren Fahrten vergleichen</string>
+    <string name="ride_share_gpx">GPX teilen</string>
+    <string name="ride_share_title">Fahrt teilen</string>
+    <string name="ride_share_failed">GPX konnte nicht erstellt werden</string>
+    <string name="ride_delete">Fahrt löschen</string>
+    <string name="ride_delete_title">Fahrt löschen?</string>
+    <string name="ride_delete_body">Die Fahrt und ihre Strecke werden endgültig gelöscht.</string>
+    <string name="ride_delete_confirm">Löschen</string>
+    <string name="ride_expand_map">Karte vergrößern</string>
+    <string name="ride_map_desc">Karte mit der gefahrenen Strecke</string>
+    <string name="ride_no_gps_title">Ohne GPS aufgezeichnet</string>
+    <string name="ride_no_gps_body">Für Karte, Höhe und GPX schalte in der Liste „Strecke per GPS aufzeichnen“ ein. Es gilt ab der nächsten Fahrt.</string>
+    <string name="ride_not_found">Diese Fahrt gibt es nicht mehr.</string>
+    <string name="ride_loading">Wird geladen …</string>
+
+    <!-- Route comparison -->
+    <string name="route_unnamed">Unbenannte Strecke</string>
+    <string name="route_name_row">Name</string>
+    <string name="route_name_set">Benennen</string>
+    <string name="route_name_title">Strecke benennen</string>
+    <string name="route_name_hint">z. B. Arbeitsweg</string>
+    <string name="route_last">Zuletzt</string>
+    <string name="route_average">Im Schnitt</string>
+    <string name="route_time_battery">%1$s, %2$d %% Akku</string>
+    <string name="route_rides_count">%1$d Fahrten auf dieser Strecke</string>
+    <string name="route_day_pattern">EE, d. MMM</string>
+    <string name="route_rides">Fahrten</string>
+    <string name="route_delta_faster">%1$s schneller als im Schnitt</string>
+    <string name="route_delta_slower">%1$s langsamer als im Schnitt</string>
+    <string name="route_delta_same">so schnell wie im Schnitt</string>
+    <string name="route_how">Erkannt an Start, Ziel und Verlauf der GPS-Strecke, in beide Richtungen.</string>
+    <string name="route_gone">Diese Strecke wird nicht mehr erkannt.</string>
+</resources>

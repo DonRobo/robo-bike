@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Handlebar mode (artboard Lenkermodus) and its tile editor. -->
+    <string name="handlebar_title">Handlebar mode</string>
+    <string name="handlebar_tile_battery">Battery</string>
+    <string name="handlebar_tile_range">Range</string>
+    <string name="handlebar_tile_assist">Level</string>
+    <string name="handlebar_tile_speed">Speed</string>
+    <string name="handlebar_tile_clock">Time</string>
+    <string name="handlebar_tile_light">Light</string>
+    <string name="handlebar_tile_home">To home</string>
+    <string name="handlebar_assist_of">of %1$d</string>
+    <string name="handlebar_value_on">On</string>
+    <string name="handlebar_value_off">Off</string>
+    <string name="handlebar_no_value">–</string>
+    <string name="handlebar_as_of">Values from %1$s</string>
+    <string name="handlebar_no_data">No values yet</string>
+    <string name="handlebar_light_locked">Locked</string>
+    <string name="handlebar_light_unavailable">Light</string>
+    <string name="handlebar_light_toggle">Switch the headlight</string>
+    <string name="handlebar_locked_hint">The bike is locked. Unlock it on the display to switch the light.</string>
+    <string name="handlebar_customize">Customize tiles</string>
+    <string name="handlebar_exit">Exit handlebar mode</string>
+
+    <string name="handlebar_tiles_title">Customize tiles</string>
+    <string name="handlebar_tiles_preview">Preview</string>
+    <string name="handlebar_tiles_preview_empty">Only the speed is shown</string>
+    <string name="handlebar_tiles_for_bike">Applies to %1$s</string>
+    <string name="handlebar_tiles_shown">Shown · %1$d of %2$d</string>
+    <string name="handlebar_tiles_none">No tiles. Add values from the list below.</string>
+    <string name="handlebar_tiles_more">More values</string>
+    <string name="handlebar_tiles_full">At most %1$d tiles: remove one first.</string>
+    <string name="handlebar_tiles_move_up">Move %1$s up</string>
+    <string name="handlebar_tiles_move_down">Move %1$s down</string>
+    <string name="handlebar_tiles_remove">Remove %1$s</string>
+    <string name="handlebar_tiles_add">Add %1$s</string>
+    <string name="handlebar_tiles_reset">Restore default</string>
+    <string name="handlebar_tiles_range_learning">Shown once enough rides are learned</string>
+    <string name="handlebar_tiles_home_unset">Needs a home location under Range</string>
+    <string name="handlebar_tiles_live_only">Only while connected</string>
+    <string name="handlebar_section_auto">Automatic</string>
+    <string name="handlebar_auto_title">Start automatically</string>
+    <string name="handlebar_auto_sub">Opens handlebar mode as soon as the bike connects. If Android does not allow that, a notification lets you open it with one tap.</string>
+    <string name="handlebar_notif_title">Bike connected</string>
+    <string name="handlebar_notif_text">Tap to open handlebar mode</string>
+</resources>
