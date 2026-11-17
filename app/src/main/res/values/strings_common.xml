@@ -4,6 +4,7 @@
     <string name="app_name" translatable="false">Robo-Bike</string>
     <string name="bike_default_name">My bike</string>
     <string name="common_back">Back</string>
+    <string name="common_got_it">Got it</string>
     <string name="common_cancel">Cancel</string>
     <string name="common_save">Save</string>
     <string name="unit_km" translatable="false">km</string>

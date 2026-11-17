@@ -59,6 +59,8 @@ import dev.donrobo.ebike.range.RangeState
 import dev.donrobo.ebike.settings.Setting
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
+import dev.donrobo.ebike.ui.components.InfoParagraph
+import dev.donrobo.ebike.ui.components.InfoButton
 import dev.donrobo.ebike.ui.components.AppCard
 import dev.donrobo.ebike.ui.components.AppIcons
 import dev.donrobo.ebike.ui.components.AppSwitch
@@ -403,7 +405,11 @@ private fun HealthCard(d: RangeDetail?, fmt: UnitFormatter) {
     val points = healthPoints(d?.months.orEmpty())
     val locale = currentLocale()
     AppCard(gap = 10.dp) {
-        CardTitle(stringResource(R.string.range_health_title), description = stringResource(R.string.range_health_subtitle))
+        CardTitle(stringResource(R.string.range_health_title), description = stringResource(R.string.range_health_subtitle)) {
+            InfoButton(stringResource(R.string.range_health_info), stringResource(R.string.range_health_title)) {
+                InfoParagraph(stringResource(R.string.range_health_caveat))
+            }
+        }
         val months = d?.months.orEmpty()
         if (points.size >= 2 && months.size == RangeModel.MONTHS) {
             val first = points.first(); val last = points.last()
@@ -419,7 +425,6 @@ private fun HealthCard(d: RangeDetail?, fmt: UnitFormatter) {
             }
             Text(stringResource(R.string.range_health_not_enough, fmt.distance(RangeModel.MONTH_KM, 0).text()), style = t.caption, color = c.textMuted)
         }
-        Text(stringResource(R.string.range_health_caveat), style = t.caption, color = c.textMuted)
     }
 }
 
@@ -468,7 +473,9 @@ private fun ModelCard(state: RangeUiState, actions: RangeActions, fmt: UnitForma
     val c = AppTheme.colors
     val t = AppTheme.type
     AppCard(gap = 12.dp) {
-        Text(stringResource(R.string.range_model_title), style = t.cardTitle)
+        CardTitle(stringResource(R.string.range_model_title)) {
+            InfoButton(stringResource(R.string.range_model_info), stringResource(R.string.range_model_title)) { ModelInfo(fmt) }
+        }
         Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(stringResource(R.string.range_model_basis), style = t.label, color = c.textMuted)
             val options = RangeModel.WINDOWS
@@ -490,11 +497,15 @@ private fun ModelCard(state: RangeUiState, actions: RangeActions, fmt: UnitForma
                 onValueChangeFinished = { draft?.let { actions.setMargin(it.roundToInt()) }; draft = null },
             )
         }
-        Text(
-            stringResource(R.string.range_model_note, fmt.distance(RangeModel.MIN_RIDE_KM, if (fmt.system == UnitSystem.IMPERIAL) 1 else 0).text(),fmt.number(RangeCalc.DETOUR_FACTOR, 1)),
-            style = t.caption, color = c.textMuted,
-        )
     }
+}
+
+/** The "How it is calculated" explanation sheet's content (S4). */
+@Composable
+internal fun ModelInfo(fmt: UnitFormatter) {
+    InfoParagraph(stringResource(R.string.range_model_info_rides, fmt.distance(RangeModel.MIN_RIDE_KM, if (fmt.system == UnitSystem.IMPERIAL) 1 else 0).text()))
+    InfoParagraph(stringResource(R.string.range_model_info_bands))
+    InfoParagraph(stringResource(R.string.range_model_info_detour, fmt.number(RangeCalc.DETOUR_FACTOR, 1)))
 }
 
 /** Safety margin 0-30 % in steps of 5: the stock Material 3 [Slider] with tick marks. */

@@ -37,6 +37,7 @@ object AppIcons {
     val ChevronDown = LineIcon("M6 9l6 6 6-6")
     val Check = LineIcon("M5 12l5 5 9-10")
     val Close = LineIcon("M6 6l12 12M18 6L6 18")
+    val Info = LineIcon(circle(12f, 12f, 9f), "M12 11v5M12 8v.5")       // ⓘ: opens an explanation sheet (S4)
     val Plus = LineIcon("M12 5v14M5 12h14")
     val Minus = LineIcon("M6 12h12")                                   // setup: skipped permission
     val Bluetooth = LineIcon("M7 7l10 10-5 5V2l5 5L7 17")              // setup: Bluetooth needed

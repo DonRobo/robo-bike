@@ -2,6 +2,8 @@
 <resources>
     <string name="diagnostics_title">Diagnose</string>
     <string name="diag_intro">Werkzeuge für Entwicklung und Fehlersuche. Im Alltag brauchst du sie nicht.</string>
+    <string name="diag_info">Mehr zur Diagnose</string>
+    <string name="diag_info_safe">Test-Manöver schicken nur Abbiegepfeile, so wie eine Navigations-App. Einstellungen schreibt die App nie ins Display.</string>
 
     <string name="diag_test_title">Test-Manöver</string>
     <string name="diag_test_sub">Zeigt einen Abbiegehinweis am Display, ohne dass Google Maps läuft.</string>

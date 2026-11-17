@@ -13,6 +13,7 @@ Read `docs/DEVELOPMENT.md` (conventions, screenshot tests, releases) and `docs/P
 - Screens: stateless `XContent(state, actions)` + pure state mapping + screenshot test; scrolling screens also get
   scrolled-state shots (`compose.scrolled`). Look at the PNGs.
 - Strings in English (default) and German ("du"), no hard-coded UI text; distances only through `UnitFormatter`.
+- Explanations: at most one short visible line; anything longer goes behind an ⓘ (`InfoButton` → `InfoSheet`).
 
 ## Code
 - One fact lives in one place; prefer structural fixes over special cases. Pure logic outside composables, with tests.
