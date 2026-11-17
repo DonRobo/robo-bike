@@ -59,7 +59,7 @@ class RangeScreenshotTest {
         limit: LocationLimit? = null,
         home: GeoPoint? = this.home,
         reading: RangeReading? = RangeReading(75, 3, 5, live = true),
-        detour: Detour = Detour(1.27, auto = true, rides = 23),
+        detour: Detour = Detour(1.27, auto = true, rides = 18),
         detourAuto: Boolean = true,
         homeEnabled: Boolean = true,
     ) = RangeUiState(

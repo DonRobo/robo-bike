@@ -100,7 +100,7 @@ class DetourTest {
     }
 
     @Test fun shownDetourFollowsTheControlsAtOnce() {
-        val engine = Detour(1.27, auto = true, rides = 23)
+        val engine = Detour(1.27, auto = true, rides = 18)
         fun state(auto: Boolean, detail: Detour?) = RangeUiState(
             detail = detail?.let { RangeDetailFixture.with(it) }, window = 20, marginPct = 10, homeEnabled = true, home = null,
             reserveKm = 10.0, detourAuto = auto, detourManual = 1.4,
