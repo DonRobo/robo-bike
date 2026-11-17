@@ -14,6 +14,7 @@ import android.os.Looper
 import dev.donrobo.ebike.ConnState
 import dev.donrobo.ebike.Repo
 import dev.donrobo.ebike.appInForeground
+import dev.donrobo.ebike.range.RangeSettings
 import dev.donrobo.ebike.ride.RideSettings
 import dev.donrobo.ebike.settings.settings
 import kotlinx.coroutines.CancellationException
@@ -27,6 +28,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -155,6 +157,10 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
     // Main thread only (apply and stop both run there), so no synchronisation is needed.
     private var gps: LocationListener? = null
     private var occasional: Job? = null
+    /** [LocationPolicy.periodicFixesWanted], kept current from the settings so toggling it while connected applies. */
+    private val periodic = MutableStateFlow(false)
+    /** The switch-on fix of the current connection was checked; reset whenever the bike is not connected. */
+    @Volatile private var connectFixChecked = false
     /** Whether a fix could be obtained, as last decided while running; [stop] does not reset it (see [onDisconnected]). */
     @Volatile private var lastUsable = false
 
@@ -164,6 +170,11 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
     fun start() {
         Locations.systemLastKnown(ctx)?.let { Locations.publish(ctx, it) }
         scope.launch { for (loc in fixes) Locations.publish(ctx, Locations.toFix(ctx, loc)) }
+        scope.launch {
+            combine(ctx.settings.flow(RangeSettings.homeEnabled), ctx.settings.flow(RangeSettings.home), LocationPolicy::periodicFixesWanted)
+                .collect { periodic.value = it }
+        }
+        scope.launch { Repo.conn.collect { if (it != ConnState.CONNECTED) connectFixChecked = false } }
         scope.launch(Dispatchers.Main) {
             // Permissions, the system switch and app visibility have no change callbacks here: re-check every 15 s.
             val ticks = kotlinx.coroutines.flow.flow { while (true) { emit(Unit); delay(15_000) } }
@@ -202,12 +213,19 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
         }
     }
 
+    /**
+     * The switch-on fix on the first pass of a connection, then one every [LocationPolicy.OCCASIONAL_INTERVAL_MS] while
+     * [periodic]. Checks once a minute, and at once when [periodic] changes (home set or the feature switched on).
+     */
     private suspend fun occasionalLoop() {
         while (true) {
-            if (LocationPolicy.needsOccasionalFix(Locations.fix.value, System.currentTimeMillis())) {
+            val first = !connectFixChecked
+            connectFixChecked = true
+            val wanted = periodic.value
+            if (LocationPolicy.occasionalFixDue(Locations.fix.value, System.currentTimeMillis(), first, wanted)) {
                 Locations.currentLocation(ctx, 30_000)?.let { fixes.trySend(it) }
             }
-            delay(60_000)
+            withTimeoutOrNull(60_000) { periodic.first { it != wanted } }
         }
     }
 
