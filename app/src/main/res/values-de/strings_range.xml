@@ -89,7 +89,27 @@
     <string name="range_model_margin_value">%1$d %%</string>
     <string name="range_model_info">Mehr zur Berechnung</string>
     <string name="range_model_info_rides">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht.</string>
-    <string name="range_model_info_bands">Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, gilt der Durchschnitt.</string>
+    <string name="range_model_info_bands">Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, setzt sie den Verlauf der gemessenen Bereiche fort.</string>
     <string name="range_model_info_detour">Auf der Straße ist ein Weg etwa %1$s-mal so lang wie die Luftlinie; Ring und Heimweg rechnen damit.</string>
 
+    <string name="range_bands_title">Akku-Bänder</string>
+    <string name="range_bands_link_sub" formatted="false">Wie weit dich jede 10 % Akku bringen</string>
+    <string name="range_bands_info">Mehr zu den Akku-Bändern</string>
+    <string name="range_bands_info_why" formatted="false">Die Prozentanzeige ist nicht überall gleich viel wert: Sie kommt von der Spannung des Akkus, und die fällt nicht gleichmäßig. Deshalb lernt die App für jedes 10-%-Band eigens, wie weit es reicht.</string>
+    <string name="range_bands_info_estimated">Gemessen heißt: genug eigene Fahrten in diesem Bereich. Geschätzte Bänder setzen den Verlauf der gemessenen fort: Bringen die unteren Bänder immer weniger, gilt das auch weiter unten, aber gedämpft.</string>
+    <string name="range_bands_info_sum">Alle Bänder zusammen ergeben „Voll geladen“, die Sicherheitsreserve ist schon abgezogen.</string>
+    <string name="range_bands_empty">Die Bänder erscheinen, sobald die App deine Reichweite aus ein paar Fahrten gelernt hat.</string>
+    <string name="range_bands_measured">Gemessen</string>
+    <string name="range_bands_estimated">Geschätzt</string>
+    <string name="range_bands_used">Schon verbraucht</string>
+    <string name="range_bands_band">%1$d–%2$d %%</string>
+    <string name="range_bands_now">jetzt</string>
+    <string name="range_bands_tap">Tippe auf ein Band für Details.</string>
+    <string name="range_bands_detail_title">Band %1$s</string>
+    <string name="range_bands_per_km">%1$s %% pro km</string>
+    <plurals name="range_bands_measured_on">
+        <item quantity="one">Gemessen auf %1$s in %2$d Fahrt.</item>
+        <item quantity="other">Gemessen auf %1$s in %2$d Fahrten.</item>
+    </plurals>
+    <string name="range_bands_estimated_body">Noch nicht genug gemessen. Bis dahin setzt die App den Verlauf der gemessenen Bänder fort. Gemessen wird, sobald du in diesem Bereich fährst.</string>
 </resources>

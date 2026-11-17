@@ -59,6 +59,9 @@ import dev.donrobo.ebike.range.RangeState
 import dev.donrobo.ebike.settings.Setting
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
+import dev.donrobo.ebike.ui.Routes
+import dev.donrobo.ebike.ui.components.ListRow
+import dev.donrobo.ebike.ui.components.ListGroup
 import dev.donrobo.ebike.ui.components.InfoParagraph
 import dev.donrobo.ebike.ui.components.InfoButton
 import dev.donrobo.ebike.ui.components.AppCard
@@ -104,6 +107,7 @@ interface RangeActions {
     fun setHomeEnabled(on: Boolean)
     fun setReserveKm(km: Double)
     fun pickHome()
+    fun openBands()
 }
 
 /** Reichweite (artboard "Reichweite"), wired to [RangeState] and the range settings. */
@@ -144,6 +148,7 @@ fun RangeScreen(nav: AppNavigator) {
             override fun setHomeEnabled(on: Boolean) { settings[RangeSettings.homeEnabled] = on }
             override fun setReserveKm(km: Double) { settings[RangeSettings.reserveKm] = km }
             override fun pickHome() { picking = true }
+            override fun openBands() = nav.open(Routes.RANGE_BANDS)
         }
     }
     RangeContent(state, actions)
@@ -164,6 +169,16 @@ fun RangeContent(state: RangeUiState, actions: RangeActions, modifier: Modifier 
     Screen(header = { BackHeader(stringResource(R.string.range_title), actions::back) }, modifier = modifier) {
         val d = state.detail
         SummaryCard(d, fmt)
+        if (d?.learned?.bands?.isNotEmpty() == true) {
+            ListGroup {
+                item {
+                    ListRow(
+                        stringResource(R.string.range_bands_title), actions::openBands,
+                        subtitle = stringResource(R.string.range_bands_link_sub), icon = AppIcons.Bands,
+                    )
+                }
+            }
+        }
         LevelsCard(d, fmt)
         RingCard(d, state.home, fmt)
         HomeCard(state, actions, fmt)

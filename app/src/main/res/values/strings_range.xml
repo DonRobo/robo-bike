@@ -89,7 +89,27 @@
     <string name="range_model_margin_value">%1$d %%</string>
     <string name="range_model_info">More about the calculation</string>
     <string name="range_model_info_rides">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used.</string>
-    <string name="range_model_info_bands">How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, the average applies.</string>
+    <string name="range_model_info_bands">How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, it continues the course of the measured ranges.</string>
     <string name="range_model_info_detour">A way by road is about %1$s times the straight line; the ring and the way home use that.</string>
 
+    <string name="range_bands_title">Battery bands</string>
+    <string name="range_bands_link_sub" formatted="false">How far each 10 % of battery takes you</string>
+    <string name="range_bands_info">More about the battery bands</string>
+    <string name="range_bands_info_why" formatted="false">The percentage on the display is not worth the same everywhere: it comes from the battery\'s voltage, which does not drop evenly. So the app learns for each 10 % band how far it goes.</string>
+    <string name="range_bands_info_estimated">Measured means: enough of your own rides in that band. Estimated bands continue the course of the measured ones: if the lower bands go less and less far, so do the ones below, but damped.</string>
+    <string name="range_bands_info_sum">All bands together make up “Fully charged”; the safety margin is already taken off.</string>
+    <string name="range_bands_empty">The bands appear once the app has learned your range from a few rides.</string>
+    <string name="range_bands_measured">Measured</string>
+    <string name="range_bands_estimated">Estimated</string>
+    <string name="range_bands_used">Already used</string>
+    <string name="range_bands_band">%1$d–%2$d %%</string>
+    <string name="range_bands_now">now</string>
+    <string name="range_bands_tap">Tap a band for details.</string>
+    <string name="range_bands_detail_title">Band %1$s</string>
+    <string name="range_bands_per_km">%1$s %% per km</string>
+    <plurals name="range_bands_measured_on">
+        <item quantity="one">Measured over %1$s in %2$d ride.</item>
+        <item quantity="other">Measured over %1$s in %2$d rides.</item>
+    </plurals>
+    <string name="range_bands_estimated_body">Not measured enough yet. Until then the app continues the course of the measured bands. It measures as soon as you ride in this range.</string>
 </resources>
