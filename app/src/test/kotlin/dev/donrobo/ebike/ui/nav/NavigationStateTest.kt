@@ -3,31 +3,23 @@ package dev.donrobo.ebike.ui.nav
 import dev.donrobo.ebike.nav.DisplayNav
 import dev.donrobo.ebike.nav.NavOrigin
 import dev.donrobo.ebike.nav.NavState
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.proto.Icon
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNull
 import org.junit.Test
 
 class NavigationStateTest {
     private val hint = NavState(130, Icon.LEFT, 2500)
 
-    private fun status(connected: Boolean = true, shown: DisplayNav? = null, maps: NavState? = null, test: NavState? = null, forward: Boolean = true) =
-        navigationUiState(connected, shown, maps, test, forward, ShowFrom.M200, true, 0).status
+    private fun status(connected: Boolean = true, shown: DisplayNav? = null, test: NavState? = null, forward: Boolean = true) =
+        navigationUiState(connected, shown, test, forward, true, 0).status
 
     @Test fun cardStatus() {
-        assertEquals(NavCardStatus.RUNNING, status(shown = DisplayNav(hint, NavOrigin.GOOGLE_MAPS, 0, active = true), maps = hint))
-        assertEquals(NavCardStatus.WAITING, status(maps = hint.copy(distM = 800)))
+        assertEquals(NavCardStatus.RUNNING, status(shown = DisplayNav(hint, NavOrigin.GOOGLE_MAPS, 0, active = true)))
         assertEquals(NavCardStatus.READY, status(shown = DisplayNav(hint, NavOrigin.GOOGLE_MAPS, 0, active = false)))
-        assertEquals(NavCardStatus.NOT_CONNECTED, status(connected = false, maps = hint))
-        assertEquals(NavCardStatus.OFF, status(forward = false, maps = hint))
+        assertEquals(NavCardStatus.NOT_CONNECTED, status(connected = false))
+        assertEquals(NavCardStatus.OFF, status(forward = false))
         // a test maneuver is forwarded even with Maps forwarding off
         assertEquals(NavCardStatus.READY, status(forward = false, test = hint))
-    }
-
-    @Test fun pendingOnlyWhileWaiting() {
-        assertEquals(800, navigationUiState(true, null, hint.copy(distM = 800), null, true, ShowFrom.M200, true, 0).pending?.distM)
-        assertNull(navigationUiState(false, null, hint, null, true, ShowFrom.M200, true, 0).pending)
     }
 
     @Test fun ago() {

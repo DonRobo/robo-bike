@@ -40,16 +40,13 @@ import dev.donrobo.ebike.R
 import dev.donrobo.ebike.Repo
 import dev.donrobo.ebike.nav.NavOrigin
 import dev.donrobo.ebike.nav.NavSettings
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
 import dev.donrobo.ebike.ui.components.AppCard
 import dev.donrobo.ebike.ui.components.AppIcon
 import dev.donrobo.ebike.ui.components.AppIcons
 import dev.donrobo.ebike.ui.components.BackHeader
-import dev.donrobo.ebike.ui.components.CardTitle
 import dev.donrobo.ebike.ui.components.Screen
-import dev.donrobo.ebike.ui.components.SegmentedControl
 import dev.donrobo.ebike.ui.disclosure.Disclosure
 import dev.donrobo.ebike.ui.disclosure.DisclosureDialog
 import dev.donrobo.ebike.ui.components.StatusBanner
@@ -57,7 +54,6 @@ import dev.donrobo.ebike.ui.components.StatusDot
 import dev.donrobo.ebike.ui.components.SwitchCard
 import dev.donrobo.ebike.ui.components.Tone
 import dev.donrobo.ebike.ui.components.rememberUnitFormatter
-import dev.donrobo.ebike.ui.components.text
 import dev.donrobo.ebike.ui.components.unitLabel
 import dev.donrobo.ebike.ui.start.maneuverPhrase
 import dev.donrobo.ebike.ui.theme.AppTheme
@@ -69,20 +65,20 @@ import kotlinx.coroutines.delay
 /** User actions on the Navigation screen. */
 interface NavigationActions {
     fun setForward(on: Boolean)
-    fun setShowFrom(v: ShowFrom)
     fun openNotificationAccess()
 }
 
-/** Navigation (artboard Navigation, without the source list and the idle-screen block: owner decisions N2/N4). */
+/**
+ * Navigation (artboard Navigation, without the source list and the idle-screen block: owner decisions N2/N4;
+ * without "Hinweis zeigen ab": N3, the display always shows the next turn while navigating).
+ */
 @Composable
 fun NavigationScreen(nav: AppNavigator) {
     val ctx = LocalContext.current
     val settings = ctx.settings
     val forward by remember { settings.flow(NavSettings.forward) }.collectAsStateWithLifecycle(settings[NavSettings.forward])
-    val showFrom by remember { settings.flow(NavSettings.showFrom) }.collectAsStateWithLifecycle(settings[NavSettings.showFrom])
     val conn by Repo.conn.collectAsStateWithLifecycle()
     val displayNav by Repo.displayNav.collectAsStateWithLifecycle()
-    val mapsNav by Repo.mapsNav.collectAsStateWithLifecycle()
     val testNav by Repo.testNav.collectAsStateWithLifecycle()
     // "vor 3 Sekunden" keeps counting while the screen is open.
     val now by produceState(System.currentTimeMillis()) { while (true) { delay(1_000); value = System.currentTimeMillis() } }
@@ -92,13 +88,12 @@ fun NavigationScreen(nav: AppNavigator) {
         access = ctx.packageName in NotificationManagerCompat.getEnabledListenerPackages(ctx)
         onPauseOrDispose { }
     }
-    val state = navigationUiState(conn == ConnState.CONNECTED, displayNav, mapsNav, testNav, forward, showFrom, access, now)
+    val state = navigationUiState(conn == ConnState.CONNECTED, displayNav, testNav, forward, access, now)
     // Prominent disclosure first; only "Agree" opens the system's notification-access page.
     var disclosure by remember { mutableStateOf(false) }
     val actions = remember {
         object : NavigationActions {
             override fun setForward(on: Boolean) { settings[NavSettings.forward] = on }
-            override fun setShowFrom(v: ShowFrom) { settings[NavSettings.showFrom] = v }
             override fun openNotificationAccess() { disclosure = true }
         }
     }
@@ -120,15 +115,6 @@ fun NavigationContent(state: NavigationUiState, actions: NavigationActions, onBa
             stringResource(R.string.nav_forward_title), state.forward, actions::setForward,
             subtitle = stringResource(R.string.nav_forward_sub),
         )
-        AppCard(gap = 10.dp) {
-            CardTitle(stringResource(R.string.nav_show_from_title), description = stringResource(R.string.nav_show_from_sub))
-            val options = ShowFrom.entries
-            SegmentedControl(
-                options.map { o -> o.meters?.let { fmt.shortDistance(it.toDouble()).text() } ?: stringResource(R.string.nav_show_from_always) },
-                options.indexOf(state.showFrom),
-                { actions.setShowFrom(options[it]) },
-            )
-        }
         AccessBanner(state.notificationAccess, actions::openNotificationAccess)
     }
 }
@@ -146,7 +132,6 @@ private fun DisplayCard(state: NavigationUiState, fmt: UnitFormatter) {
                 stringResource(
                     when (state.status) {
                         NavCardStatus.RUNNING -> R.string.nav_status_running
-                        NavCardStatus.WAITING -> R.string.nav_status_waiting
                         NavCardStatus.READY -> R.string.nav_status_ready
                         NavCardStatus.NOT_CONNECTED -> R.string.status_off
                         NavCardStatus.OFF -> R.string.nav_status_off
@@ -181,20 +166,15 @@ private fun DisplayCard(state: NavigationUiState, fmt: UnitFormatter) {
                 }
             }
         }
-        Text(footer(state, fmt), style = t.bodySmall, color = c.textMuted)
+        Text(footer(state), style = t.bodySmall, color = c.textMuted)
     }
 }
 
 @Composable
-private fun footer(state: NavigationUiState, fmt: UnitFormatter): String {
+private fun footer(state: NavigationUiState): String {
     val last = state.shown
     return when {
         state.status == NavCardStatus.RUNNING && last != null -> sentAgo(last.sinceMs, last.origin, state.nowMs)
-        state.status == NavCardStatus.WAITING && state.pending != null && state.showFrom.meters != null -> stringResource(
-            R.string.nav_waiting,
-            fmt.shortDistance(state.pending.distM.toDouble()).text(),
-            fmt.shortDistance(state.showFrom.meters.toDouble()).text(),
-        )
         state.status == NavCardStatus.OFF -> stringResource(R.string.nav_off)
         state.status == NavCardStatus.NOT_CONNECTED -> stringResource(R.string.nav_not_connected)
         last != null -> sentAgo(last.sinceMs, last.origin, state.nowMs)

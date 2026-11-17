@@ -6,7 +6,6 @@ import dev.donrobo.ebike.clock.ClockCheck
 import dev.donrobo.ebike.nav.DisplayNav
 import dev.donrobo.ebike.nav.NavOrigin
 import dev.donrobo.ebike.nav.NavState
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.proto.Icon
 import dev.donrobo.ebike.ui.diagnostics.DiagnosticsActions
 import dev.donrobo.ebike.ui.diagnostics.DiagnosticsContent
@@ -29,7 +28,6 @@ class NavDiagScreenshotTest {
 
     private val navActions = object : NavigationActions {
         override fun setForward(on: Boolean) {}
-        override fun setShowFrom(v: ShowFrom) {}
         override fun openNotificationAccess() {}
     }
     private val diagActions = object : DiagnosticsActions {
@@ -44,10 +42,10 @@ class NavDiagScreenshotTest {
         override fun shareLog() {}
     }
 
-    /** The artboard's sample: 130 m left, sent 3 s ago, threshold 200 m, access granted. */
+    /** The artboard's sample: 130 m left, sent 3 s ago, access granted. */
     private fun running() = navigationUiState(
         connected = true, displayNav = DisplayNav(NavState(130, Icon.LEFT, 2500), NavOrigin.GOOGLE_MAPS, 7_000, active = true),
-        mapsNav = NavState(130, Icon.LEFT, 2500), testNav = null, forward = true, showFrom = ShowFrom.M200,
+        testNav = null, forward = true,
         notificationAccess = true, nowMs = 10_000,
     )
 
@@ -60,13 +58,7 @@ class NavDiagScreenshotTest {
     /** Idle: connected, no navigation yet, notification access missing. */
     @Test @Config(qualifiers = "de-$PHONE")
     fun navigation_idle_de() = compose.screenshot("navigation_idle_de") {
-        NavigationContent(navigationUiState(true, null, null, null, true, ShowFrom.ALWAYS, false, 0), navActions) {}
-    }
-
-    /** Maps navigates, the turn is farther than the threshold. */
-    @Test @Config(qualifiers = "de-$PHONE")
-    fun navigation_waiting_de() = compose.screenshot("navigation_waiting_de") {
-        NavigationContent(navigationUiState(true, null, NavState(650, Icon.RIGHT, 4000), null, true, ShowFrom.M200, true, 0), navActions) {}
+        NavigationContent(navigationUiState(true, null, null, true, false, 0), navActions) {}
     }
 
     private fun diag() = DiagnosticsUiState(
