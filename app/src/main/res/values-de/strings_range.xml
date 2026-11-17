@@ -33,13 +33,21 @@
     <string name="range_levels_legend_unknown">– = in dieser Stufe noch nicht gefahren.</string>
     <string name="range_levels_empty">Sobald die ersten Fahrten gelernt sind, steht hier die Reichweite jeder Stufe.</string>
 
-    <!-- ring -->
-    <string name="range_ring_title">So weit kommst du noch</string>
-    <string name="range_ring_text">Der Ring zeigt %1$s Luftlinie, also Hin- und Rückweg mit dem aktuellen Akku.</string>
-    <string name="range_ring_parked">Gemessen ab dem Ort, an dem das Rad zuletzt abgestellt wurde.</string>
-    <string name="range_ring_no_range">Der Ring erscheint, sobald die Reichweite gelernt ist.</string>
-    <string name="range_ring_no_battery">Der Ring erscheint, sobald das Rad verbunden und der Akkustand bekannt ist.</string>
-    <string name="range_ring_no_position">Ohne aktuelle Position kann die App den Ring nicht zeichnen.</string>
+    <!-- erreichbare Fläche (R4) -->
+    <string name="range_area_title">So weit kommst du noch</string>
+    <string name="range_area_info">Mehr zur Reichweiten-Karte</string>
+    <string name="range_area_text_home">Hinfahren und mit dem Akku noch heimkommen.</string>
+    <string name="range_area_too_far">Für hin und heim reicht der Akku nicht mehr.</string>
+    <string name="range_area_no_home">Leg deinen Heimatort fest, dann zeigt die Karte, von wo du noch heimkommst.</string>
+    <string name="range_area_no_range">Die Fläche erscheint, sobald die Reichweite gelernt ist.</string>
+    <string name="range_area_no_battery">Die Fläche erscheint, sobald das Rad verbunden und der Akkustand bekannt ist.</string>
+    <string name="range_area_no_position">Ohne aktuelle Position kann die App die Fläche nicht zeichnen.</string>
+    <string name="range_area_legend_bike">Dein Rad</string>
+    <string name="range_area_legend_home">Zuhause</string>
+    <string name="range_area_legend_guide_home">Beispiel: hin und heim</string>
+    <string name="range_area_info_inside">Für jeden Ort in der Fläche gilt: Hinweg plus Heimweg passen in die Reichweite, die noch übrig ist, abzüglich der Reserve, die bei der Ankunft bleiben soll.</string>
+    <string name="range_area_info_ellipse">Wege rechnet die App als Luftlinie mal Umwegfaktor (%1$s, siehe „Umwege“). Deshalb ist die Fläche eine Ellipse mit deinem Rad und deinem Zuhause als Brennpunkten.</string>
+    <string name="range_area_info_parked">Solange das Rad nicht verbunden ist, gilt der Ort, an dem es zuletzt abgestellt wurde.</string>
 
     <!-- home -->
     <string name="range_home_title">Komme ich heim?</string>
@@ -49,7 +57,6 @@
     <string name="range_home_short">Heimweg %1$s, dafür reicht der Akku nicht mehr</string>
     <string name="range_home_no_range">Heimweg %1$s. Ob der Akku reicht, weiß die App, sobald die Reichweite gelernt ist.</string>
     <string name="range_home_no_battery">Heimweg %1$s. Ob der Akku reicht, weiß die App, sobald das Rad verbunden ist.</string>
-    <string name="range_home_estimate_note">Der Heimweg ist geschätzt: Luftlinie × %1$s für Umwege.</string>
     <string name="range_home_no_home">Lege deinen Heimatort fest, dann rechnet die App den Heimweg mit.</string>
     <string name="range_home_no_position">Keine aktuelle Position, deshalb gerade keine Aussage zum Heimweg.</string>
     <string name="range_home_needs_background">Unterwegs fehlt die Position: Erlaube den Standort „immer“, oder öffne die App beim Losfahren.</string>
@@ -90,6 +97,33 @@
     <string name="range_model_info">Mehr zur Berechnung</string>
     <string name="range_model_info_rides">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht.</string>
     <string name="range_model_info_bands">Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, gilt der Durchschnitt.</string>
-    <string name="range_model_info_detour">Auf der Straße ist ein Weg etwa %1$s-mal so lang wie die Luftlinie; Ring und Heimweg rechnen damit.</string>
+
+    <!-- R9 Umwegfaktor -->
+    <string name="range_detour_title">Umwege</string>
+    <string name="range_detour_info">Mehr zum Umwegfaktor</string>
+    <string name="range_detour_sheet_title">Umwegfaktor</string>
+    <string name="range_detour_unit">%1$s pro %1$s Luftlinie</string>
+    <plurals name="range_detour_from">
+        <item quantity="one">Aus %1$d Fahrt berechnet</item>
+        <item quantity="other">Aus %1$d Fahrten berechnet</item>
+    </plurals>
+    <string name="range_detour_too_few">Noch zu wenige Fahrten, bis dahin ein üblicher Wert.</string>
+    <string name="range_detour_auto">Aus dem Fahrtenbuch berechnen</string>
+    <string name="range_detour_less">Umwegfaktor verringern</string>
+    <string name="range_detour_more">Umwegfaktor erhöhen</string>
+    <string name="range_detour_info_what">Du fährst selten in gerader Linie. Der Faktor sagt, wie weit du pro %1$s Luftlinie wirklich fährst. Die Karte „So weit kommst du noch“ rechnet damit.</string>
+    <string name="range_detour_example_straight">%1$s Luftlinie</string>
+    <string name="range_detour_example_ridden">%1$s gefahren</string>
+    <string name="range_detour_example_sum">%1$s ÷ %2$s = %3$s</string>
+    <string name="range_detour_example_description">Beispiel: %2$s gefahren zwischen zwei Orten, die %1$s Luftlinie auseinander liegen, ergibt den Faktor %3$s.</string>
+    <string name="range_detour_info_heading">So wird er berechnet</string>
+    <string name="range_detour_info_trip">Die gefahrene Strecke liefert der Trip-Zähler deines Rads.</string>
+    <string name="range_detour_info_ends">Start und Ziel merkt sich die App beim Ein- und Ausschalten.</string>
+    <string name="range_detour_info_median">Rundfahrten unter %1$s Luftlinie zählen nicht. Aus den übrigen nimmt die App den Median, über so viele Fahrten wie bei „Grundlage“.</string>
+    <plurals name="range_detour_info_default">
+        <item quantity="one">Bis %1$d solche Fahrt beisammen ist, gilt %2$s.</item>
+        <item quantity="other">Bis %1$d solche Fahrten beisammen sind, gilt %2$s.</item>
+    </plurals>
+    <string name="range_detour_info_manual">Schaltest du „Aus dem Fahrtenbuch berechnen“ aus, stellst du den Wert selbst ein.</string>
 
 </resources>

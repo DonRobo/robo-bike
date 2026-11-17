@@ -21,6 +21,12 @@ object RangeSettings {
     /** R5: range that should be left on arrival, in km. */
     val reserveKm = Setting.double("range.reserveKm", 10.0)
 
+    /** R9, per bike (its rides are the data): detour factor from the ride log (true) or set by hand ([detourManual]). */
+    val detourAuto = Setting.bool("range.detourAuto", true, Scope.PER_BIKE)
+
+    /** R9, per bike: the rider's own detour factor, used while [detourAuto] is off. */
+    val detourManual = Setting.double("range.detourManual", DetourCalc.DEFAULT, Scope.PER_BIKE)
+
     const val MARGIN_MAX = 30
     const val MARGIN_STEP = 5
 

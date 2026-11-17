@@ -68,13 +68,22 @@ object RangeEngine {
             // count for the bike they come from, not for whichever bike is shown.
             val linkedHere = Repo.linkedTo(id)
 
+            // while recording, the newest file is the ride in progress: learn only from finished rides
+            val finished = combine(RideRepository.summaries(ctx, id), Repo.recordingFor(id)) { rides, recording ->
+                if (recording && rides.isNotEmpty()) rides.drop(1) else rides
+            }.distinctUntilChanged()
+
             val learned: Flow<Pair<LearnedRange, Int>> = combine(
-                RideRepository.summaries(ctx, id), Repo.recordingFor(id), settings.flow(RangeSettings.window, id),
+                finished, settings.flow(RangeSettings.window, id),
                 minuteTicks().map { YearMonth.now(zone) }.distinctUntilChanged(),
-            ) { rides, recording, window, month ->
-                // while recording, the newest file is the ride in progress: learn only from finished rides
-                val finished = if (recording && rides.isNotEmpty()) rides.drop(1) else rides
-                RangeModel.learn(finished, window, month, zone) to window
+            ) { rides, window, month ->
+                RangeModel.learn(rides, window, month, zone) to window
+            }.distinctUntilChanged().flowOn(Dispatchers.Default)
+
+            val detour = combine(
+                finished, settings.flow(RangeSettings.window, id), settings.flow(RangeSettings.detourAuto, id), settings.flow(RangeSettings.detourManual, id),
+            ) { rides, window, auto, manual ->
+                DetourCalc.effective(auto, manual, rides, window)
             }.distinctUntilChanged().flowOn(Dispatchers.Default)
 
             // live: the rest level of the last readings, not the momentary (sagging) one; reset per live session
@@ -97,8 +106,11 @@ object RangeEngine {
                 settings.flow(RangeSettings.homeEnabled), settings.flow(RangeSettings.home), settings.flow(RangeSettings.reserveKm), ::HomeSettings,
             )
 
-            combine(learned, reading, settings.flow(RangeSettings.marginPct, id), combine(position, Locations.status) { p, s -> p to s.limit }, home) { l, r, margin, pos, h ->
-                compose(l.first, l.second, r, margin, pos.first, pos.second, h)
+            combine(
+                learned, reading, combine(settings.flow(RangeSettings.marginPct, id), detour, ::Pair),
+                combine(position, Locations.status) { p, s -> p to s.limit }, home,
+            ) { l, r, md, pos, h ->
+                compose(l.first, l.second, r, md.first, pos.first, pos.second, h, md.second)
             }.distinctUntilChanged().collect { d ->
                 publish(d)
                 if (d.reading?.live == true) reportHomeWarning(ctx, id, d.home) // R5: only while riding
@@ -109,16 +121,19 @@ object RangeEngine {
     /** Pure assembly of everything the range feature shows (unit-tested). */
     fun compose(
         learned: LearnedRange, window: Int, reading: RangeReading?, marginPct: Int,
-        position: BikePosition?, limit: LocationLimit?, home: HomeSettings,
+        position: BikePosition?, limit: LocationLimit?, home: HomeSettings, detour: Detour = Detour(DetourCalc.DEFAULT, auto = true),
     ): RangeDetail {
         val estimate = RangeCalc.estimate(learned, reading, marginPct)
         val full = RangeCalc.full(learned, reading?.level, marginPct)
+        val homePoint = home.home?.takeIf { home.enabled }
         return RangeDetail(
             learned = learned, reading = reading, marginPct = marginPct, window = window, full = full, estimate = estimate,
             levels = RangeCalc.levels(learned, reading?.batteryPct ?: 100, reading?.levelCount, marginPct),
             months = RangeCalc.months(learned, marginPct),
             position = position,
-            home = HomeCalc.status(home.enabled, home.home, position, limit, estimate, home.reserveKm, learned = full != null),
+            home = HomeCalc.status(home.enabled, home.home, position, limit, estimate, home.reserveKm, detour.factor, learned = full != null),
+            detour = detour,
+            area = if (position != null && estimate != null && homePoint != null) RangeCalc.area(position.point, homePoint, estimate.remainingKm, home.reserveKm, detour.factor) else null,
         )
     }
 
