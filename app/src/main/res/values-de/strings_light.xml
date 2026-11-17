@@ -40,7 +40,9 @@
     <string name="light_short_failed">Schalten fehlgeschlagen</string>
 
     <string name="light_curve_title">Sonnenstand heute</string>
-    <string name="light_curve_hint">Zieh die beiden Punkte dorthin, wo das Licht schalten soll. In den getönten Bereichen ist es an.</string>
+    <string name="light_curve_hint">Zieh die Punkte. Im getönten Bereich ist das Licht an.</string>
+    <string name="light_curve_info">Mehr zur Sonnenkurve</string>
+    <string name="light_curve_info_body">Die Kurve zeigt, wie hoch die Sonne heute an deinem Ort über dem Horizont steht. Jeder Punkt legt fest, bei welchem Sonnenstand das Licht ein- oder ausschaltet, getrennt für Morgen und Abend.</string>
     <string name="light_curve_a11y">Sonnenstand im Tagesverlauf mit den Schaltpunkten für das Licht</string>
     <string name="light_horizon">Horizont</string>
     <string name="light_now">Jetzt</string>
@@ -59,7 +61,7 @@
     <string name="light_morning_later">Morgens später ausschalten</string>
     <string name="light_evening_earlier">Abends früher einschalten</string>
     <string name="light_evening_later">Abends später einschalten</string>
-    <string name="light_curve_footnote">Gespeichert wird der Sonnenstand, nicht die Uhrzeit. So passt der Schaltpunkt das ganze Jahr.</string>
+    <string name="light_curve_footnote">Gespeichert wird der Sonnenstand, nicht die Uhrzeit. So passt der Schaltpunkt das ganze Jahr. Die Uhrzeiten neben der Kurve gelten für heute.</string>
     <string name="light_no_position_title">Noch kein Standort</string>
     <string name="light_no_position_text">Sobald das Handy deinen Ort kennt, erscheint hier der Sonnenstand von heute. Die Schaltpunkte kannst du schon jetzt in Grad einstellen.</string>
 

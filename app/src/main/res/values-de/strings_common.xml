@@ -2,6 +2,7 @@
 <resources>
     <string name="bike_default_name">Mein Rad</string>
     <string name="common_back">Zurück</string>
+    <string name="common_got_it">Verstanden</string>
     <string name="common_cancel">Abbrechen</string>
     <string name="common_save">Speichern</string>
     <string name="percent_value">%1$d %%</string>

@@ -76,6 +76,7 @@
     <string name="range_health_title">Akku-Gesundheit</string>
     <string name="range_health_subtitle">Maximale Reichweite der letzten sechs Monate</string>
     <string name="range_health_caveat">Jahreszeit, Temperatur und Fahrweise bewegen diesen Wert genauso wie der Akku selbst.</string>
+    <string name="range_health_info">Mehr zur Akku-Gesundheit</string>
     <string name="range_health_not_enough">Für einen Verlauf braucht es Fahrten aus mindestens zwei Monaten, etwa %1$s pro Monat.</string>
     <string name="range_health_one_month">%1$s: %2$s mit vollem Akku.</string>
     <string name="range_health_chart">Maximale Reichweite von %1$s bis %2$s: von %3$s auf %4$s</string>
@@ -86,6 +87,9 @@
     <string name="range_model_rides">%1$d Fahrten</string>
     <string name="range_model_margin">Sicherheitsabschlag</string>
     <string name="range_model_margin_value">%1$d %%</string>
-    <string name="range_model_note">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht. Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, gilt der Durchschnitt. Auf der Straße ist ein Weg etwa %2$s-mal so lang wie die Luftlinie; Ring und Heimweg rechnen damit.</string>
+    <string name="range_model_info">Mehr zur Berechnung</string>
+    <string name="range_model_info_rides">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht.</string>
+    <string name="range_model_info_bands">Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, gilt der Durchschnitt.</string>
+    <string name="range_model_info_detour">Auf der Straße ist ein Weg etwa %1$s-mal so lang wie die Luftlinie; Ring und Heimweg rechnen damit.</string>
 
 </resources>
