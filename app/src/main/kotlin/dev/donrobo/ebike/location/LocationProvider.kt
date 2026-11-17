@@ -14,7 +14,6 @@ import android.os.Looper
 import dev.donrobo.ebike.ConnState
 import dev.donrobo.ebike.Repo
 import dev.donrobo.ebike.appInForeground
-import dev.donrobo.ebike.range.RangeSettings
 import dev.donrobo.ebike.ride.RideSettings
 import dev.donrobo.ebike.settings.settings
 import kotlinx.coroutines.CancellationException
@@ -171,7 +170,8 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
         Locations.systemLastKnown(ctx)?.let { Locations.publish(ctx, it) }
         scope.launch { for (loc in fixes) Locations.publish(ctx, Locations.toFix(ctx, loc)) }
         scope.launch {
-            combine(ctx.settings.flow(RangeSettings.homeEnabled), ctx.settings.flow(RangeSettings.home), LocationPolicy::periodicFixesWanted)
+            val range = dev.donrobo.ebike.range.RangeSettings
+            combine(ctx.settings.flow(range.homeEnabled), ctx.settings.flow(range.home), LocationPolicy::periodicFixesWanted)
                 .collect { periodic.value = it }
         }
         scope.launch { Repo.conn.collect { if (it != ConnState.CONNECTED) connectFixChecked = false } }
