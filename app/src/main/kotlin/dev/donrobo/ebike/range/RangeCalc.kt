@@ -70,11 +70,11 @@ object RangeCalc {
     }
 
     /**
-     * R4: the area reachable from [bike] with the way to [home] (null = back to the bike) still covered: the
+     * R4: the area reachable from [bike] with the way to [home] still covered: the
      * remaining range minus the reserve the rider wants left on arrival (R5's reserve, so the area ends exactly
      * where "Komme ich heim?" stops being OK), in straight-line km via the [detour] factor (R9).
      */
-    fun area(bike: GeoPoint, home: GeoPoint?, remainingKm: Double, reserveKm: Double, detour: Double): ReachArea =
+    fun area(bike: GeoPoint, home: GeoPoint, remainingKm: Double, reserveKm: Double, detour: Double): ReachArea =
         ReachArea(bike, home, ((remainingKm - reserveKm) / detour).coerceAtLeast(0.0))
 
     /** R6: full-battery range per month, with the same margin as "Voll geladen" so the numbers compare. */

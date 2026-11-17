@@ -61,9 +61,10 @@ class RangeScreenshotTest {
         reading: RangeReading? = RangeReading(75, 3, 5, live = true),
         detour: Detour = Detour(1.27, auto = true, rides = 23),
         detourAuto: Boolean = true,
+        homeEnabled: Boolean = true,
     ) = RangeUiState(
-        detail = RangeEngine.compose(learned, 20, reading, 10, position, limit, HomeSettings(true, home, 10.0), detour),
-        window = 20, marginPct = 10, homeEnabled = true, home = home, reserveKm = 10.0,
+        detail = RangeEngine.compose(learned, 20, reading, 10, position, limit, HomeSettings(homeEnabled, home, 10.0), detour),
+        window = 20, marginPct = 10, homeEnabled = homeEnabled, home = home, reserveKm = 10.0,
         detourAuto = detourAuto, detourManual = 1.45,
     )
 
@@ -87,11 +88,15 @@ class RangeScreenshotTest {
         RangeContent(state(position = parked, reading = null), actions)
     }
 
-    /** No home set: the area is a circle around the bike (there and back); too few rides for the detour factor yet. */
+    /** No home set: the map shows the bike only, with the hint to set a home; too few rides for the detour factor yet. */
     @Test @Config(qualifiers = "de-$TALL")
     fun range_no_home_de() = compose.screenshot("range_no_home_de") {
         RangeContent(state(home = null, detour = Detour(DetourCalc.DEFAULT, auto = true, rides = 1)), actions)
     }
+
+    /** "Komme ich heim?" switched off: no map card (the map is that feature's picture). */
+    @Test @Config(qualifiers = "de-$TALL")
+    fun range_home_off_de() = compose.screenshot("range_home_off_de") { RangeContent(state(homeEnabled = false), actions) }
 
     /** Low battery far from home: no area, the way home is short; the detour factor is set by hand. */
     @Test @Config(qualifiers = "de-$TALL")

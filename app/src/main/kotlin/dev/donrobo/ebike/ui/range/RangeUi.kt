@@ -39,17 +39,16 @@ fun shownDetour(s: RangeUiState): Detour =
     if (!s.detourAuto) Detour(s.detourManual.coerceIn(DetourCalc.MIN, DetourCalc.MAX), auto = false)
     else s.detail?.detour?.takeIf { it.auto } ?: Detour(DetourCalc.DEFAULT, auto = true)
 
-/** The range map (R4): the bike, home, the reachable area and one example way there and home across it. */
+/** The range map (R4): the bike, home (if set), the reachable area and one example way there and home across it. */
 fun areaMap(position: BikePosition, home: GeoPoint?, area: ReachArea?): MapContent {
     val markers = listOfNotNull(
         MapMarker(position.point, if (position.source == BikePosition.Source.LIVE) MarkerKind.CURRENT else MarkerKind.PARKED),
         home?.let { MapMarker(it, MarkerKind.HOME) },
     )
     val a = area?.takeIf { it.reachable } ?: return MapContent(markers = markers)
-    val to = a.home ?: a.bike
     return MapContent(
-        area = MapGeometry.ellipse(a.bike, to, a.sumKm * 1000)?.let(::MapArea),
-        guide = MapGeometry.ellipseGuide(a.bike, to, a.sumKm * 1000).orEmpty(),
+        area = MapGeometry.ellipse(a.bike, a.home, a.sumKm * 1000)?.let(::MapArea),
+        guide = MapGeometry.ellipseGuide(a.bike, a.home, a.sumKm * 1000).orEmpty(),
         markers = markers,
     )
 }

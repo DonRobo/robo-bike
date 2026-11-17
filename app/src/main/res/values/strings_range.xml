@@ -37,18 +37,17 @@
     <string name="range_area_title">How far you can still go</string>
     <string name="range_area_info">More about the range map</string>
     <string name="range_area_text_home">Ride out and still get home on this battery.</string>
-    <string name="range_area_text_back">Ride out and still get back on this battery.</string>
     <string name="range_area_too_far">The battery no longer covers there and home.</string>
+    <string name="range_area_no_home">Set your home, then the map shows from where you can still get home.</string>
     <string name="range_area_no_range">The area appears once the range has been learned.</string>
     <string name="range_area_no_battery">The area appears once the bike is connected and the battery level is known.</string>
     <string name="range_area_no_position">Without a current position the app cannot draw the area.</string>
     <string name="range_area_legend_bike">Your bike</string>
     <string name="range_area_legend_home">Home</string>
     <string name="range_area_legend_guide_home">Example: there and home</string>
-    <string name="range_area_legend_guide_back">Example: there and back</string>
     <string name="range_area_info_inside">For every place inside the area, the way there plus the way home fit into the remaining range, minus the reserve you want left on arrival.</string>
     <string name="range_area_info_ellipse">Roads count as the straight line times the detour factor (%1$s, see “Detours”). That makes the area an ellipse with your bike and your home as its two focal points.</string>
-    <string name="range_area_info_circle">Without a home location it is a circle around the bike: there and back again. While the bike is not connected, the map starts where it was parked last.</string>
+    <string name="range_area_info_parked">While the bike is not connected, the place where it was last parked counts.</string>
 
     <!-- home -->
     <string name="range_home_title">Will I make it home?</string>
@@ -120,7 +119,7 @@
     <string name="range_detour_info_heading">How it is calculated</string>
     <string name="range_detour_info_trip">The distance ridden comes from your bike’s trip counter.</string>
     <string name="range_detour_info_ends">The app remembers start and end when the bike is switched on and off.</string>
-    <string name="range_detour_info_median">Round trips under %1$s in a straight line do not count. Of the others, the app takes the median.</string>
+    <string name="range_detour_info_median">Round trips under %1$s in a straight line do not count. Of the others, the app takes the median of as many rides as “Basis” says.</string>
     <plurals name="range_detour_info_default">
         <item quantity="one">Until there is %1$d such ride, the factor is %2$s.</item>
         <item quantity="other">Until there are %1$d such rides, the factor is %2$s.</item>

@@ -177,7 +177,8 @@ fun RangeContent(state: RangeUiState, actions: RangeActions, modifier: Modifier 
         val d = state.detail
         SummaryCard(d, fmt)
         LevelsCard(d, fmt)
-        AreaCard(d, state.home.takeIf { state.homeEnabled })
+        // the map is the picture of "Komme ich heim?": off, it goes too
+        if (state.homeEnabled) AreaCard(d, state.home)
         HomeCard(state, actions, fmt)
         HealthCard(d, fmt)
         ModelCard(state, actions, fmt)
@@ -321,10 +322,10 @@ private fun AreaCard(d: RangeDetail?, home: GeoPoint?) {
             }
             val text = when {
                 pos == null -> stringResource(R.string.range_area_no_position)
+                home == null -> stringResource(R.string.range_area_no_home)
                 area == null -> stringResource(if (d.full != null) R.string.range_area_no_battery else R.string.range_area_no_range)
                 !area.reachable -> stringResource(R.string.range_area_too_far)
-                area.home != null -> stringResource(R.string.range_area_text_home)
-                else -> stringResource(R.string.range_area_text_back)
+                else -> stringResource(R.string.range_area_text_home)
             }
             Text(text, Modifier.padding(end = 8.dp), style = AppTheme.type.bodySmall, color = c.textMuted)
             if (pos != null && area?.reachable == true) {
@@ -334,11 +335,8 @@ private fun AreaCard(d: RangeDetail?, home: GeoPoint?) {
                 ) {
                     val bike = if (pos.source == BikePosition.Source.LIVE) MarkerKind.CURRENT else MarkerKind.PARKED
                     MapLegendItem(LegendSymbol.Marker(bike), stringResource(R.string.range_area_legend_bike))
-                    if (area.home != null) MapLegendItem(LegendSymbol.Marker(MarkerKind.HOME), stringResource(R.string.range_area_legend_home))
-                    MapLegendItem(
-                        LegendSymbol.Guide,
-                        stringResource(if (area.home != null) R.string.range_area_legend_guide_home else R.string.range_area_legend_guide_back),
-                    )
+                    MapLegendItem(LegendSymbol.Marker(MarkerKind.HOME), stringResource(R.string.range_area_legend_home))
+                    MapLegendItem(LegendSymbol.Guide, stringResource(R.string.range_area_legend_guide_home))
                 }
             }
         }
@@ -350,7 +348,7 @@ private fun AreaCard(d: RangeDetail?, home: GeoPoint?) {
 internal fun AreaInfo(detour: Double) {
     InfoParagraph(stringResource(R.string.range_area_info_inside))
     InfoParagraph(stringResource(R.string.range_area_info_ellipse, rememberUnitFormatter().number(detour, 2)))
-    InfoParagraph(stringResource(R.string.range_area_info_circle))
+    InfoParagraph(stringResource(R.string.range_area_info_parked))
 }
 
 // --- home (R5) -------------------------------------------------------------------

@@ -30,8 +30,8 @@ class DetourTest {
             ride(8.0, null, 4), // no ends: ignored
             ride(0.0, 3.0, 5), // no distance: ignored
         )
-        assertEquals(3, DetourCalc.ratios(rides).size)
-        val d = DetourCalc.effective(true, 1.6, rides)
+        assertEquals(3, DetourCalc.ratios(rides, 20).size)
+        val d = DetourCalc.effective(true, 1.6, rides, 20)
         assertEquals(1.3, d.factor, 1e-3) // median of 1.2, 1.3, 1.5
         assertEquals(3, d.rides)
         assertTrue(d.learned)
@@ -43,7 +43,7 @@ class DetourTest {
     }
 
     @Test fun tooFewRidesGiveTheDefault() {
-        val d = DetourCalc.effective(true, 1.6, listOf(ride(12.0, 10.0, 0), ride(20.0, 10.0, 1)))
+        val d = DetourCalc.effective(true, 1.6, listOf(ride(12.0, 10.0, 0), ride(20.0, 10.0, 1)), 20)
         assertEquals(DetourCalc.DEFAULT, d.factor, 0.0)
         assertEquals(2, d.rides)
         assertFalse(d.learned)
@@ -51,17 +51,42 @@ class DetourTest {
 
     @Test fun clampedAndLimitedToTheNewestRides() {
         // odometer/GPS outliers cannot push the factor out of 1.0..2.0
-        assertEquals(DetourCalc.MAX, DetourCalc.effective(true, 1.3, (0..4).map { ride(30.0, 10.0, it) }).factor, 0.0)
-        assertEquals(DetourCalc.MIN, DetourCalc.effective(true, 1.3, (0..4).map { ride(9.0, 10.0, it) }).factor, 0.0)
-        // only the newest MAX_RIDES count: 50 new rides at 1.2 outvote 60 older at 1.8
-        val rides = (0 until 50).map { ride(12.0, 10.0, it) } + (50 until 110).map { ride(18.0, 10.0, it) }
-        val d = DetourCalc.effective(true, 1.3, rides)
+        assertEquals(DetourCalc.MAX, DetourCalc.effective(true, 1.3, (0..4).map { ride(30.0, 10.0, it) }, 20).factor, 0.0)
+        assertEquals(DetourCalc.MIN, DetourCalc.effective(true, 1.3, (0..4).map { ride(9.0, 10.0, it) }, 20).factor, 0.0)
+    }
+
+    @Test fun sameRideWindowAsTheRangeModel() {
+        // 10 newest usable rides at 1.2, 40 older at 1.8: the window (10 vs 50) decides
+        val rides = (0 until 10).map { ride(12.0, 10.0, it) } + (10 until 50).map { ride(18.0, 10.0, it) }
+        val ten = DetourCalc.effective(true, 1.3, rides, 10)
+        assertEquals(1.2, ten.factor, 1e-3)
+        assertEquals(10, ten.rides)
+        val fifty = DetourCalc.effective(true, 1.3, rides, 50)
+        assertEquals(1.8, fifty.factor, 1e-3)
+        assertEquals(50, fifty.rides)
+        // fewer usable rides than the window: all of them
+        assertEquals(50, DetourCalc.effective(true, 1.3, rides, 80).rides)
+    }
+
+    @Test fun windowCountsOnlyUsableRides() {
+        // usable rides interleaved with round trips and rides without ends: still 10 usable ones are taken,
+        // going back past the unusable rides (the 10th usable ride is the 30th ride)
+        val rides = (0 until 60).map { i ->
+            when {
+                i % 3 == 1 -> ride(5.0, 0.4, i) // round trip
+                i % 3 == 2 -> ride(9.0, null, i) // no ends
+                i < 30 -> ride(12.0, 10.0, i) // usable, newest ten: 1.2
+                else -> ride(18.0, 10.0, i) // usable, older: 1.8
+            }
+        }
+        val d = DetourCalc.effective(true, 1.3, rides, 10)
+        assertEquals(10, d.rides)
         assertEquals(1.2, d.factor, 1e-3)
-        assertEquals(DetourCalc.MAX_RIDES, d.rides)
+        assertEquals(20, DetourCalc.effective(true, 1.3, rides, 50).rides) // all usable rides there are
     }
 
     @Test fun manualValueWins() {
-        val d = DetourCalc.effective(false, 1.45, (0..4).map { ride(12.0, 10.0, it) })
+        val d = DetourCalc.effective(false, 1.45, (0..4).map { ride(12.0, 10.0, it) }, 20)
         assertEquals(Detour(1.45, auto = false), d)
         assertFalse(d.learned)
     }

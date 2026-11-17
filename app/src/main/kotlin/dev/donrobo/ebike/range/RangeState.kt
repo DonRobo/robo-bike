@@ -37,7 +37,7 @@ data class RangeDetail(
     val home: HomeStatus,
     /** R9: the detour factor all straight-line distances are multiplied with. */
     val detour: Detour = Detour(DetourCalc.DEFAULT, auto = true),
-    /** R4: null without a position or a remaining range. */
+    /** R4, the picture of "Komme ich heim?": null with that feature off, without a home, a position or a remaining range. */
     val area: ReachArea? = null,
 )
 

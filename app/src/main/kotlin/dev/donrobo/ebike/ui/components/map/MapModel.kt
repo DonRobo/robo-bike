@@ -84,7 +84,7 @@ object MapGeometry {
 
     /**
      * Closed polygon (first point repeated last) of the ellipse with foci [a] and [b] whose points P have
-     * |aP| + |Pb| = [sumM] (straight line); a circle of [sumM] / 2 around [a] when the foci coincide. Built from
+     * |aP| + |Pb| = [sumM] (straight line); a circle of [sumM] / 2 around [a] when the foci coincide (e.g. the bike at home). Built from
      * the focal polar form r(θ) = (A² − C²) / (A − C·cos(θ − φ)) around [a] (A = sumM / 2, C = |ab| / 2, φ = bearing
      * a→b) and walked out along great circles, accurate to well under 1 % at range scales. Null if [sumM] does not
      * exceed |ab| (no area).

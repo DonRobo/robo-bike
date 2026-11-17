@@ -80,8 +80,10 @@ object RangeEngine {
                 RangeModel.learn(rides, window, month, zone) to window
             }.distinctUntilChanged().flowOn(Dispatchers.Default)
 
-            val detour = combine(finished, settings.flow(RangeSettings.detourAuto, id), settings.flow(RangeSettings.detourManual, id)) { rides, auto, manual ->
-                DetourCalc.effective(auto, manual, rides)
+            val detour = combine(
+                finished, settings.flow(RangeSettings.window, id), settings.flow(RangeSettings.detourAuto, id), settings.flow(RangeSettings.detourManual, id),
+            ) { rides, window, auto, manual ->
+                DetourCalc.effective(auto, manual, rides, window)
             }.distinctUntilChanged().flowOn(Dispatchers.Default)
 
             // live: the rest level of the last readings, not the momentary (sagging) one; reset per live session
@@ -131,7 +133,7 @@ object RangeEngine {
             position = position,
             home = HomeCalc.status(home.enabled, home.home, position, limit, estimate, home.reserveKm, detour.factor, learned = full != null),
             detour = detour,
-            area = if (position != null && estimate != null) RangeCalc.area(position.point, homePoint, estimate.remainingKm, home.reserveKm, detour.factor) else null,
+            area = if (position != null && estimate != null && homePoint != null) RangeCalc.area(position.point, homePoint, estimate.remainingKm, home.reserveKm, detour.factor) else null,
         )
     }
 

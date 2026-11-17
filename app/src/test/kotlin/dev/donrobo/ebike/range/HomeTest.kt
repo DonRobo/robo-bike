@@ -138,9 +138,9 @@ class RangeComposeTest {
         assertEquals(home, area.home)
         assertEquals((d.estimate!!.remainingKm - 10.0) / 1.5, area.sumKm, 1e-9)
         assertTrue(area.reachable)
-        // "Komme ich heim?" switched off: the area is a circle around the bike (there and back)
+        // "Komme ich heim?" switched off: no area (the map belongs to that feature)
         val off = RangeEngine.compose(learned, 20, RangeReading(75, 3, 5, live = true), 10, pos, null, HomeSettings(false, home, 10.0), detour)
-        assertNull(off.area!!.home)
+        assertNull(off.area)
         // no remaining range known: no area
         assertNull(RangeEngine.compose(learned, 20, null, 10, pos, null, HomeSettings(true, home, 10.0)).area)
     }
