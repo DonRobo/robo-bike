@@ -4,10 +4,14 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import dev.donrobo.ebike.Repo
+import dev.donrobo.ebike.location.LocationPolicy
 import dev.donrobo.ebike.location.Locations
 import dev.donrobo.ebike.proto.BikeReport
 import dev.donrobo.ebike.settings.bikes
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
@@ -39,7 +43,7 @@ object RideStore {
         return FileProvider.getUriForFile(ctx, "${ctx.packageName}.files", out)
     }
 
-    fun delete(ride: RideSummary) { ride.file.delete(); RideRepository.notifyChanged() }
+    fun delete(ride: RideSummary) { ride.file.delete(); RideFixes.file(ride.file).delete(); RideRepository.notifyChanged() }
 }
 
 /**
@@ -85,6 +89,7 @@ object RideRepository {
 class RideRecorder(private val ctx: Context) {
     private val tracker = RideTracker()
     private var out: Writer? = null
+    private var outFile: File? = null
     private var lastRefreshMs = 0L
 
     /** Collects [Repo.live] / Locations.fix until cancelled; maintains Repo.recording. Rides go to the connected bike. */
@@ -102,7 +107,7 @@ class RideRecorder(private val ctx: Context) {
                         RideTracker.Action.SKIP -> {}
                     }
                 }
-                if (!tracker.isActive(now) && out != null) close("ride ended (no movement for 5 min)")
+                if (!tracker.isActive(now) && out != null) { val f = outFile; close("ride ended (no movement for 5 min)"); f?.let(::recordEnd) }
                 Repo.publishRecording(tracker.isActive(now))
             }
         } finally {
@@ -115,6 +120,9 @@ class RideRecorder(private val ctx: Context) {
         close("new ride")
         val f = File(RideStore.dir(ctx, bikeId), RideCsv.fileName(now))
         out = f.bufferedWriter().apply { write(RideCsv.HEADER + "\n"); flush() }
+        outFile = f
+        // R9: the newest fix, if taken next to the standing bike just before it moved, is the ride's start
+        Locations.fix.value?.takeIf { it.ageMs(now) <= RideEndpoints.STILL_MS }?.let { RideFixes.append(f, it) }
         _open.value = OpenRide(bikeId, now, r.odoKm)
         Repo.log("Ride started: ${f.name}")
         lastRefreshMs = now
@@ -133,15 +141,35 @@ class RideRecorder(private val ctx: Context) {
     private fun close(why: String) {
         val w = out ?: return
         out = null
+        outFile = null
         _open.value = null
         runCatching { w.close() }
         Repo.log("Ride closed: $why")
         RideRepository.notifyChanged()
     }
 
+    /**
+     * R9: the bike has stood still since the ride's last movement, so a fix now is the ride's end. The newest fix
+     * if it is fresh, else one short low-power query (Q3: no continuous GPS for this). It runs in [endScope], so a
+     * service stopping right now does not cancel it. (A ride that ends because the connection ends gets its end
+     * from [dev.donrobo.ebike.location.LocationProvider.onDisconnected] instead.)
+     */
+    private fun recordEnd(csv: File) {
+        val app = ctx.applicationContext
+        endScope.launch {
+            val now = System.currentTimeMillis()
+            val fix = Locations.fix.value?.takeIf { it.ageMs(now) < LocationPolicy.PARKED_FRESH_MS }
+                ?: if (Locations.status.value.usable) Locations.requestFix(app) else null
+            fix?.let { RideFixes.append(csv, it); RideRepository.notifyChanged() }
+        }
+    }
+
     companion object {
         /** How often the growing current ride refreshes [RideRepository.summaries]. */
         const val REFRESH_MS = 30_000L
+
+        /** Process-wide: the end-of-ride fix outlives the recorder that asked for it. */
+        private val endScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
         private val _open = MutableStateFlow<OpenRide?>(null)
         /** The ride being recorded now (null between rides); its start odometer is the ride file's first sample. */

@@ -17,7 +17,7 @@ data class RangeEstimate(val remainingKm: Double, val fullKm: Double, val pctPer
  */
 data class FullRange(val fullKm: Double, val pctPerKm: Double)
 
-/** "Komme ich heim?" (R5): road distance home (straight line x detour factor) and whether the remaining range covers it plus the reserve. */
+/** "Komme ich heim?" (R5): road distance home (straight line x detour factor, R9) and whether the remaining range covers it plus the reserve. */
 data class HomeReach(val distanceKm: Double, val reachable: Boolean)
 
 /** Everything the Reichweite screen shows, computed by [RangeEngine] in one place. */
@@ -35,6 +35,10 @@ data class RangeDetail(
     val months: List<MonthRange>,
     val position: BikePosition?,
     val home: HomeStatus,
+    /** R9: the detour factor all straight-line distances are multiplied with. */
+    val detour: Detour = Detour(DetourCalc.DEFAULT, auto = true),
+    /** R4: null without a position or a remaining range. */
+    val area: ReachArea? = null,
 )
 
 /**

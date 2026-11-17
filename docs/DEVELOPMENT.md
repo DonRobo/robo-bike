@@ -137,7 +137,8 @@ BikeMap(
     MapContent(
         tracks = listOf(MapTrack(samples.mapNotNull { s -> s.lat?.let { GeoPoint(it, s.lon!!) } })), // F3
         heat = heatLines,                                    // F8: HeatLines.build(tracks), off the main thread
-        ring = MapRing(here, radiusM = 32_000.0),            // R4
+        area = MapGeometry.ellipse(bike, home, sumM = 40_000.0)?.let(::MapArea), // R4: filled + outlined polygon
+        guide = MapGeometry.ellipseGuide(bike, home, 40_000.0).orEmpty(),         // dotted line (example way)
         markers = listOf(MapMarker(here, MarkerKind.CURRENT), MapMarker(home, MarkerKind.HOME)), // or PARKED (W3)
     ),
     Modifier.fillMaxWidth().height(230.dp).clip(RoundedCornerShape(22.dp)),
@@ -175,7 +176,10 @@ summaries cannot disagree with the files. Columns: `epochMs,lat,lon,speedKmh,bat
 
 - `RideRepository.summaries(ctx, bikeId): Flow<List<RideSummary>>`, newest first; updates on ride start, every
   30 s while recording, ride end and delete. `RideSummary`: distance, duration, moving time, battery
-  start/end/used, max speed, climb, `hasTrack`, `levels: List<LevelStats>` (km, battery %, time per assist level).
+  start/end/used, max speed, climb, `hasTrack`, `levels: List<LevelStats>` (km, battery %, time per assist level),
+  `ends` (start and end point, also without a GPS track, R9: `RideEndpoints` picks them from the positioned
+  samples and the few fixes in `<ride>.fixes` next to the CSV — the fix known at ride start, a fresh one at ride end
+  and at disconnect; the index key includes that file). `DetourCalc` turns them into the detour factor.
 - `RideRepository.samples(ride)`, `tracks(rides)` (positioned samples, for the heatmap), `delete(ride)`,
   `exportGpx(ctx, ride)` (share Uri, F9).
 - `RideStats.aggregate(rides, StatsPeriod.MONTH, LocalDate.now())`: total plus per-day (week/month) or per-month

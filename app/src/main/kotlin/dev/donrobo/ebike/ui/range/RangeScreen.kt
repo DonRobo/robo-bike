@@ -17,6 +17,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.clip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -78,10 +79,15 @@ import dev.donrobo.ebike.ui.components.ValueRow
 import dev.donrobo.ebike.ui.components.SwitchRow
 import dev.donrobo.ebike.ui.components.bleed
 import dev.donrobo.ebike.ui.components.map.BikeMap
-import dev.donrobo.ebike.ui.components.map.MapContent
-import dev.donrobo.ebike.ui.components.map.MapMarker
-import dev.donrobo.ebike.ui.components.map.MapRing
+import dev.donrobo.ebike.ui.components.map.LegendSymbol
+import dev.donrobo.ebike.ui.components.map.MapLegendItem
 import dev.donrobo.ebike.ui.components.map.MarkerKind
+import dev.donrobo.ebike.ui.components.map.drawGuide
+import dev.donrobo.ebike.ui.components.InfoBullet
+import dev.donrobo.ebike.ui.components.InfoHeading
+import dev.donrobo.ebike.range.DetourCalc
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import dev.donrobo.ebike.ui.components.rememberUnitFormatter
 import dev.donrobo.ebike.ui.components.text
 import dev.donrobo.ebike.ui.components.unitLabel
@@ -104,6 +110,8 @@ interface RangeActions {
     fun setHomeEnabled(on: Boolean)
     fun setReserveKm(km: Double)
     fun pickHome()
+    fun setDetourAuto(on: Boolean)
+    fun setDetourManual(factor: Double)
 }
 
 /** Reichweite (artboard "Reichweite"), wired to [RangeState] and the range settings. */
@@ -134,6 +142,8 @@ fun RangeScreen(nav: AppNavigator) {
         homeEnabled = global(RangeSettings.homeEnabled),
         home = global(RangeSettings.home),
         reserveKm = global(RangeSettings.reserveKm),
+        detourAuto = perBike(RangeSettings.detourAuto),
+        detourManual = perBike(RangeSettings.detourManual),
     )
     var picking by remember { mutableStateOf(false) }
     val actions = remember(id, nav) {
@@ -144,6 +154,8 @@ fun RangeScreen(nav: AppNavigator) {
             override fun setHomeEnabled(on: Boolean) { settings[RangeSettings.homeEnabled] = on }
             override fun setReserveKm(km: Double) { settings[RangeSettings.reserveKm] = km }
             override fun pickHome() { picking = true }
+            override fun setDetourAuto(on: Boolean) { id?.let { settings.set(RangeSettings.detourAuto, it, on) } }
+            override fun setDetourManual(factor: Double) { id?.let { settings.set(RangeSettings.detourManual, it, factor) } }
         }
     }
     RangeContent(state, actions)
@@ -165,7 +177,7 @@ fun RangeContent(state: RangeUiState, actions: RangeActions, modifier: Modifier 
         val d = state.detail
         SummaryCard(d, fmt)
         LevelsCard(d, fmt)
-        RingCard(d, state.home, fmt)
+        AreaCard(d, state.home.takeIf { state.homeEnabled })
         HomeCard(state, actions, fmt)
         HealthCard(d, fmt)
         ModelCard(state, actions, fmt)
@@ -293,36 +305,52 @@ private fun LevelRow(b: LevelBar, fmt: UnitFormatter) {
     }
 }
 
-// --- ring (R4) -------------------------------------------------------------------
+// --- reachable area (R4) ---------------------------------------------------------
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun RingCard(d: RangeDetail?, home: GeoPoint?, fmt: UnitFormatter) {
+private fun AreaCard(d: RangeDetail?, home: GeoPoint?) {
     val c = AppTheme.colors
-    val t = AppTheme.type
     val pos = d?.position
-    val remaining = d?.estimate?.remainingKm
+    val area = d?.area
     AppCard(contentPadding = PaddingValues(0.dp)) {
-        if (pos != null) {
-            val markers = listOfNotNull(
-                MapMarker(pos.point, if (pos.source == BikePosition.Source.LIVE) MarkerKind.CURRENT else MarkerKind.PARKED),
-                home?.let { MapMarker(it, MarkerKind.HOME) },
-            )
-            val ring = remaining?.let { MapRing(pos.point, RangeCalc.ringRadiusKm(it) * 1000) }
-            BikeMap(MapContent(ring = ring, markers = markers), Modifier.fillMaxWidth().aspectRatio(350f / 230f))
-        }
-        Column(Modifier.padding(start = 16.dp, end = 16.dp, top = 14.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-            Text(stringResource(R.string.range_ring_title), style = t.cardTitle)
+        if (pos != null) BikeMap(areaMap(pos, home, area), Modifier.fillMaxWidth().aspectRatio(350f / 230f))
+        Column(Modifier.padding(start = 16.dp, end = 8.dp, top = 6.dp, bottom = 16.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            CardTitle(stringResource(R.string.range_area_title)) {
+                InfoButton(stringResource(R.string.range_area_info), stringResource(R.string.range_area_title)) { AreaInfo(d?.detour?.factor ?: DetourCalc.DEFAULT) }
+            }
             val text = when {
-                pos == null -> stringResource(R.string.range_ring_no_position)
-                remaining == null -> stringResource(if (d?.full != null) R.string.range_ring_no_battery else R.string.range_ring_no_range)
-                else -> {
-                    val main = stringResource(R.string.range_ring_text, fmt.distance(RangeCalc.ringRadiusKm(remaining), 0).text())
-                    if (pos.source == BikePosition.Source.PARKED) main + " " + stringResource(R.string.range_ring_parked) else main
+                pos == null -> stringResource(R.string.range_area_no_position)
+                area == null -> stringResource(if (d.full != null) R.string.range_area_no_battery else R.string.range_area_no_range)
+                !area.reachable -> stringResource(R.string.range_area_too_far)
+                area.home != null -> stringResource(R.string.range_area_text_home)
+                else -> stringResource(R.string.range_area_text_back)
+            }
+            Text(text, Modifier.padding(end = 8.dp), style = AppTheme.type.bodySmall, color = c.textMuted)
+            if (pos != null && area?.reachable == true) {
+                FlowRow(
+                    Modifier.padding(top = 10.dp, end = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    val bike = if (pos.source == BikePosition.Source.LIVE) MarkerKind.CURRENT else MarkerKind.PARKED
+                    MapLegendItem(LegendSymbol.Marker(bike), stringResource(R.string.range_area_legend_bike))
+                    if (area.home != null) MapLegendItem(LegendSymbol.Marker(MarkerKind.HOME), stringResource(R.string.range_area_legend_home))
+                    MapLegendItem(
+                        LegendSymbol.Guide,
+                        stringResource(if (area.home != null) R.string.range_area_legend_guide_home else R.string.range_area_legend_guide_back),
+                    )
                 }
             }
-            Text(text, style = t.bodySmall, color = c.textMuted)
         }
     }
+}
+
+/** The range map's explanation sheet (S4). */
+@Composable
+internal fun AreaInfo(detour: Double) {
+    InfoParagraph(stringResource(R.string.range_area_info_inside))
+    InfoParagraph(stringResource(R.string.range_area_info_ellipse, rememberUnitFormatter().number(detour, 2)))
+    InfoParagraph(stringResource(R.string.range_area_info_circle))
 }
 
 // --- home (R5) -------------------------------------------------------------------
@@ -372,10 +400,6 @@ private fun HomeStatusLine(s: HomeStatus, fmt: UnitFormatter) {
                 HomeLevel.TIGHT -> StatusBanner(stringResource(R.string.range_home_tight, way, d(s.leftoverKm).text()), tone = Tone.WARNING, icon = AppIcons.Warning)
                 HomeLevel.SHORT -> StatusBanner(stringResource(R.string.range_home_short, way), tone = Tone.DANGER, icon = AppIcons.Warning)
             }
-            Text(
-                stringResource(R.string.range_home_estimate_note, fmt.number(RangeCalc.DETOUR_FACTOR, 1)),
-                Modifier.padding(top = 0.dp), style = AppTheme.type.caption, color = c.textMuted,
-            )
         }
         is HomeStatus.NoRange -> StatusBanner(
             stringResource(if (s.learned) R.string.range_home_no_battery else R.string.range_home_no_range, d(s.distanceKm).text()), tone = Tone.NEUTRAL,
@@ -497,6 +521,42 @@ private fun ModelCard(state: RangeUiState, actions: RangeActions, fmt: UnitForma
                 onValueChangeFinished = { draft?.let { actions.setMargin(it.roundToInt()) }; draft = null },
             )
         }
+        DetourBlock(state, actions, fmt)
+    }
+}
+
+/** R9 "Umwege": the detour factor, where it comes from, and the switch between the ride log and the rider's own value. */
+@Composable
+private fun DetourBlock(state: RangeUiState, actions: RangeActions, fmt: UnitFormatter) {
+    val c = AppTheme.colors
+    val t = AppTheme.type
+    val detour = shownDetour(state)
+    val unit = stringResource(R.string.range_detour_unit, unitLabel(fmt.distanceUnit))
+    Column {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(stringResource(R.string.range_detour_title), style = t.label, color = c.textMuted)
+            InfoButton(stringResource(R.string.range_detour_info), stringResource(R.string.range_detour_sheet_title)) { DetourInfo(fmt) }
+        }
+        if (detour.auto) {
+            NumberWithUnit(fmt.number(detour.factor, 2), unit, t.numberMedium, t.unit)
+            Text(
+                if (detour.learned) pluralStringResource(R.plurals.range_detour_from, detour.rides, detour.rides)
+                else stringResource(R.string.range_detour_too_few),
+                Modifier.padding(top = 4.dp), style = t.bodySmall, color = c.textMuted,
+            )
+        } else {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(unit, Modifier.weight(1f), style = t.bodyStrong)
+                Stepper(
+                    fmt.number(detour.factor, 2),
+                    onDecrease = { actions.setDetourManual(DetourCalc.step(detour.factor, -1)) },
+                    onIncrease = { actions.setDetourManual(DetourCalc.step(detour.factor, +1)) },
+                    decreaseDescription = stringResource(R.string.range_detour_less),
+                    increaseDescription = stringResource(R.string.range_detour_more),
+                )
+            }
+        }
+        SwitchRow(stringResource(R.string.range_detour_auto), state.detourAuto, actions::setDetourAuto, Modifier.bleed(16.dp).padding(top = 4.dp))
     }
 }
 
@@ -505,7 +565,73 @@ private fun ModelCard(state: RangeUiState, actions: RangeActions, fmt: UnitForma
 internal fun ModelInfo(fmt: UnitFormatter) {
     InfoParagraph(stringResource(R.string.range_model_info_rides, fmt.distance(RangeModel.MIN_RIDE_KM, if (fmt.system == UnitSystem.IMPERIAL) 1 else 0).text()))
     InfoParagraph(stringResource(R.string.range_model_info_bands))
-    InfoParagraph(stringResource(R.string.range_model_info_detour, fmt.number(RangeCalc.DETOUR_FACTOR, 1)))
+}
+
+/** The detour factor's explanation sheet (S4): what it is, an example, how it is computed. */
+@Composable
+internal fun DetourInfo(fmt: UnitFormatter) {
+    InfoParagraph(stringResource(R.string.range_detour_info_what, stringResource(if (fmt.system == UnitSystem.IMPERIAL) R.string.range_unit_word_mi else R.string.range_unit_word_km)))
+    DetourExample(fmt)
+    InfoHeading(stringResource(R.string.range_detour_info_heading))
+    InfoBullet(stringResource(R.string.range_detour_info_trip))
+    InfoBullet(stringResource(R.string.range_detour_info_ends))
+    InfoBullet(stringResource(R.string.range_detour_info_median, fmt.distance(DetourCalc.MIN_STRAIGHT_KM, if (fmt.system == UnitSystem.IMPERIAL) 1 else 0).text()))
+    InfoBullet(pluralStringResource(R.plurals.range_detour_info_default, DetourCalc.MIN_RIDES, DetourCalc.MIN_RIDES, fmt.number(DetourCalc.DEFAULT, 2)))
+    InfoParagraph(stringResource(R.string.range_detour_info_manual))
+}
+
+/** Example numbers of the illustration, in the rider's distance unit. */
+private const val EXAMPLE_STRAIGHT = 8.0
+private const val EXAMPLE_RIDDEN = 10.2
+
+/**
+ * The sheet's illustration: start and end joined by the dotted straight line, the curvy way actually ridden
+ * above it, both labelled, and the division below.
+ */
+@Composable
+private fun DetourExample(fmt: UnitFormatter) {
+    val c = AppTheme.colors
+    val t = AppTheme.type
+    val straight = fmt.distance(fmt.system.fromUnit(EXAMPLE_STRAIGHT), 1).text()
+    val ridden = fmt.distance(fmt.system.fromUnit(EXAMPLE_RIDDEN), 1).text()
+    val factor = fmt.number(EXAMPLE_RIDDEN / EXAMPLE_STRAIGHT, 2)
+    val description = stringResource(R.string.range_detour_example_description, straight, ridden, factor)
+    val measurer = rememberTextMeasurer()
+    val straightLabel = stringResource(R.string.range_detour_example_straight, straight)
+    val riddenLabel = stringResource(R.string.range_detour_example_ridden, ridden)
+    val labelStyle = t.caption.copy(color = c.textMuted)
+    val riddenStyle = t.caption.copy(color = c.primaryStrong, fontWeight = FontWeight.SemiBold)
+    Column(
+        Modifier.fillMaxWidth().clip(MaterialTheme.shapes.medium).background(MaterialTheme.colorScheme.surfaceContainerHigh).padding(16.dp)
+            .semantics(mergeDescendants = true) { contentDescription = description },
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        Canvas(Modifier.fillMaxWidth().height(110.dp)) {
+            val dp = density
+            val y = size.height - 30 * dp
+            val x0 = 10 * dp; val x1 = size.width - 10 * dp
+            val w = x1 - x0
+            // the way ridden: a wavy line from start to end, above the straight line
+            val way = Path().apply {
+                moveTo(x0, y)
+                cubicTo(x0 + w * 0.12f, y - 70 * dp, x0 + w * 0.32f, y - 76 * dp, x0 + w * 0.45f, y - 40 * dp)
+                cubicTo(x0 + w * 0.55f, y - 14 * dp, x0 + w * 0.7f, y - 78 * dp, x0 + w * 0.85f, y - 52 * dp)
+                cubicTo(x0 + w * 0.93f, y - 38 * dp, x1, y - 20 * dp, x1, y)
+            }
+            drawPath(way, c.primary, style = Stroke(3 * dp, cap = StrokeCap.Round, join = StrokeJoin.Round))
+            drawGuide(Path().apply { moveTo(x0, y); lineTo(x1, y) }, c.text)
+            drawCircle(c.primary, 6 * dp, Offset(x0, y))
+            drawCircle(c.primary, 6 * dp, Offset(x1, y))
+            val r = measurer.measure(riddenLabel, riddenStyle)
+            drawText(r, topLeft = Offset(x0 + w * 0.5f - r.size.width / 2f, 0f))
+            val s = measurer.measure(straightLabel, labelStyle)
+            drawText(s, topLeft = Offset(x0 + w * 0.5f - s.size.width / 2f, y + 8 * dp))
+        }
+        Text(
+            stringResource(R.string.range_detour_example_sum, fmt.number(EXAMPLE_RIDDEN, 1), fmt.number(EXAMPLE_STRAIGHT, 1), factor),
+            Modifier.fillMaxWidth(), style = t.bodyStrong, textAlign = TextAlign.Center,
+        )
+    }
 }
 
 /** Safety margin 0-30 % in steps of 5: the stock Material 3 [Slider] with tick marks. */

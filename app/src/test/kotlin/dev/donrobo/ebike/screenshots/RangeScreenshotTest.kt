@@ -5,6 +5,8 @@ import dev.donrobo.ebike.location.GeoPoint
 import dev.donrobo.ebike.location.LocationLimit
 import dev.donrobo.ebike.range.BikePosition
 import dev.donrobo.ebike.range.Confidence
+import dev.donrobo.ebike.range.Detour
+import dev.donrobo.ebike.range.DetourCalc
 import dev.donrobo.ebike.range.HomeSettings
 import dev.donrobo.ebike.range.LearnedRange
 import dev.donrobo.ebike.range.LevelRate
@@ -36,6 +38,8 @@ class RangeScreenshotTest {
         override fun setHomeEnabled(on: Boolean) {}
         override fun setReserveKm(km: Double) {}
         override fun pickHome() {}
+        override fun setDetourAuto(on: Boolean) {}
+        override fun setDetourManual(factor: Double) {}
     }
 
     private val home = GeoPoint(48.2085, 16.3721)
@@ -55,9 +59,12 @@ class RangeScreenshotTest {
         limit: LocationLimit? = null,
         home: GeoPoint? = this.home,
         reading: RangeReading? = RangeReading(75, 3, 5, live = true),
+        detour: Detour = Detour(1.27, auto = true, rides = 23),
+        detourAuto: Boolean = true,
     ) = RangeUiState(
-        detail = RangeEngine.compose(learned, 20, reading, 10, position, limit, HomeSettings(true, home, 10.0)),
+        detail = RangeEngine.compose(learned, 20, reading, 10, position, limit, HomeSettings(true, home, 10.0), detour),
         window = 20, marginPct = 10, homeEnabled = true, home = home, reserveKm = 10.0,
+        detourAuto = detourAuto, detourManual = 1.45,
     )
 
     @Test @Config(qualifiers = "de-$TALL")
@@ -78,6 +85,19 @@ class RangeScreenshotTest {
     fun range_battery_unknown_de() = compose.screenshot("range_battery_unknown_de") {
         val parked = BikePosition(here, 0, BikePosition.Source.PARKED)
         RangeContent(state(position = parked, reading = null), actions)
+    }
+
+    /** No home set: the area is a circle around the bike (there and back); too few rides for the detour factor yet. */
+    @Test @Config(qualifiers = "de-$TALL")
+    fun range_no_home_de() = compose.screenshot("range_no_home_de") {
+        RangeContent(state(home = null, detour = Detour(DetourCalc.DEFAULT, auto = true, rides = 1)), actions)
+    }
+
+    /** Low battery far from home: no area, the way home is short; the detour factor is set by hand. */
+    @Test @Config(qualifiers = "de-$TALL")
+    fun range_too_far_de() = compose.screenshot("range_too_far_de") {
+        val far = BikePosition(GeoPoint(48.3500, 16.3721), 0, BikePosition.Source.LIVE)
+        RangeContent(state(position = far, reading = RangeReading(25, 3, 5, live = true), detourAuto = false), actions)
     }
 
     /** Riding with only "while in use" location: no position, so no ring and no answer about the way home. */

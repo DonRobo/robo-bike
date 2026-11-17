@@ -24,7 +24,7 @@ class HomeTest {
     @Test fun distanceIsStraightLineTimesDetour() {
         val straight = here.distanceM(home) / 1000
         assertEquals(3.22, straight, 0.02)
-        assertEquals(straight * 1.3, HomeCalc.distanceKm(here, home), 1e-9)
+        assertEquals(straight * 1.3, HomeCalc.distanceKm(here, home, 1.3), 1e-9)
     }
 
     @Test fun levels() {
@@ -37,20 +37,20 @@ class HomeTest {
     @Test fun statusCases() {
         val pos = BikePosition(here, now, BikePosition.Source.LIVE)
         val est = RangeEstimate(64.0, 86.0, 1.2)
-        assertEquals(HomeStatus.Off, HomeCalc.status(false, home, pos, null, est, 10.0))
-        assertEquals(HomeStatus.NoHome, HomeCalc.status(true, null, pos, null, est, 10.0))
-        assertEquals(HomeStatus.NoPosition(LocationLimit.NEEDS_BACKGROUND), HomeCalc.status(true, home, null, LocationLimit.NEEDS_BACKGROUND, est, 10.0))
-        assertTrue(HomeCalc.status(true, home, pos, null, null, 10.0) is HomeStatus.NoRange)
-        val k = HomeCalc.status(true, home, pos, null, est, 10.0) as HomeStatus.Known
+        assertEquals(HomeStatus.Off, HomeCalc.status(false, home, pos, null, est, 10.0, 1.3))
+        assertEquals(HomeStatus.NoHome, HomeCalc.status(true, null, pos, null, est, 10.0, 1.3))
+        assertEquals(HomeStatus.NoPosition(LocationLimit.NEEDS_BACKGROUND), HomeCalc.status(true, home, null, LocationLimit.NEEDS_BACKGROUND, est, 10.0, 1.3))
+        assertTrue(HomeCalc.status(true, home, pos, null, null, 10.0, 1.3) is HomeStatus.NoRange)
+        val k = HomeCalc.status(true, home, pos, null, est, 10.0, 1.3) as HomeStatus.Known
         assertEquals(HomeLevel.OK, k.level)
         assertEquals(64.0 - k.distanceKm, k.leftoverKm, 1e-9)
         assertEquals(HomeReach(k.distanceKm, true), HomeCalc.reach(k))
         assertNull(HomeCalc.reach(HomeStatus.NoPosition(null)))
         // at home (within AT_HOME_M) there is nothing to say about the way home
-        val atHome = HomeCalc.status(true, home, BikePosition(home, 0L, BikePosition.Source.LIVE), null, est, 10.0) as HomeStatus.Known
+        val atHome = HomeCalc.status(true, home, BikePosition(home, 0L, BikePosition.Source.LIVE), null, est, 10.0, 1.3) as HomeStatus.Known
         assertTrue(atHome.atHome)
         assertNull(HomeCalc.reach(atHome))
-        assertEquals(false, HomeCalc.reach(HomeCalc.status(true, home, pos, null, RangeEstimate(8.0, 86.0, 1.2), 10.0))!!.reachable)
+        assertEquals(false, HomeCalc.reach(HomeCalc.status(true, home, pos, null, RangeEstimate(8.0, 86.0, 1.2), 10.0, 1.3))!!.reachable)
     }
 
     @Test fun positionWhileConnectedMustBeFresh() {
@@ -124,6 +124,25 @@ class RangeComposeTest {
         val k = d.home as HomeStatus.Known
         assertEquals(d.estimate!!.remainingKm, k.remainingKm, 1e-9)
         assertEquals(100 / 1.1 * 0.9, d.months.last().fullKm!!, 1e-9)
+    }
+
+    @Test fun composeUsesTheDetourForTheWayHomeAndTheArea() {
+        val home = GeoPoint(48.2085, 16.3721)
+        val pos = BikePosition(GeoPoint(48.2375, 16.3721), 0, BikePosition.Source.LIVE)
+        val detour = Detour(1.5, auto = true, rides = 12)
+        val d = RangeEngine.compose(learned, 20, RangeReading(75, 3, 5, live = true), 10, pos, null, HomeSettings(true, home, 10.0), detour)
+        val straight = pos.point.distanceM(home) / 1000
+        assertEquals(straight * 1.5, (d.home as HomeStatus.Known).distanceKm, 1e-9)
+        assertEquals(detour, d.detour)
+        val area = d.area!!
+        assertEquals(home, area.home)
+        assertEquals((d.estimate!!.remainingKm - 10.0) / 1.5, area.sumKm, 1e-9)
+        assertTrue(area.reachable)
+        // "Komme ich heim?" switched off: the area is a circle around the bike (there and back)
+        val off = RangeEngine.compose(learned, 20, RangeReading(75, 3, 5, live = true), 10, pos, null, HomeSettings(false, home, 10.0), detour)
+        assertNull(off.area!!.home)
+        // no remaining range known: no area
+        assertNull(RangeEngine.compose(learned, 20, null, 10, pos, null, HomeSettings(true, home, 10.0)).area)
     }
 
     @Test fun composeWithoutReadingShowsFullBatteryLevels() {

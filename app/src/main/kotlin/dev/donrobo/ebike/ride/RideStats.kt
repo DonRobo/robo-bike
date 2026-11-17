@@ -18,6 +18,7 @@ import java.time.temporal.TemporalAdjusters
  *   range model, statistics and route comparison all read it.
  * - [climbM]: metres climbed (null when the ride has no altitude, e.g. no GPS track or an old file).
  * - [shape]: outline of the GPS track for thumbnails and route recognition (null without a usable track).
+ * - [ends]: where the ride started and ended, also without a GPS track (R9, see [RideEndpoints]); null if unknown.
  */
 data class RideSummary(
     val file: File, val startMs: Long, val durationS: Long, val distanceKm: Double,
@@ -29,6 +30,7 @@ data class RideSummary(
     val climbM: Double? = null,
     val levels: List<LevelStats> = emptyList(),
     val shape: RideShape? = null,
+    val ends: RideEnds? = null,
 ) {
     val batteryUsedPct: Double get() = (batteryStartPct - batteryEndPct).coerceAtLeast(0).toDouble()
 

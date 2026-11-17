@@ -64,8 +64,8 @@ object HomeCalc {
         return parked?.fix?.let { BikePosition(it.point, it.timeMs.takeIf { t -> t > 0 } ?: parked.atMs, BikePosition.Source.PARKED) } ?: fresh
     }
 
-    /** Road distance home: straight line times [RangeCalc.DETOUR_FACTOR]. */
-    fun distanceKm(from: GeoPoint, home: GeoPoint): Double = from.distanceM(home) / 1000 * RangeCalc.DETOUR_FACTOR
+    /** Road distance home: straight line times the [detour] factor (R9). */
+    fun distanceKm(from: GeoPoint, home: GeoPoint, detour: Double): Double = from.distanceM(home) / 1000 * detour
 
     fun level(remainingKm: Double, distanceKm: Double, reserveKm: Double): HomeLevel = when {
         remainingKm < distanceKm -> HomeLevel.SHORT
@@ -75,12 +75,12 @@ object HomeCalc {
 
     fun status(
         enabled: Boolean, home: GeoPoint?, position: BikePosition?, limit: LocationLimit?,
-        estimate: RangeEstimate?, reserveKm: Double, learned: Boolean = estimate != null,
+        estimate: RangeEstimate?, reserveKm: Double, detour: Double, learned: Boolean = estimate != null,
     ): HomeStatus {
         if (!enabled) return HomeStatus.Off
         if (home == null) return HomeStatus.NoHome
         if (position == null) return HomeStatus.NoPosition(limit)
-        val d = distanceKm(position.point, home)
+        val d = distanceKm(position.point, home, detour)
         if (estimate == null) return HomeStatus.NoRange(d, learned)
         return HomeStatus.Known(d, estimate.remainingKm, reserveKm, level(estimate.remainingKm, d, reserveKm), atHome(position.point, home))
     }

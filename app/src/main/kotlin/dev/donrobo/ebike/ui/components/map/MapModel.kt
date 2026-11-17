@@ -17,26 +17,28 @@ import kotlin.math.tan
  * - [tracks]: ride tracks (F3), drawn as a casing + primary line with a hollow start and a filled end dot.
  * - [heat]: many tracks for the heatmap (F8); ways ridden more often are drawn wider and stronger.
  *   Build it once with [HeatLines.build] (off the main thread for many rides).
- * - [ring]: range ring (R4).
+ * - [area]: a filled, outlined area, e.g. the reachable area (R4, [MapGeometry.ellipse]).
+ * - [guide]: a dotted line, e.g. one example way there and home across [area].
  * - [markers]: current position, home, parked bike.
  */
 @Immutable
 data class MapContent(
     val tracks: List<MapTrack> = emptyList(),
     val heat: HeatLines? = null,
-    val ring: MapRing? = null,
+    val area: MapArea? = null,
+    val guide: List<GeoPoint> = emptyList(),
     val markers: List<MapMarker> = emptyList(),
 ) {
-    val isEmpty: Boolean get() = tracks.all { it.points.isEmpty() } && heat?.lines.isNullOrEmpty() && ring == null && markers.isEmpty()
+    val isEmpty: Boolean get() = tracks.all { it.points.isEmpty() } && heat?.lines.isNullOrEmpty() && area == null && guide.isEmpty() && markers.isEmpty()
 }
 
 /** One track. [showEnds] draws the start (hollow) and end (filled) dots. */
 @Immutable
 data class MapTrack(val points: List<GeoPoint>, val showEnds: Boolean = true)
 
-/** A circle of [radiusM] metres around [center], e.g. the straight-line range there and back. */
+/** A closed polygon (first point repeated last), drawn filled with an outline. */
 @Immutable
-data class MapRing(val center: GeoPoint, val radiusM: Double)
+data class MapArea(val points: List<GeoPoint>)
 
 enum class MarkerKind {
     /** Where the phone is now (filled dot). */
@@ -69,33 +71,60 @@ data class GeoBounds(val south: Double, val west: Double, val north: Double, val
 
 /** Pure map geometry (unit-tested; shared by the MapLibre view and the stand-in). */
 object MapGeometry {
-    private const val M_PER_DEG_LAT = 111_320.0
-
-    /** Bounds of everything in [c] (a ring counts with its full circle); null if empty. */
+    /** Bounds of everything in [c]; null if empty. */
     fun bounds(c: MapContent): GeoBounds? {
         val pts = ArrayList<GeoPoint>()
         c.tracks.forEach { pts += it.points }
         c.heat?.lines?.forEach { pts += it.points }
         c.markers.forEach { pts += it.position }
-        c.ring?.let { r ->
-            val dLat = r.radiusM / M_PER_DEG_LAT
-            val dLon = dLat / cos(Math.toRadians(r.center.lat)).coerceAtLeast(0.01)
-            pts += GeoPoint(r.center.lat - dLat, r.center.lon - dLon)
-            pts += GeoPoint(r.center.lat + dLat, r.center.lon + dLon)
-        }
+        c.area?.let { pts += it.points }
+        pts += c.guide
         return GeoBounds.of(pts)
     }
 
-    /** Closed polygon approximating a circle of [radiusM] around [center] (first point repeated last). */
-    fun circle(center: GeoPoint, radiusM: Double, segments: Int = 72): List<GeoPoint> {
-        val d = radiusM / GeoPoint.EARTH_RADIUS_M
-        val lat1 = Math.toRadians(center.lat); val lon1 = Math.toRadians(center.lon)
+    /**
+     * Closed polygon (first point repeated last) of the ellipse with foci [a] and [b] whose points P have
+     * |aP| + |Pb| = [sumM] (straight line); a circle of [sumM] / 2 around [a] when the foci coincide. Built from
+     * the focal polar form r(θ) = (A² − C²) / (A − C·cos(θ − φ)) around [a] (A = sumM / 2, C = |ab| / 2, φ = bearing
+     * a→b) and walked out along great circles, accurate to well under 1 % at range scales. Null if [sumM] does not
+     * exceed |ab| (no area).
+     */
+    fun ellipse(a: GeoPoint, b: GeoPoint, sumM: Double, segments: Int = 96): List<GeoPoint>? {
+        val bigA = sumM / 2; val c = a.distanceM(b) / 2
+        if (bigA <= c || bigA <= 0) return null
+        val phi = if (c > 0) bearing(a, b) else 0.0
         return (0..segments).map { i ->
-            val brg = 2 * PI * (i % segments) / segments
-            val lat2 = kotlin.math.asin(sin(lat1) * cos(d) + cos(lat1) * sin(d) * cos(brg))
-            val lon2 = lon1 + kotlin.math.atan2(sin(brg) * sin(d) * cos(lat1), cos(d) - sin(lat1) * sin(lat2))
-            GeoPoint(Math.toDegrees(lat2), Math.toDegrees(lon2))
+            val theta = 2 * PI * (i % segments) / segments
+            destination(a, theta, (bigA * bigA - c * c) / (bigA - c * cos(theta)), phi)
         }
+    }
+
+    /**
+     * An example way across the [ellipse]: [a] → the end of its minor axis → [b] (the minor-axis end lies at [a]
+     * plus the half major axis, where θ − φ = acos(C / A)). For coincident foci: out and back along one radius.
+     */
+    fun ellipseGuide(a: GeoPoint, b: GeoPoint, sumM: Double): List<GeoPoint>? {
+        val bigA = sumM / 2; val c = a.distanceM(b) / 2
+        if (bigA <= c || bigA <= 0) return null
+        val phi = if (c > 0) bearing(a, b) else 0.0
+        val far = destination(a, kotlin.math.acos(c / bigA), bigA, phi)
+        return listOf(a, far, b)
+    }
+
+    /** Initial great-circle bearing from [p] to [q], radians clockwise from north. */
+    private fun bearing(p: GeoPoint, q: GeoPoint): Double {
+        val l1 = Math.toRadians(p.lat); val l2 = Math.toRadians(q.lat); val dl = Math.toRadians(q.lon - p.lon)
+        return kotlin.math.atan2(sin(dl) * cos(l2), cos(l1) * sin(l2) - sin(l1) * cos(l2) * cos(dl))
+    }
+
+    /** The point [distM] from [p] at bearing [phi] + [theta] (radians). */
+    private fun destination(p: GeoPoint, theta: Double, distM: Double, phi: Double): GeoPoint {
+        val d = distM / GeoPoint.EARTH_RADIUS_M
+        val brg = phi + theta
+        val lat1 = Math.toRadians(p.lat); val lon1 = Math.toRadians(p.lon)
+        val lat2 = kotlin.math.asin(sin(lat1) * cos(d) + cos(lat1) * sin(d) * cos(brg))
+        val lon2 = lon1 + kotlin.math.atan2(sin(brg) * sin(d) * cos(lat1), cos(d) - sin(lat1) * sin(lat2))
+        return GeoPoint(Math.toDegrees(lat2), Math.toDegrees(lon2))
     }
 
     /** Web Mercator, normalised to 0..1 (x east, y south). */
