@@ -151,8 +151,9 @@ One provider (`LocationProvider`, run by `BikeService`) for all features; read i
 
 - `Locations.fix: StateFlow<LocationFix?>`: newest fix of this process (point, time, accuracy, altitude).
   `Locations.best(ctx)`: newest of live fix, system last known and the persisted last position.
-- `Locations.status: StateFlow<LocationStatus>`: `mode` (`OFF`; `OCCASIONAL` = low-power fix on connect and every
-  10 min while connected; `CONTINUOUS` = GPS, only while `RideSettings.gpsTrack` is on, Q3) and `limit`, what is
+- `Locations.status: StateFlow<LocationStatus>`: `mode` (`OFF`; `OCCASIONAL` = one low-power fix on connect, and
+  every 10 min while connected only while "Komme ich heim?" is on and a home is set
+  (`LocationPolicy.periodicFixesWanted`); `CONTINUOUS` = GPS, only while `RideSettings.gpsTrack` is on, Q3) and `limit`, what is
   missing: `NO_PERMISSION`, `SYSTEM_LOCATION_OFF`, `NEEDS_BACKGROUND` (service started in the background with only
   "while in use": Android grants no location; fix = "allow all the time" or open the app), `TRACK_NEEDS_PRECISE`.
   `Locations.permissions(ctx)` works without the service. The decision is the pure `LocationPolicy.decide`.
