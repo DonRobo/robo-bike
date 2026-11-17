@@ -69,6 +69,7 @@ import dev.donrobo.ebike.ui.components.chart.LineChart
 import dev.donrobo.ebike.ui.components.map.BikeMap
 import dev.donrobo.ebike.ui.components.map.MapContent
 import dev.donrobo.ebike.ui.components.map.MapMode
+import dev.donrobo.ebike.ui.components.map.MapThumbnailCache
 import dev.donrobo.ebike.ui.components.map.MapTrack
 import dev.donrobo.ebike.ui.components.rememberUnitFormatter
 import dev.donrobo.ebike.ui.components.unitLabel
@@ -158,7 +159,7 @@ fun RideScreen(nav: AppNavigator, rideId: String) {
         stringResource(R.string.ride_delete_title), stringResource(R.string.ride_delete_body), stringResource(R.string.ride_delete_confirm),
         onConfirm = {
             confirmDelete = false
-            scope.launch { RideRepository.delete(ride); nav.back() }
+            scope.launch { RideRepository.delete(ride); MapThumbnailCache.delete(ctx, ride.id); nav.back() }
         },
         onDismiss = { confirmDelete = false },
     )

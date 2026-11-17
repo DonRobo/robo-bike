@@ -201,7 +201,7 @@ private fun RideCard(item: RideItem, onClick: () -> Unit) {
     val r = item.ride
     AppCard(contentPadding = PaddingValues(12.dp), onClick = onClick) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(14.dp)) {
-            RideThumbnail(r.shape)
+            RideThumbnail(r.id, r.shape)
             Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(stringResource(R.string.rides_time, clockText(r.startMs)), style = AppTheme.type.cardTitle, maxLines = 1)
