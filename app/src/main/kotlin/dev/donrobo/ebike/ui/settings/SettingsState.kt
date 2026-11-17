@@ -8,7 +8,6 @@ import dev.donrobo.ebike.display.DisplayCapabilities
 import dev.donrobo.ebike.light.LightMode
 import dev.donrobo.ebike.light.LightSettings
 import dev.donrobo.ebike.nav.NavSettings
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.notify.NotifySettings
 import dev.donrobo.ebike.proto.DisplayFeature
 import dev.donrobo.ebike.range.RangeSettings
@@ -26,9 +25,6 @@ data class LightSummary(val mode: LightMode, val rain: Boolean)
 
 data class RangeSummary(val window: Int, val marginPct: Int, val home: Boolean)
 
-/** [showFrom] only matters while [forward] is on. */
-data class NavSummary(val forward: Boolean, val showFrom: ShowFrom)
-
 /** The three switches behind "Erinnerungen" (W1, W4, R5). */
 data class Reminders(val homeRange: Boolean, val charge: Boolean, val maintenance: Boolean)
 
@@ -39,7 +35,8 @@ data class Reminders(val homeRange: Boolean, val charge: Boolean, val maintenanc
 data class SettingsUiState(
     val light: LightSummary?,
     val range: RangeSummary,
-    val nav: NavSummary,
+    /** Google Maps turn hints go to the display (N6). */
+    val navForward: Boolean,
     val gpsTrack: Boolean,
     val priceCentPerKwh: Double,
     val connectionDetails: Boolean,
@@ -73,7 +70,7 @@ fun settingsUiState(
     return SettingsUiState(
         light = if (caps.supports(DisplayFeature.LAMP_SWITCH)) LightSummary(bike(LightSettings.mode), bike(LightSettings.rain)) else null,
         range = RangeSummary(bike(RangeSettings.window), bike(RangeSettings.marginPct), settings[RangeSettings.homeEnabled]),
-        nav = NavSummary(settings[NavSettings.forward], settings[NavSettings.showFrom]),
+        navForward = settings[NavSettings.forward],
         gpsTrack = settings[RideSettings.gpsTrack],
         priceCentPerKwh = settings[StatsSettings.priceCentPerKwh],
         connectionDetails = settings[NotifySettings.connectionDetails],

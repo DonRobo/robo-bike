@@ -2,14 +2,11 @@ package dev.donrobo.ebike.ui.nav
 
 import dev.donrobo.ebike.nav.DisplayNav
 import dev.donrobo.ebike.nav.NavState
-import dev.donrobo.ebike.nav.ShowFrom
 
 /** Status chip of "Das zeigt dein Display". */
 enum class NavCardStatus {
     /** A hint is on the display. */
     RUNNING,
-    /** Maps navigates, but the next turn is still farther away than "Hinweis zeigen ab". */
-    WAITING,
     /** Connected and forwarding, no navigation. */
     READY,
     NOT_CONNECTED,
@@ -22,10 +19,7 @@ data class NavigationUiState(
     val status: NavCardStatus,
     /** The hint on the display ([DisplayNav.active]) or the last one sent in this app process. */
     val shown: DisplayNav?,
-    /** Maps' current hint while [NavCardStatus.WAITING]. */
-    val pending: NavState?,
     val forward: Boolean,
-    val showFrom: ShowFrom,
     val notificationAccess: Boolean,
     val nowMs: Long,
 ) {
@@ -35,10 +29,8 @@ data class NavigationUiState(
 fun navigationUiState(
     connected: Boolean,
     displayNav: DisplayNav?,
-    mapsNav: NavState?,
     testNav: NavState?,
     forward: Boolean,
-    showFrom: ShowFrom,
     notificationAccess: Boolean,
     nowMs: Long,
 ): NavigationUiState {
@@ -46,12 +38,9 @@ fun navigationUiState(
         displayNav?.active == true -> NavCardStatus.RUNNING
         !forward && testNav == null -> NavCardStatus.OFF
         !connected -> NavCardStatus.NOT_CONNECTED
-        mapsNav != null -> NavCardStatus.WAITING
         else -> NavCardStatus.READY
     }
-    return NavigationUiState(
-        status, displayNav, mapsNav.takeIf { status == NavCardStatus.WAITING }, forward, showFrom, notificationAccess, nowMs,
-    )
+    return NavigationUiState(status, displayNav, forward, notificationAccess, nowMs)
 }
 
 /** "vor 3 Sekunden" in the largest whole unit. */

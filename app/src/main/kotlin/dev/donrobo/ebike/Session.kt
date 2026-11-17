@@ -189,7 +189,7 @@ internal class Session(private val ctx: Context, private val transport: LinkTran
         try {
             while (isActive) {
                 val out = fwd.tick(
-                    Repo.testNav.value, Repo.mapsNav.value, settings[NavSettings.forward], settings[NavSettings.showFrom],
+                    Repo.testNav.value, Repo.mapsNav.value, settings[NavSettings.forward],
                     System.currentTimeMillis(),
                 )
                 try {

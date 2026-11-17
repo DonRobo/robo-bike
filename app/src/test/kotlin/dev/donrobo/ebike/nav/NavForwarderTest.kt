@@ -18,42 +18,29 @@ class NavForwarderTest {
     private fun maps(m: Int, icon: Icon = Icon.LEFT) = NavState(m, icon, 5_000)
 
     /** One tick one second later; returns the frame kinds. */
-    private fun tick(maps: NavState?, showFrom: ShowFrom = ShowFrom.M200, test: NavState? = null, forward: Boolean = true): List<NavForwarder.Kind> {
+    private fun tick(maps: NavState?, test: NavState? = null, forward: Boolean = true): List<NavForwarder.Kind> {
         now += 1_000
-        return f.tick(test, maps, forward, showFrom, now).map { it.kind }
+        return f.tick(test, maps, forward, now).map { it.kind }
     }
 
-    @Test fun alwaysStartsAtOnceAndUpdatesEveryTick() {
-        assertEquals(listOf(START, UPDATE), tick(maps(1500), ShowFrom.ALWAYS))
-        assertEquals(listOf(UPDATE), tick(maps(1400), ShowFrom.ALWAYS))
-        assertEquals(1400, f.shown!!.state.distM)
-        assertTrue(f.shown!!.active)
-    }
-
-    @Test fun thresholdHoldsBackFarHints() {
-        assertEquals(emptyList<NavForwarder.Kind>(), tick(maps(450)))
-        assertEquals(emptyList<NavForwarder.Kind>(), tick(maps(250)))
+    @Test fun nothingWithoutNavigation() {
+        assertEquals(emptyList<NavForwarder.Kind>(), tick(null))
         assertNull(f.shown)
-        assertEquals(listOf(START, UPDATE), tick(maps(200)))
-        assertEquals(listOf(UPDATE), tick(maps(150)))
     }
 
-    @Test fun jitterAroundTheThresholdDoesNotFlicker() {
-        tick(maps(200))
-        // GPS/rounding jumps back above 200 m, but within the hysteresis (200 + 50): stays on
-        assertEquals(listOf(UPDATE), tick(maps(250)))
-        assertEquals(listOf(UPDATE), tick(maps(200)))
-        assertEquals(listOf(UPDATE), tick(maps(240)))
+    @Test fun startsAtOnceHoweverFarAndUpdatesEveryTick() {
+        assertEquals(listOf(START, UPDATE), tick(maps(5_000)))
+        assertEquals(listOf(UPDATE), tick(maps(4_900)))
+        assertEquals(4_900, f.shown!!.state.distM)
         assertTrue(f.shown!!.active)
     }
 
-    @Test fun passedTurnEndsUntilTheNextOneIsNear() {
+    @Test fun passedTurnShowsTheNextOneAtOnce() {
         tick(maps(200)); tick(maps(50)); tick(maps(0))
-        // next maneuver is 800 m away: back to the normal screen
-        assertEquals(listOf(END), tick(maps(800, Icon.RIGHT)))
-        assertFalse(f.shown!!.active)
-        assertEquals(emptyList<NavForwarder.Kind>(), tick(maps(500, Icon.RIGHT)))
-        assertEquals(listOf(START, UPDATE), tick(maps(200, Icon.RIGHT)))
+        // next maneuver is 800 m away: the session stays open and shows it
+        assertEquals(listOf(UPDATE), tick(maps(800, Icon.RIGHT)))
+        assertTrue(f.shown!!.active)
+        assertEquals(Icon.RIGHT, f.shown!!.state.icon)
     }
 
     @Test fun shortDropoutKeepsTheSession() {
@@ -75,10 +62,10 @@ class NavForwarderTest {
         assertEquals(emptyList<NavForwarder.Kind>(), tick(maps(150), forward = false))
     }
 
-    @Test fun testManeuverIgnoresThresholdAndStopsAtOnce() {
-        assertEquals(listOf(START, UPDATE), tick(null, ShowFrom.M100, test = NavState(1200, Icon.UTURN, 2500)))
+    @Test fun testManeuverStartsAndStopsAtOnce() {
+        assertEquals(listOf(START, UPDATE), tick(null, test = NavState(1200, Icon.UTURN, 2500)))
         assertEquals(NavOrigin.TEST, f.shown!!.origin)
-        assertEquals(listOf(END), tick(null, ShowFrom.M100))
+        assertEquals(listOf(END), tick(null))
     }
 
     @Test fun testFallsBackToMapsWithinTheSameSession() {
@@ -87,8 +74,8 @@ class NavForwarderTest {
         assertEquals(NavOrigin.GOOGLE_MAPS, f.shown!!.origin)
     }
 
-    @Test fun arrivalIsShownRegardlessOfThreshold() {
-        assertEquals(listOf(START, UPDATE), tick(maps(900, Icon.ARRIVED), ShowFrom.M100))
+    @Test fun arrivalIsShown() {
+        assertEquals(listOf(START, UPDATE), tick(maps(900, Icon.ARRIVED)))
     }
 
     @Test fun sinceChangesOnlyWithTheContent() {
@@ -102,7 +89,7 @@ class NavForwarderTest {
 
     @Test fun framesFollowTheSessionSequence() {
         now += 1000
-        val out = f.tick(null, maps(150), true, ShowFrom.ALWAYS, now)
+        val out = f.tick(null, maps(150), true, now)
         val start = Frame.parse(out[0].frame)
         val upd = Frame.parse(out[1].frame)
         assertEquals(listOf(1, 1), start.data.map { it.toInt() })            // seq 1, cmd start
@@ -110,12 +97,6 @@ class NavForwarderTest {
         assertEquals(150, (upd.data[2].toInt() and 0xFF) or ((upd.data[3].toInt() and 0xFF) shl 8))
         assertEquals(Icon.LEFT.code, upd.data[5].toInt())
         assertTrue(out[1].changed)
-        assertFalse(f.tick(null, maps(150), true, ShowFrom.ALWAYS, now + 1000)[0].changed)
-    }
-
-    @Test fun hysteresis() {
-        assertEquals(25, NavForwarder.hysteresisM(100))
-        assertEquals(50, NavForwarder.hysteresisM(200))
-        assertEquals(125, NavForwarder.hysteresisM(500))
+        assertFalse(f.tick(null, maps(150), true, now + 1000)[0].changed)
     }
 }

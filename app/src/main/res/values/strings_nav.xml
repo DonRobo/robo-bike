@@ -15,7 +15,6 @@
 
     <string name="nav_card_title">What your display shows</string>
     <string name="nav_status_running">Running</string>
-    <string name="nav_status_waiting">Waiting</string>
     <string name="nav_status_ready">Ready</string>
     <string name="nav_status_off">Off</string>
     <string name="nav_arrow_cd">Arrow: %1$s</string>
@@ -40,16 +39,12 @@
         <item quantity="one">%d day ago</item>
         <item quantity="other">%d days ago</item>
     </plurals>
-    <string name="nav_waiting">Next turn in %1$s. It appears on the display from %2$s.</string>
     <string name="nav_ready">As soon as Google Maps guides you along a route, the arrow and distance appear here and on the display.</string>
     <string name="nav_not_connected">The display is not connected. Turn hints go out as soon as it is.</string>
     <string name="nav_off">Sending turn hints is switched off.</string>
 
     <string name="nav_forward_title">Send turn hints</string>
     <string name="nav_forward_sub">Arrow and distance appear on your bike\'s display.</string>
-    <string name="nav_show_from_title">Show hint from</string>
-    <string name="nav_show_from_sub">Before that the display stays on its normal screen.</string>
-    <string name="nav_show_from_always">Always</string>
     <string name="nav_access_granted">Notification access is allowed</string>
     <string name="nav_access_missing">Notification access is missing, so the app cannot read Google Maps</string>
     <string name="nav_access_change">Change</string>

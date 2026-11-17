@@ -3,11 +3,9 @@ package dev.donrobo.ebike.screenshots
 import androidx.activity.ComponentActivity
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import dev.donrobo.ebike.light.LightMode
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.settings.AppLanguage
 import dev.donrobo.ebike.ui.Tab
 import dev.donrobo.ebike.ui.settings.LightSummary
-import dev.donrobo.ebike.ui.settings.NavSummary
 import dev.donrobo.ebike.ui.settings.RangeSummary
 import dev.donrobo.ebike.ui.settings.Reminders
 import dev.donrobo.ebike.ui.settings.RemindersSheet
@@ -48,7 +46,7 @@ class SettingsScreenshotTest {
     private fun sample(language: AppLanguage = AppLanguage.GERMAN) = SettingsUiState(
         light = LightSummary(LightMode.AUTO, rain = true),
         range = RangeSummary(20, 10, home = true),
-        nav = NavSummary(true, ShowFrom.M200),
+        navForward = true,
         gpsTrack = true,
         priceCentPerKwh = 30.0,
         connectionDetails = true,
@@ -71,7 +69,7 @@ class SettingsScreenshotTest {
     /** A display without lamp switch and clock (Q4): Licht and the clock row are gone; details off. */
     @Test @Config(qualifiers = "de-$SETTINGS_PHONE")
     fun settings_reduced_de() = compose.screenshot("settings_reduced_de", Tab.SETTINGS) {
-        SettingsContent(sample().copy(light = null, clockAuto = null, connectionDetails = false, nav = NavSummary(false, ShowFrom.ALWAYS)), actions)
+        SettingsContent(sample().copy(light = null, clockAuto = null, connectionDetails = false, navForward = false), actions)
     }
 
     @Test @Config(qualifiers = "de-$PHONE")

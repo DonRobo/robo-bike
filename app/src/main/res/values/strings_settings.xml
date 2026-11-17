@@ -23,7 +23,6 @@
     <string name="settings_range_sub_home">Last %1$d rides, %2$d %% margin, way home</string>
     <string name="settings_nav_off">Off: nothing is sent to the display</string>
     <string name="settings_nav_always">Google Maps, every hint</string>
-    <string name="settings_nav_from">Google Maps, hint from %1$s</string>
     <string name="settings_handlebar_sub">Choose tiles, start automatically</string>
     <string name="settings_rides">Ride log</string>
     <string name="settings_rides_gps_on">Record route with GPS: on</string>
