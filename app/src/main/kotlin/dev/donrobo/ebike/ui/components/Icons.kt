@@ -47,6 +47,7 @@ object AppIcons {
     val Expand = LineIcon("M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5")
     val Tiles = LineIcon(rect(4f, 4f, 7f, 7f, 1.5f), rect(13f, 4f, 7f, 7f, 1.5f), rect(4f, 13f, 7f, 7f, 1.5f), rect(13f, 13f, 7f, 7f, 1.5f))
     val Battery = LineIcon(rect(3f, 8f, 16f, 9f, 2f), "M22 11v3")
+    val Bands = LineIcon("M5 6h11M5 10h14M5 14h12", "M5 18h1M9 18h1M13 18h1") // battery bands (R8): solid bars, a dotted one
     val Bulb = LineIcon("M9 18h6M10 21h4M12 3a6 6 0 0 0-4 10.5c.7.7 1 1.5 1 2.5h6c0-1 .3-1.8 1-2.5A6 6 0 0 0 12 3z")
     val Rain = LineIcon("M7 15a4 4 0 0 1 .5-8 5 5 0 0 1 9.6 1.5A3.5 3.5 0 0 1 17 15z", "M9 18l-1 2M13 18l-1 2M17 18l-1 2")
     val HomeCheck = LineIcon("M4 11l8-7 8 7v8a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z", "M9 14l2 2 4-4")
