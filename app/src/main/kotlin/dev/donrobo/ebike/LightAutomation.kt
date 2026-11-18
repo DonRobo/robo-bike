@@ -131,7 +131,8 @@ class LightAutomation(private val ctx: Context) {
 
     /**
      * Whether the weather is needed: a bike is connected and its rain rule can act (mode AUTO, rain switched on).
-     * Otherwise nothing is sent to Open-Meteo (data minimisation, Play data-safety answers).
+     * Otherwise the light sends nothing to Open-Meteo (data minimisation); the ride log's two temperature
+     * requests per ride ([dev.donrobo.ebike.ride.RideTemperatures]) are separate and share [Weather]'s cache.
      */
     @OptIn(ExperimentalCoroutinesApi::class)
     private val wantsWeather = Repo.live.map { it?.bikeId }.distinctUntilChanged().flatMapLatest { id ->
@@ -155,7 +156,7 @@ class LightAutomation(private val ctx: Context) {
                 val pos = if (perms.coarse || perms.fine) position() else null
                 if (pos == null) { delay(EVAL_INTERVAL_MS); continue }
                 precipitation.value = try {
-                    Weather.fetch(pos.lat, pos.lon).also { failing = false }
+                    Weather.current(pos.lat, pos.lon)?.precipitation.also { failing = false }
                 } catch (e: CancellationException) {
                     throw e
                 } catch (e: Exception) {

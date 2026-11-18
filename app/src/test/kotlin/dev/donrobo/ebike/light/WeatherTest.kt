@@ -4,13 +4,14 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 class WeatherTest {
     @Test fun url() {
         assertEquals(
             "https://api.open-meteo.com/v1/forecast?latitude=48.21&longitude=16.37" +
-                "&current=precipitation,rain,showers,snowfall,weather_code",
+                "&current=temperature_2m,precipitation,rain,showers,snowfall,weather_code",
             Weather.url(48.20612, 16.37208),
         )
     }
@@ -67,5 +68,34 @@ class WeatherTest {
         assertEquals(RainNow.DRY, rainNow(true, RainLevel.RAIN, p(0.0)))
         assertEquals(RainNow.BELOW_LEVEL, rainNow(true, RainLevel.RAIN, p(0.0, code = 51)))
         assertEquals(RainNow.WET, rainNow(true, RainLevel.RAIN, p(0.5)))
+    }
+
+    private fun w(c: Double) = CurrentWeather(Precipitation(0.0, 3), c)
+
+    @Test fun cacheSharesOneAnswerPerRoundedPositionWhileFresh() = runBlocking {
+        var now = 0L
+        val calls = mutableListOf<String>()
+        val cache = WeatherCache({ lat, lon -> calls += Weather.key(lat, lon); w(calls.size.toDouble()) }, { now })
+        assertEquals(1.0, cache.get(48.2081, 16.3713, 60_000)!!.temperatureC!!, 0.0)
+        now = 60_000
+        // same rounded position (about 1 km) within maxAge: no second request
+        assertEquals(1.0, cache.get(48.2119, 16.3698, 60_000)!!.temperatureC!!, 0.0)
+        assertEquals(1, calls.size)
+        // too old for this caller: fetched again
+        now = 60_001
+        assertEquals(2.0, cache.get(48.2081, 16.3713, 60_000)!!.temperatureC!!, 0.0)
+        // another rounded position: fetched again
+        assertEquals(3.0, cache.get(48.1850, 16.3770, 60_000)!!.temperatureC!!, 0.0)
+        assertEquals(listOf("latitude=48.21&longitude=16.37", "latitude=48.21&longitude=16.37", "latitude=48.19&longitude=16.38"), calls)
+    }
+
+    @Test fun failuresAreNotCached() = runBlocking {
+        var fail = true
+        var calls = 0
+        val cache = WeatherCache({ _, _ -> calls++; if (fail) error("offline") else w(4.0) }, { 0L })
+        assertTrue(runCatching { cache.get(48.2081, 16.3713, 60_000) }.isFailure)
+        fail = false
+        assertEquals(4.0, cache.get(48.2081, 16.3713, 60_000)!!.temperatureC!!, 0.0)
+        assertEquals(2, calls)
     }
 }

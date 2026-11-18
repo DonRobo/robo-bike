@@ -35,6 +35,7 @@
 
     <!-- Fahrtdetail -->
     <string name="ride_time_range">%1$s bis %2$s Uhr</string>
+    <string name="ride_time_temperature">%1$s · %2$s</string>
     <string name="ride_distance">Distanz</string>
     <string name="ride_duration">Dauer</string>
     <string name="ride_average">Durchschnitt</string>

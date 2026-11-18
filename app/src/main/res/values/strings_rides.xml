@@ -35,6 +35,8 @@
 
     <!-- Fahrtdetail -->
     <string name="ride_time_range">%1$s to %2$s</string>
+    <!-- time range, then the outdoor temperature at the start (and end) of the ride, e.g. "08:15 to 08:42 · 3 °C" -->
+    <string name="ride_time_temperature">%1$s · %2$s</string>
     <string name="ride_distance">Distance</string>
     <string name="ride_duration">Duration</string>
     <string name="ride_average">Average</string>

@@ -1,6 +1,8 @@
 package dev.donrobo.ebike.backup
 
 import dev.donrobo.ebike.ride.RideIndex
+import dev.donrobo.ebike.ride.RideTemperature
+import dev.donrobo.ebike.ride.RideTemperatures
 import dev.donrobo.ebike.settings.Bikes
 import dev.donrobo.ebike.settings.MemoryStore
 import dev.donrobo.ebike.settings.Migration
@@ -204,6 +206,16 @@ class BackupTest {
         assertEquals(sa.all(), sb.all())
         assertTrue(File(b, "bikes/b1/errors.csv").exists())
         assertFalse(File(b, Restore.DIR).exists())
+    }
+
+    @Test fun rideTemperatureIsBackedUpAndRestored() {
+        val (a, sa) = phoneA()
+        val csv = File(a, "bikes/b1/rides/2025-11-10_203300.csv")
+        RideTemperatures.append(csv, RideTemperatures.Reading(RideTemperatures.Moment.START, 1_762_803_180_000L, -1.5))
+        val zip = backupOf(a, sa)
+        val (b, sb) = phoneB()
+        Restore(b, sb).apply { stage(ByteArrayInputStream(zip), Migration.CURRENT); commit() }
+        assertEquals(RideTemperature(-1.5, null), RideTemperatures.read(File(b, "bikes/b1/rides/2025-11-10_203300.csv")))
     }
 
     @Test fun backupLeavesCachesAndDebugLogOut() {

@@ -12,7 +12,7 @@
 <li>Connects automatically when the display switches on (companion device pairing)</li>
 </ul>
 
-<p><b>Privacy</b>: all data stays on your phone. The app only contacts Open-Meteo (weather for the rain light, with a rounded position) and OpenFreeMap (map tiles).</p>
+<p><b>Privacy</b>: all data stays on your phone. The app only contacts Open-Meteo (weather for the rain light and the outdoor temperature of rides, with a rounded position) and OpenFreeMap (map tiles).</p>
 
 <p><b>Safety</b>: the app only uses the display's documented, harmless commands (headlight, clock, navigation hints, reads). It never changes speed limits or motor parameters and never sends firmware commands. No warranty; use at your own risk.</p>
 

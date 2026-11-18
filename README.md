@@ -57,8 +57,9 @@ commands. Do not operate the app while riding in a way that distracts you from t
 All data (rides, positions, settings) stays on your phone; backups are files you export yourself. There are no
 accounts, analytics or ads. The app contacts only:
 
-- **Open-Meteo** (`api.open-meteo.com`) for the current weather at a rounded position, only when the rain rule of
-  the automatic light is on and location access is granted;
+- **Open-Meteo** (`api.open-meteo.com`) for the current weather at a rounded position (about 1 km), only with
+  location access granted: while the rain rule of the automatic light is on, and once at the start and once at the
+  end of each ride, for the outdoor temperature kept with the ride;
 - **OpenFreeMap** (`tiles.openfreemap.org`) for map tiles when a map is shown.
 
 Location and notification access are optional and explained in the app before Android asks for them.

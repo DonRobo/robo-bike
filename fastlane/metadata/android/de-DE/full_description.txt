@@ -12,7 +12,7 @@
 <li>Verbindet sich automatisch, sobald das Display eingeschaltet wird (Companion-Kopplung)</li>
 </ul>
 
-<p><b>Datenschutz</b>: Alle Daten bleiben auf deinem Handy. Die App kontaktiert nur Open-Meteo (Wetter für das Regenlicht, mit gerundeter Position) und OpenFreeMap (Kartenkacheln).</p>
+<p><b>Datenschutz</b>: Alle Daten bleiben auf deinem Handy. Die App kontaktiert nur Open-Meteo (Wetter für das Regenlicht und die Außentemperatur der Fahrten, mit gerundeter Position) und OpenFreeMap (Kartenkacheln).</p>
 
 <p><b>Sicherheit</b>: Die App nutzt nur dokumentierte, harmlose Befehle des Displays (Licht, Uhr, Abbiegehinweise, Lesen). Sie ändert nie Geschwindigkeitsgrenzen oder Motorparameter und sendet nie Firmware-Befehle. Keine Gewährleistung, Nutzung auf eigene Gefahr.</p>
 
