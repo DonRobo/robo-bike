@@ -11,7 +11,7 @@
     <string name="disclosure_bg_location_parked">remember where you parked (“Where is my bike?”)</string>
     <string name="disclosure_bg_location_home">count the distance since you left home and warn you when the battery may not get you back</string>
     <string name="disclosure_bg_location_light">switch the light by sunrise, sunset and rain</string>
-    <string name="disclosure_bg_location_data">Your location stays on your phone. Only for the rain check, a position rounded to about 1 km goes to the weather service Open-Meteo. No ads, no analytics.</string>
+    <string name="disclosure_bg_location_data">Your location stays on your phone. Only for the rain check and the outdoor temperature of your rides, a position rounded to about 1 km goes to the weather service Open-Meteo. No ads, no analytics.</string>
     <string name="disclosure_bg_location_optional">This is optional. Without it, these features only work when you open the app before riding.</string>
     <string name="disclosure_bg_location_next">Next, Android asks you: choose “%1$s”.</string>
     <string name="disclosure_bg_location_next_generic">Next, Android asks for the permission.</string>

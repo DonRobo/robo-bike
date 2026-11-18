@@ -187,6 +187,10 @@ val rides by remember(bike.id) { RideRepository.summaries(ctx, bike.id) }.collec
 val month = RideStats.aggregate(rides, StatsPeriod.MONTH, LocalDate.now())
 ```
 
+- `RideTemperatures.read(csv)`: outdoor temperature at ride start/end (`RideTemperature`, °C, either may be null),
+  from `<ride>.weather` next to the CSV ("start|end,epochMs,°C" per line). The recorder takes it from Open-Meteo
+  (`Weather.current`, cache shared with the light automation) at the newest known position, once at start and once
+  at end; no file = no temperature (older rides, no position or network). Not in `RideSummary` / the index yet.
 - `RideSummary.shape` (`RideShape`, 32 points along the GPS path, cached in the index) draws thumbnails and feeds
   `RouteMatcher` (recurring routes, F5; method documented there). `RecurringRoutes.groups(ctx, bikeId)` gives
   `RouteGroups` (routes + route per ride id); names are the per-bike setting `RouteSettings.routes`.

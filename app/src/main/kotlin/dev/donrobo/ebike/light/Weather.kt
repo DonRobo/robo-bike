@@ -1,6 +1,8 @@
 package dev.donrobo.ebike.light
 
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.HttpURLConnection
@@ -41,15 +43,44 @@ enum class RainLevel(val minMmH: Double, val codes: Set<Int>) {
 
 private fun codes(vararg ranges: IntRange): Set<Int> = ranges.flatMap { it }.toSet()
 
-/** Current precipitation from Open-Meteo (no API key). */
+/** One answer of Open-Meteo's `current` block: precipitation (rain rule) and air temperature 2 m above ground (ride log). */
+data class CurrentWeather(val precipitation: Precipitation?, val temperatureC: Double?)
+
+/**
+ * The last [CurrentWeather] per rounded position ([Weather.key]), so the light automation and the ride log share
+ * one request: an answer younger than the caller's `maxAgeMs` is reused, and concurrent callers wait for the
+ * request in flight instead of sending their own. Failures are not cached.
+ */
+class WeatherCache(
+    private val fetch: suspend (lat: Double, lon: Double) -> CurrentWeather?,
+    private val clock: () -> Long = System::currentTimeMillis,
+) {
+    private val lock = Mutex()
+    private var last: Triple<String, Long, CurrentWeather?>? = null
+
+    suspend fun get(lat: Double, lon: Double, maxAgeMs: Long): CurrentWeather? = lock.withLock {
+        val key = Weather.key(lat, lon)
+        last?.let { (k, at, w) -> if (k == key && clock() - at in 0..maxAgeMs) return@withLock w }
+        fetch(lat, lon).also { last = Triple(key, clock(), it) }
+    }
+}
+
+/** Current weather from Open-Meteo (no API key). */
 object Weather {
-    /** Rounds to 2 decimals (~1 km) so the exact position never leaves the phone. */
-    fun url(lat: Double, lon: Double): String = String.format(
-        Locale.US,
-        "https://api.open-meteo.com/v1/forecast?latitude=%.2f&longitude=%.2f" +
-            "&current=precipitation,rain,showers,snowfall,weather_code",
-        lat, lon,
-    )
+    /** The position as sent: rounded to 2 decimals (~1 km) so the exact position never leaves the phone. */
+    fun key(lat: Double, lon: Double): String = String.format(Locale.US, "latitude=%.2f&longitude=%.2f", lat, lon)
+
+    fun url(lat: Double, lon: Double): String =
+        "https://api.open-meteo.com/v1/forecast?${key(lat, lon)}" +
+            "&current=temperature_2m,precipitation,rain,showers,snowfall,weather_code"
+
+    /** An answer younger than this is reused by every caller ([WeatherCache]). */
+    const val CACHE_MS = 5 * 60_000L
+
+    private val cache = WeatherCache(::fetch)
+
+    /** Current weather at the rounded position, from [cache] when fresh enough; throws on any network/parse failure. */
+    suspend fun current(lat: Double, lon: Double, maxAgeMs: Long = CACHE_MS): CurrentWeather? = cache.get(lat, lon, maxAgeMs)
 
     /** WMO groups: drizzle 51-57, rain 61-67, snow 71-77, showers 80-86, thunderstorm 95-99. */
     fun isWetCode(code: Int) = code in RainLevel.DRIZZLE.codes
@@ -68,8 +99,8 @@ object Weather {
         return Precipitation(mm?.let { it * perHour }, weatherCode)
     }
 
-    /** Blocking fetch on IO; throws on any network/parse failure. */
-    suspend fun fetch(lat: Double, lon: Double): Precipitation? = withContext(Dispatchers.IO) {
+    /** Blocking fetch on IO; throws on any network/parse failure. Callers use [current]. */
+    private suspend fun fetch(lat: Double, lon: Double): CurrentWeather? = withContext(Dispatchers.IO) {
         val conn = URL(url(lat, lon)).openConnection() as HttpURLConnection
         try {
             conn.connectTimeout = 5_000
@@ -78,7 +109,9 @@ object Weather {
             val cur = JSONObject(conn.inputStream.bufferedReader().use { it.readText() }).getJSONObject("current")
             fun d(k: String) = if (cur.isNull(k)) null else cur.optDouble(k).takeUnless { it.isNaN() }
             fun i(k: String) = if (cur.isNull(k) || !cur.has(k)) null else cur.optInt(k)
-            precipitation(i("weather_code"), d("precipitation"), d("rain"), d("showers"), d("snowfall"), i("interval"))
+            val p = precipitation(i("weather_code"), d("precipitation"), d("rain"), d("showers"), d("snowfall"), i("interval"))
+            val t = d("temperature_2m")
+            if (p == null && t == null) null else CurrentWeather(p, t)
         } finally {
             conn.disconnect()
         }

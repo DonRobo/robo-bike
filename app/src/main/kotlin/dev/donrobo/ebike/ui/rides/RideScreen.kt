@@ -42,6 +42,8 @@ import dev.donrobo.ebike.ride.RecurringRoute
 import dev.donrobo.ebike.ride.RecurringRoutes
 import dev.donrobo.ebike.ride.RideRepository
 import dev.donrobo.ebike.ride.RideSummary
+import dev.donrobo.ebike.ride.RideTemperature
+import dev.donrobo.ebike.ride.RideTemperatures
 import dev.donrobo.ebike.ride.RouteGroups
 import dev.donrobo.ebike.settings.bikes
 import dev.donrobo.ebike.ui.AppNavigator
@@ -71,6 +73,7 @@ import dev.donrobo.ebike.ui.components.map.MapContent
 import dev.donrobo.ebike.ui.components.map.MapMode
 import dev.donrobo.ebike.ui.components.map.MapTrack
 import dev.donrobo.ebike.ui.components.rememberUnitFormatter
+import dev.donrobo.ebike.ui.components.text
 import dev.donrobo.ebike.ui.components.unitLabel
 import dev.donrobo.ebike.ui.theme.AppTheme
 import dev.donrobo.ebike.units.UnitFormatter
@@ -85,8 +88,8 @@ import java.time.ZoneId
 import kotlin.math.abs
 import kotlin.math.roundToInt
 
-/** Fahrtdetail data. [charts] is null while the samples are read. */
-data class RideDetailUiState(val ride: RideSummary, val route: RecurringRoute?, val charts: RideCharts?)
+/** Fahrtdetail data. [charts] is null while the samples are read; [temperature] is null when none was recorded. */
+data class RideDetailUiState(val ride: RideSummary, val route: RecurringRoute?, val charts: RideCharts?, val temperature: RideTemperature? = null)
 
 interface RideActions {
     fun back()
@@ -113,6 +116,9 @@ fun RideScreen(nav: AppNavigator, rideId: String) {
     // re-read when the file changed (a ride still being recorded grows)
     val charts by produceState<RideCharts?>(null, ride?.file, ride?.endMs) {
         value = ride?.let { r -> withContext(Dispatchers.Default) { rideCharts(RideRepository.samples(r)) } }
+    }
+    val temperature by produceState<RideTemperature?>(null, ride?.file, ride?.endMs) {
+        value = ride?.let { r -> withContext(Dispatchers.IO) { RideTemperatures.read(r.file) } }
     }
     var fullMap by rememberSaveable { mutableStateOf(false) }
     var confirmDelete by remember { mutableStateOf(false) }
@@ -153,7 +159,7 @@ fun RideScreen(nav: AppNavigator, rideId: String) {
         FullScreenMap(MapContent(tracks = listOf(MapTrack(charts?.track ?: ride.shape?.points.orEmpty())))) { fullMap = false }
         return
     }
-    RideDetailContent(RideDetailUiState(ride, groups.byRide[ride.id], charts), actions)
+    RideDetailContent(RideDetailUiState(ride, groups.byRide[ride.id], charts, temperature), actions)
     if (confirmDelete) ConfirmDialog(
         stringResource(R.string.ride_delete_title), stringResource(R.string.ride_delete_body), stringResource(R.string.ride_delete_confirm),
         onConfirm = {
@@ -198,7 +204,9 @@ fun RideDetailContent(
             Column(Modifier.fillMaxWidth().padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 24.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                     Text(dayText(Instant.ofEpochMilli(r.startMs).atZone(zone).toLocalDate()), style = AppTheme.type.detailTitle)
-                    Text(stringResource(R.string.ride_time_range, clockText(r.startMs, zone), clockText(r.endMs, zone)), style = AppTheme.type.body, color = c.textMuted)
+                    val times = stringResource(R.string.ride_time_range, clockText(r.startMs, zone), clockText(r.endMs, zone))
+                    val temp = state.temperature?.measure(fmt)?.text()
+                    Text(temp?.let { stringResource(R.string.ride_time_temperature, times, it) } ?: times, style = AppTheme.type.body, color = c.textMuted)
                 }
                 Figures(r, fmt)
                 BatteryCard(r)

@@ -29,16 +29,22 @@ enum class UnitSystem {
 
     /** The unit symbol of speeds (km/h / mph). */
     val speedUnit: UnitLabel get() = if (this == IMPERIAL) UnitLabel.MPH else UnitLabel.KMH
+
+    /** The unit symbol of temperatures (°C / °F). */
+    val temperatureUnit: UnitLabel get() = if (this == IMPERIAL) UnitLabel.FAHRENHEIT else UnitLabel.CELSIUS
+
+    /** [celsius] in this system's temperature unit. */
+    fun toTemperatureUnit(celsius: Double): Double = if (this == IMPERIAL) celsius * 9 / 5 + 32 else celsius
 }
 
 /** Unit symbol of a [Measure]; the UI maps it to a string resource. */
-enum class UnitLabel { KM, MI, KMH, MPH, M, FT }
+enum class UnitLabel { KM, MI, KMH, MPH, M, FT, CELSIUS, FAHRENHEIT }
 
 /** A number formatted for display plus its unit, rendered separately (the designs style them differently). */
 data class Measure(val value: String, val unit: UnitLabel)
 
 /**
- * The single place where distances and speeds become text. All inputs are metric (what the display
+ * The single place where distances, speeds and temperatures become text. All inputs are metric (what the display
  * reports); conversion and number formatting follow [system] and [locale].
  */
 class UnitFormatter(val system: UnitSystem, val locale: Locale) {
@@ -56,6 +62,18 @@ class UnitFormatter(val system: UnitSystem, val locale: Locale) {
     }
 
     fun speed(kmh: Double, decimals: Int = 0): Measure = Measure(number(system.toUnit(kmh), decimals), system.speedUnit)
+
+    /**
+     * Whole degrees in the rider's unit ("3 °C", "37 °F"); with [endC] whose rounded value differs, start to end
+     * ("3 → 5 °C"). Never "-0".
+     */
+    fun temperature(startC: Double, endC: Double? = null): Measure {
+        fun deg(c: Double): Double = Math.round(system.toTemperatureUnit(c)).toDouble() // via Long: -0.4 gives 0, not -0
+        val a = deg(startC)
+        val b = endC?.let(::deg)?.takeIf { it != a }
+        val value = if (b == null) number(a, 0) else "${number(a, 0)} → ${number(b, 0)}"
+        return Measure(value, system.temperatureUnit)
+    }
 
     /** The unit symbol of distances (km / mi), e.g. for an empty value or an axis. */
     val distanceUnit: UnitLabel get() = system.distanceUnit

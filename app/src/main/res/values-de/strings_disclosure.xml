@@ -10,7 +10,7 @@
     <string name="disclosure_bg_location_parked">sich merken, wo du geparkt hast („Wo steht mein Rad?“)</string>
     <string name="disclosure_bg_location_home">die Strecke seit daheim zählen und dich warnen, wenn der Akku nicht mehr für den Heimweg reicht</string>
     <string name="disclosure_bg_location_light">das Licht nach Sonnenaufgang, Sonnenuntergang und Regen schalten</string>
-    <string name="disclosure_bg_location_data">Dein Standort bleibt auf deinem Handy. Nur für die Regenprüfung geht eine auf etwa 1 km gerundete Position an den Wetterdienst Open-Meteo. Keine Werbung, keine Analyse.</string>
+    <string name="disclosure_bg_location_data">Dein Standort bleibt auf deinem Handy. Nur für die Regenprüfung und die Außentemperatur deiner Fahrten geht eine auf etwa 1 km gerundete Position an den Wetterdienst Open-Meteo. Keine Werbung, keine Analyse.</string>
     <string name="disclosure_bg_location_optional">Das ist freiwillig. Ohne funktionieren diese Funktionen nur, wenn du die App vor der Fahrt öffnest.</string>
     <string name="disclosure_bg_location_next">Danach fragt Android: Wähle „%1$s“.</string>
     <string name="disclosure_bg_location_next_generic">Danach fragt Android nach der Berechtigung.</string>
