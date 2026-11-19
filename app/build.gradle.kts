@@ -95,6 +95,6 @@ dependencies {
     testImplementation("androidx.compose.ui:ui-test-junit4")
     testImplementation("org.robolectric:robolectric:4.16")
     testImplementation("io.github.takahirom.roborazzi:roborazzi:1.50.0")
-    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:1.50.0")
+    testImplementation("io.github.takahirom.roborazzi:roborazzi-compose:1.79.0")
     testImplementation("io.github.takahirom.roborazzi:roborazzi-junit-rule:1.50.0")
 }
