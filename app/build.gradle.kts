@@ -74,6 +74,34 @@ kotlin { compilerOptions { jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarg
 
 roborazzi { outputDir.set(layout.buildDirectory.dir("screenshots")) }
 
+// Robolectric's Android framework jars (android-all-instrumented) are resolved by Gradle, not downloaded by
+// Robolectric at test time: Gradle retries and caches them, so a flaky Maven download no longer fails random test
+// classes. The tests then run Robolectric offline from that directory.
+// One jar per SDK the tests use (robolectric.properties: 35, @Config: 31). The versions must match what this
+// Robolectric release expects: after a Robolectric bump, offline mode names the missing jar; take its version from
+// that error (or from ~/.m2/repository/org/robolectric/android-all-instrumented after an online run).
+// One configuration per jar: within a single configuration Gradle would resolve the versions to just the newest.
+val robolectricAndroidAll = mapOf(
+    31 to "12-robolectric-7732740-i7",
+    35 to "15-robolectric-13954326-i7",
+).map { (sdk, version) ->
+    configurations.create("robolectricAndroidAll$sdk") {
+        isTransitive = false
+        dependencies.add(project.dependencies.create("org.robolectric:android-all-instrumented:$version"))
+    }
+}
+val robolectricJarsDir = layout.buildDirectory.dir("robolectric-android-all")
+val prepareRobolectricJars by tasks.registering(Sync::class) {
+    from(robolectricAndroidAll)
+    into(robolectricJarsDir)
+}
+tasks.withType<Test>().configureEach {
+    dependsOn(prepareRobolectricJars)
+    inputs.dir(robolectricJarsDir)
+    systemProperty("robolectric.offline", "true")
+    systemProperty("robolectric.dependency.dir", robolectricJarsDir.get().asFile.absolutePath)
+}
+
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2025.12.01"))
     implementation("androidx.compose.material3:material3")
