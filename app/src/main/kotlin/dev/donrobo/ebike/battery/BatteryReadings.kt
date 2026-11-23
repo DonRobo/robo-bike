@@ -26,7 +26,7 @@ import dev.donrobo.ebike.ride.RideSummary
  *   voltage keeps recovering for much longer. By the next ride the reading was back up by 1-5 points on most of
  *   the owner's rides and by up to 13 (11 within half an hour), so the end-of-ride reading booked about twice the
  *   real consumption. The true end level is the next ride's start level, as long as no charge came in between
- *   ([settleEnds]).
+ *   ([settleEnds], [charged]).
  */
 object BatteryReadings {
     /**
@@ -50,6 +50,12 @@ object BatteryReadings {
      * without a charge.
      */
     const val FLICKER_PCT = 1
+
+    /** A start at or above this is a full battery (100 % within flicker), where every charge ends ([charged]). */
+    const val FULL_PCT = 100 - FLICKER_PCT
+
+    /** From a full start: a rise from the end reading to a full next start by this much is a charge ([charged]). */
+    const val TOP_CHARGE_RISE_PCT = 8
 
     /** The display reports 0 before it knows the battery; above 100 is not a percentage. */
     fun plausible(pct: Int) = pct in 1..100
@@ -77,10 +83,8 @@ object BatteryReadings {
 
     /**
      * Replaces each ride's end level by its rest level (see [BatteryReadings]): the next ride's start level, the first
-     * reading at rest after it, marked [RideSummary.endSettled]. Between two rides the charge can only fall unless the
-     * bike was charged, and recovery never lifts the reading above the charge, so the next ride starting at most
-     * [FLICKER_PCT] above this ride's start means no charge came in between. The settled end is never above the
-     * start and never below the ride's own end reading.
+     * reading at rest after it, marked [RideSummary.endSettled], unless the bike was charged in between ([charged]).
+     * The settled end is never above the start and never below the ride's own end reading.
      *
      * A ride followed by a charge, and the newest ride, have no reading at rest after them. They get their own end
      * reading plus the median recovery of the settled rides ([recoveryPct]), unsettled. Dropping them instead would
@@ -91,7 +95,7 @@ object BatteryReadings {
     fun settleEnds(rides: List<RideSummary>): List<RideSummary> {
         val rest = rides.mapIndexed { i, r ->
             val nextStart = rides.getOrNull(i - 1)?.batteryStartPct?.takeIf(::plausible)
-            if (plausible(r.batteryStartPct) && nextStart != null && nextStart <= r.batteryStartPct + FLICKER_PCT)
+            if (plausible(r.batteryStartPct) && nextStart != null && !charged(r, nextStart))
                 nextStart.coerceIn(r.batteryEndPct, r.batteryStartPct) else null
         }
         val recovery = recoveryPct(rides.indices.mapNotNull { i -> rest[i]?.let { it - rides[i].batteryEndPct } })
@@ -103,6 +107,19 @@ object BatteryReadings {
             }
         }
     }
+
+    /**
+     * Whether the bike was charged between [ride] and a next ride starting at [nextStartPct]. The owner only charges
+     * fully, so a charge always ends at (about) 100 %: a next start below [FULL_PCT] is never a charge (a start above
+     * this ride's start then is flicker or recovery, and the settled end is capped at the start). A full next start
+     * is a charge when it lies above this ride's start (the charge cannot rise by itself), or when this ride started
+     * full too and the reading rose from its end by [TOP_CHARGE_RISE_PCT] or more: near the top, recovery lifted the
+     * reading by at most 5 points on the owner's rides (11 rides starting at 90 % or more), so 100 -> 95 -> 100 is
+     * recovery (the ride used less than one display step) and 100 -> 88 -> 100 a charge.
+     */
+    fun charged(ride: RideSummary, nextStartPct: Int): Boolean =
+        nextStartPct >= FULL_PCT &&
+            (nextStartPct > ride.batteryStartPct + FLICKER_PCT || nextStartPct - ride.batteryEndPct >= TOP_CHARGE_RISE_PCT)
 
     /** Typical recovery from the end of a ride to rest: the median of [recoveries] (whole percent), 0 without any. */
     fun recoveryPct(recoveries: List<Int>): Int {

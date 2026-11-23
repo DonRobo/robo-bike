@@ -66,11 +66,27 @@ class BatteryReadingsTest {
         assertEquals(listOf(3.0, 1.0, 4.0, 4.0), s.map { it.batteryUsedPct })
     }
 
-    @Test fun oneStepAboveTheStartIsFlickerNotACharge() {
-        val s = settle(ride(0, 90, 80), ride(1, 91, 85))
+    @Test fun onlyAFullNextStartIsACharge() {
+        // the owner charges fully only: 80 -> 70, next start 85 is no charge (recovery, capped at the start)
+        val s = settle(ride(0, 80, 70), ride(1, 85, 80))
         assertTrue(s[0].endSettled)
-        assertEquals(90, s[0].batteryEndPct) // never above the ride's own start
-        assertFalse(settle(ride(0, 90, 80), ride(1, 92, 85))[0].endSettled)
+        assertEquals(80, s[0].batteryEndPct)
+        // a full next start above the ride's start is
+        assertFalse(settle(ride(0, 80, 70), ride(1, 100, 92))[0].endSettled)
+        assertFalse(settle(ride(0, 98, 90), ride(1, 100, 92))[0].endSettled)
+        // one step above a full start is flicker
+        assertTrue(settle(ride(0, 99, 95), ride(1, 100, 92))[0].endSettled)
+    }
+
+    @Test fun fullToFullIsAChargeOnlyAfterALargeDrop() {
+        // 100 -> 95, next 100: recovery, the ride used less than one display step
+        val small = settle(ride(0, 100, 95), ride(1, 100, 92))
+        assertTrue(small[0].endSettled)
+        assertEquals(0.0, small[0].batteryUsedPct, 1e-9)
+        // 100 -> 88, next 100: more than recovery does near the top, so charged; end estimated (no recovery data: 88)
+        val big = settle(ride(0, 100, 88), ride(1, 100, 92))
+        assertFalse(big[0].endSettled)
+        assertEquals(88, big[0].batteryEndPct)
     }
 
     @Test fun settledEndIsNeverBelowTheRidesOwnEnd() {
