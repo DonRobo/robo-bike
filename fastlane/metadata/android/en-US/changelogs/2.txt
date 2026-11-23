@@ -1,0 +1,3 @@
+- Range: more accurate. The battery reading recovers for hours after a ride, so a ride's end level is now read at the next ride's start; only a full start counts as a charge.
+- Range while riding no longer drops with every long climb; it counts down with the distance ridden.
+- Library updates.

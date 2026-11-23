@@ -1,0 +1,3 @@
+- Reichweite: genauer. Die Akkuanzeige erholt sich nach einer Fahrt noch stundenlang, deshalb zählt jetzt der Stand beim Start der nächsten Fahrt; nur ein voller Start gilt als Ladung.
+- Die Reichweite während der Fahrt fällt nicht mehr bei jedem langen Anstieg, sondern zählt mit der gefahrenen Strecke herunter.
+- Bibliotheken aktualisiert.
