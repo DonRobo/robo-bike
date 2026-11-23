@@ -15,8 +15,8 @@ android {
         minSdk = 31
         targetSdk = 36
         // Read by F-Droid's checkupdates: keep both literal here and bump them for every release tag (v<versionName>).
-        versionCode = 1
-        versionName = "0.1.0"
+        versionCode = 2
+        versionName = "0.1.1"
     }
 
     // Release signing from the environment (CI) or keystore.properties (local, gitignored). Without either the release
