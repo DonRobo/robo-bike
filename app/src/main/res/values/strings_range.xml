@@ -76,6 +76,7 @@
     <string name="range_health_title">Battery health</string>
     <string name="range_health_subtitle">Maximum range over the last six months</string>
     <string name="range_health_caveat">Season, temperature and riding style move this value as much as the battery itself.</string>
+    <string name="range_health_info">More about battery health</string>
     <string name="range_health_not_enough">A trend needs rides from at least two months, about %1$s per month.</string>
     <string name="range_health_one_month">%1$s: %2$s on a full battery.</string>
     <string name="range_health_chart">Maximum range from %1$s to %2$s: from %3$s to %4$s</string>
@@ -86,6 +87,9 @@
     <string name="range_model_rides">%1$d rides</string>
     <string name="range_model_margin">Safety margin</string>
     <string name="range_model_margin_value">%1$d %%</string>
-    <string name="range_model_note">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used. How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, the average applies. A way by road is about %2$s times the straight line; the ring and the way home use that.</string>
+    <string name="range_model_info">More about the calculation</string>
+    <string name="range_model_info_rides">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used.</string>
+    <string name="range_model_info_bands">How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, the average applies.</string>
+    <string name="range_model_info_detour">A way by road is about %1$s times the straight line; the ring and the way home use that.</string>
 
 </resources>

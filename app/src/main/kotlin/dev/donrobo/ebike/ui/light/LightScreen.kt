@@ -33,6 +33,8 @@ import dev.donrobo.ebike.light.SunDay
 import dev.donrobo.ebike.settings.Setting
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
+import dev.donrobo.ebike.ui.components.InfoParagraph
+import dev.donrobo.ebike.ui.components.InfoButton
 import dev.donrobo.ebike.ui.components.AppCard
 import dev.donrobo.ebike.ui.components.AppIcon
 import dev.donrobo.ebike.ui.components.AppIcons
@@ -198,7 +200,9 @@ private fun CurveCard(state: LightUiState, actions: LightActions) {
     val curve = state.curve
     val schedule = state.schedule
     AppCard(gap = 12.dp) {
-        CardTitle(stringResource(R.string.light_curve_title), description = stringResource(R.string.light_curve_hint))
+        CardTitle(stringResource(R.string.light_curve_title), description = stringResource(R.string.light_curve_hint)) {
+            InfoButton(stringResource(R.string.light_curve_info), stringResource(R.string.light_curve_title)) { SunCurveInfo() }
+        }
         if (curve != null && schedule != null) {
             val day = curve.day
             SunCurveChart(
@@ -238,7 +242,6 @@ private fun CurveCard(state: LightUiState, actions: LightActions) {
             onEarlier = { actions.setEveningOnDeg(stepEvening(day, state, forward = false)) },
             onLater = { actions.setEveningOnDeg(stepEvening(day, state, forward = true)) },
         )
-        Text(stringResource(R.string.light_curve_footnote), style = t.caption, color = c.textMuted)
     }
 }
 
@@ -302,3 +305,10 @@ private fun RainCard(state: LightUiState, actions: LightActions) {
     }
 }
 
+
+/** The sun curve's explanation sheet content (S4). */
+@Composable
+internal fun SunCurveInfo() {
+    InfoParagraph(stringResource(R.string.light_curve_info_body))
+    InfoParagraph(stringResource(R.string.light_curve_footnote))
+}

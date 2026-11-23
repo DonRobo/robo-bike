@@ -2,6 +2,8 @@
 <resources>
     <string name="diagnostics_title">Diagnostics</string>
     <string name="diag_intro">Tools for development and troubleshooting. You do not need them day to day.</string>
+    <string name="diag_info">More about diagnostics</string>
+    <string name="diag_info_safe">Test maneuvers only send turn arrows, like a navigation app would. The app never writes settings to the display.</string>
 
     <string name="diag_test_title">Test maneuver</string>
     <string name="diag_test_sub">Shows a turn hint on the display without Google Maps running.</string>

@@ -44,7 +44,9 @@
 
     <!-- Sun curve card -->
     <string name="light_curve_title">Sun today</string>
-    <string name="light_curve_hint">Drag the two points to where the light should switch. It is on in the tinted areas.</string>
+    <string name="light_curve_hint">Drag the points. The light is on in the tinted area.</string>
+    <string name="light_curve_info">More about the sun curve</string>
+    <string name="light_curve_info_body">The curve is the sun\'s height above the horizon at your location today. Each point marks the sun elevation at which the light switches on or off, separately for morning and evening.</string>
     <string name="light_curve_a11y">Sun elevation over the day with the light\'s switching points</string>
     <string name="light_horizon">Horizon</string>
     <string name="light_now">Now</string>
@@ -63,7 +65,7 @@
     <string name="light_morning_later">Switch off later in the morning</string>
     <string name="light_evening_earlier">Switch on earlier in the evening</string>
     <string name="light_evening_later">Switch on later in the evening</string>
-    <string name="light_curve_footnote">The sun elevation is stored, not the clock time, so the switching point fits all year round.</string>
+    <string name="light_curve_footnote">The sun elevation is stored, not the clock time, so the switching point fits all year round. The times next to the curve are today\'s.</string>
     <string name="light_no_position_title">No location yet</string>
     <string name="light_no_position_text">As soon as the phone knows where you are, today\'s sun curve appears here. You can already set the switching points in degrees.</string>
 

@@ -51,6 +51,8 @@ import dev.donrobo.ebike.proto.hex
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
 import dev.donrobo.ebike.ui.LocalSnackbar
+import dev.donrobo.ebike.ui.components.InfoParagraph
+import dev.donrobo.ebike.ui.components.InfoButton
 import dev.donrobo.ebike.ui.components.AppButton
 import dev.donrobo.ebike.ui.components.AppCard
 import dev.donrobo.ebike.ui.components.AppIcon
@@ -174,11 +176,15 @@ fun DiagnosticsScreen(nav: AppNavigator) {
 /** Stateless Diagnose screen (used by the screenshot test). */
 @Composable
 fun DiagnosticsContent(state: DiagnosticsUiState, actions: DiagnosticsActions, extra: @Composable () -> Unit = {}, onBack: () -> Unit) {
-    Screen(header = { BackHeader(stringResource(R.string.diagnostics_title), onBack) }, bodyTop = 4.dp) {
-        Text(
-            stringResource(R.string.diag_intro), Modifier.padding(horizontal = 4.dp),
-            style = AppTheme.type.bodySmall, color = AppTheme.colors.textMuted,
-        )
+    val header = @Composable {
+        BackHeader(stringResource(R.string.diagnostics_title), onBack) {
+            InfoButton(stringResource(R.string.diag_info), stringResource(R.string.diagnostics_title)) {
+                InfoParagraph(stringResource(R.string.diag_intro))
+                InfoParagraph(stringResource(R.string.diag_info_safe))
+            }
+        }
+    }
+    Screen(header = header, bodyTop = 4.dp) {
         TestCard(state, actions)
         MapsDebugCard(state)
         ClockCard(state, actions)
