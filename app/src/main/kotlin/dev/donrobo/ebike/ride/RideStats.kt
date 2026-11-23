@@ -14,6 +14,10 @@ import java.time.temporal.TemporalAdjusters
  * - [movingS]: only intervals while moving (stops at lights excluded; gaps > 10 s ignored).
  * - [batteryStartPct], [batteryEndPct]: the battery's rest level at the start and the end of the ride, not the
  *   momentary readings (the display's percent sags under load, see [dev.donrobo.ebike.battery.BatteryReadings]).
+ * - [endSettled]: [batteryEndPct] is the next ride's start level, read after the battery had time to recover
+ *   ([dev.donrobo.ebike.battery.BatteryReadings.settleEnds], applied by [RideIndex.load]). False: charged before
+ *   the next ride, or no next ride yet; the end is then estimated from the reading at the end of this ride plus
+ *   the typical recovery.
  * - [batteryUsedPct]: start minus end rest level. The only measure of a ride's battery use in the app; the
  *   range model, statistics and route comparison all read it.
  * - [climbM]: metres climbed (null when the ride has no altitude, e.g. no GPS track or an old file).
@@ -31,6 +35,7 @@ data class RideSummary(
     val levels: List<LevelStats> = emptyList(),
     val shape: RideShape? = null,
     val ends: RideEnds? = null,
+    val endSettled: Boolean = false,
 ) {
     val batteryUsedPct: Double get() = (batteryStartPct - batteryEndPct).coerceAtLeast(0).toDouble()
 
