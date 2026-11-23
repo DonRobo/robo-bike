@@ -14,6 +14,7 @@ import android.os.Looper
 import dev.donrobo.ebike.ConnState
 import dev.donrobo.ebike.Repo
 import dev.donrobo.ebike.appInForeground
+import dev.donrobo.ebike.ride.RideFixes
 import dev.donrobo.ebike.ride.RideSettings
 import dev.donrobo.ebike.settings.settings
 import kotlinx.coroutines.CancellationException
@@ -247,16 +248,20 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
 
     /**
      * The connection to [bikeId]'s display ended at [atMs]: store the newest position now, then try for a
-     * fresh one-shot fix (the phone is usually still next to the bike) and replace it if one arrives.
+     * fresh one-shot fix (the phone is usually still next to the bike) and replace it if one arrives. The same fix
+     * is offered to the bike's newest ride as its end ([RideFixes.offerToLatest], R9).
      * The request runs outside the service scope: on Disconnect the connection ends because the service stops,
      * and a request launched into its (then cancelled) scope would never run.
      */
     fun onDisconnected(bikeId: String, atMs: Long) {
         val known = Locations.fix.value
         ctx.settings.set(LocationSettings.parked, bikeId, ParkedPosition(atMs, known))
-        if (known != null && known.ageMs(atMs) < LocationPolicy.PARKED_FRESH_MS) return
-        if (!lastUsable) return
         val app = ctx.applicationContext
+        if (known != null && known.ageMs(atMs) < LocationPolicy.PARKED_FRESH_MS) {
+            parkedScope.launch { RideFixes.offerToLatest(app, bikeId, known) } // R9: also the end of the ride
+            return
+        }
+        if (!lastUsable) return
         parkedScope.launch {
             try {
                 val loc = Locations.currentLocation(app, 30_000) ?: return@launch
@@ -265,6 +270,7 @@ class LocationProvider(private val ctx: Context, private val scope: CoroutineSco
                 if (app.settings.get(LocationSettings.parked, bikeId)?.atMs == atMs) {
                     app.settings.set(LocationSettings.parked, bikeId, ParkedPosition(atMs, fix))
                 }
+                RideFixes.offerToLatest(app, bikeId, fix) // R9: the bike is switched off where the ride ended
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {

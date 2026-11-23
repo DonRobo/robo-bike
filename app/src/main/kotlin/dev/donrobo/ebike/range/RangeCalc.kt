@@ -1,5 +1,6 @@
 package dev.donrobo.ebike.range
 
+import dev.donrobo.ebike.location.GeoPoint
 import java.time.YearMonth
 
 /**
@@ -17,12 +18,6 @@ data class MonthRange(val month: YearMonth, val fullKm: Double?)
 
 /** Pure range arithmetic on top of a [LearnedRange] (unit-tested). All distances in km. */
 object RangeCalc {
-    /**
-     * Roads are longer than the straight line. 1.3 is a common circuity factor for road networks (typical
-     * measured values 1.2-1.4); used for the way home (R5) and the ring (R4), both stated in the UI as estimates.
-     */
-    const val DETOUR_FACTOR = 1.3
-
     fun marginFactor(marginPct: Int) = 1.0 - marginPct.coerceIn(0, 90) / 100.0
 
     /**
@@ -74,8 +69,13 @@ object RangeCalc {
         }
     }
 
-    /** R4: straight-line radius reachable there and back with [remainingKm] of road. */
-    fun ringRadiusKm(remainingKm: Double): Double = remainingKm / 2 / DETOUR_FACTOR
+    /**
+     * R4: the area reachable from [bike] with the way to [home] still covered: the
+     * remaining range minus the reserve the rider wants left on arrival (R5's reserve, so the area ends exactly
+     * where "Komme ich heim?" stops being OK), in straight-line km via the [detour] factor (R9).
+     */
+    fun area(bike: GeoPoint, home: GeoPoint, remainingKm: Double, reserveKm: Double, detour: Double): ReachArea =
+        ReachArea(bike, home, ((remainingKm - reserveKm) / detour).coerceAtLeast(0.0))
 
     /** R6: full-battery range per month, with the same margin as "Voll geladen" so the numbers compare. */
     fun months(learned: LearnedRange, marginPct: Int): List<MonthRange> {

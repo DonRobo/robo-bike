@@ -17,7 +17,8 @@ import dev.donrobo.ebike.ui.components.map.BikeMap
 import dev.donrobo.ebike.ui.components.map.HeatLines
 import dev.donrobo.ebike.ui.components.map.MapContent
 import dev.donrobo.ebike.ui.components.map.MapMarker
-import dev.donrobo.ebike.ui.components.map.MapRing
+import dev.donrobo.ebike.ui.components.map.MapArea
+import dev.donrobo.ebike.ui.components.map.MapGeometry
 import dev.donrobo.ebike.ui.components.map.MapTrack
 import dev.donrobo.ebike.ui.components.map.MarkerKind
 import dev.donrobo.ebike.ui.theme.AppTheme
@@ -28,7 +29,7 @@ import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
 import org.robolectric.annotation.GraphicsMode
 
-/** The map component's Robolectric stand-in with each overlay type (track, heatmap, range ring, markers). */
+/** The map component's Robolectric stand-in with each overlay type (track, heatmap, area + guide, markers). */
 @RunWith(RobolectricTestRunner::class)
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 class MapScreenshotTest {
@@ -62,11 +63,13 @@ class MapScreenshotTest {
         Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
             Card("Track (F3)", MapContent(tracks = listOf(MapTrack(ride))))
             Card("Heatmap (F8)", MapContent(heat = heat))
+            val bike = GeoPoint(home.lat + 0.008, home.lon + 0.007)
             Card(
-                "Ring + current + home (R4, R5)",
+                "Area + guide + current + home (R4, R5)",
                 MapContent(
-                    ring = MapRing(home, 3_000.0),
-                    markers = listOf(MapMarker(home, MarkerKind.CURRENT), MapMarker(GeoPoint(home.lat + 0.008, home.lon + 0.007), MarkerKind.HOME)),
+                    area = MapArea(MapGeometry.ellipse(bike, home, 1_800.0)!!),
+                    guide = MapGeometry.ellipseGuide(bike, home, 1_800.0)!!,
+                    markers = listOf(MapMarker(bike, MarkerKind.CURRENT), MapMarker(home, MarkerKind.HOME)),
                 ),
             )
             Card("Parked bike (W3)", MapContent(markers = listOf(MapMarker(home, MarkerKind.PARKED))))

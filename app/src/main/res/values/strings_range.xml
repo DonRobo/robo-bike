@@ -33,13 +33,21 @@
     <string name="range_levels_legend_unknown">– = not ridden in this level yet.</string>
     <string name="range_levels_empty">Once the first rides are learned, the range of every level appears here.</string>
 
-    <!-- ring -->
-    <string name="range_ring_title">How far you can still go</string>
-    <string name="range_ring_text">The ring shows %1$s in a straight line, i.e. there and back with the current battery.</string>
-    <string name="range_ring_parked">Measured from where the bike was last parked.</string>
-    <string name="range_ring_no_range">The ring appears once the range has been learned.</string>
-    <string name="range_ring_no_battery">The ring appears once the bike is connected and the battery level is known.</string>
-    <string name="range_ring_no_position">Without a current position the app cannot draw the ring.</string>
+    <!-- reachable area (R4) -->
+    <string name="range_area_title">How far you can still go</string>
+    <string name="range_area_info">More about the range map</string>
+    <string name="range_area_text_home">Ride out and still get home on this battery.</string>
+    <string name="range_area_too_far">The battery no longer covers there and home.</string>
+    <string name="range_area_no_home">Set your home, then the map shows from where you can still get home.</string>
+    <string name="range_area_no_range">The area appears once the range has been learned.</string>
+    <string name="range_area_no_battery">The area appears once the bike is connected and the battery level is known.</string>
+    <string name="range_area_no_position">Without a current position the app cannot draw the area.</string>
+    <string name="range_area_legend_bike">Your bike</string>
+    <string name="range_area_legend_home">Home</string>
+    <string name="range_area_legend_guide_home">Example: there and home</string>
+    <string name="range_area_info_inside">For every place inside the area, the way there plus the way home fit into the remaining range, minus the reserve you want left on arrival.</string>
+    <string name="range_area_info_ellipse">Roads count as the straight line times the detour factor (%1$s, see “Detours”). That makes the area an ellipse with your bike and your home as its two focal points.</string>
+    <string name="range_area_info_parked">While the bike is not connected, the place where it was last parked counts.</string>
 
     <!-- home -->
     <string name="range_home_title">Will I make it home?</string>
@@ -49,7 +57,6 @@
     <string name="range_home_short">Way home %1$s, the battery no longer covers it</string>
     <string name="range_home_no_range">Way home %1$s. Whether the battery covers it is known once the range is learned.</string>
     <string name="range_home_no_battery">Way home %1$s. Whether the battery covers it is known once the bike is connected.</string>
-    <string name="range_home_estimate_note">The way home is an estimate: straight line × %1$s for detours.</string>
     <string name="range_home_no_home">Set your home location and the app includes the way home.</string>
     <string name="range_home_no_position">No current position, so no answer about the way home right now.</string>
     <string name="range_home_needs_background">No position on the road: allow location “all the time”, or open the app when you set off.</string>
@@ -90,7 +97,34 @@
     <string name="range_model_info">More about the calculation</string>
     <string name="range_model_info_rides">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used.</string>
     <string name="range_model_info_bands">How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, it continues the course of the measured ranges.</string>
-    <string name="range_model_info_detour">A way by road is about %1$s times the straight line; the ring and the way home use that.</string>
+
+    <!-- R9 detour factor -->
+    <string name="range_detour_title">Detours</string>
+    <string name="range_detour_info">More about the detour factor</string>
+    <string name="range_detour_sheet_title">Detour factor</string>
+    <string name="range_detour_unit">%1$s per %1$s in a straight line</string>
+    <plurals name="range_detour_from">
+        <item quantity="one">Calculated from %1$d ride</item>
+        <item quantity="other">Calculated from %1$d rides</item>
+    </plurals>
+    <string name="range_detour_too_few">Too few rides yet, a typical value until then.</string>
+    <string name="range_detour_auto">Calculate from the ride log</string>
+    <string name="range_detour_less">Decrease detour factor</string>
+    <string name="range_detour_more">Increase detour factor</string>
+    <string name="range_detour_info_what">You rarely ride in a straight line. The factor says how far you really ride per %1$s of straight line. The map “How far you can still go” uses it.</string>
+    <string name="range_detour_example_straight">%1$s straight line</string>
+    <string name="range_detour_example_ridden">%1$s ridden</string>
+    <string name="range_detour_example_sum">%1$s ÷ %2$s = %3$s</string>
+    <string name="range_detour_example_description">Example: a ride of %2$s between two points %1$s apart in a straight line gives a factor of %3$s.</string>
+    <string name="range_detour_info_heading">How it is calculated</string>
+    <string name="range_detour_info_trip">The distance ridden comes from your bike’s trip counter.</string>
+    <string name="range_detour_info_ends">The app remembers start and end when the bike is switched on and off.</string>
+    <string name="range_detour_info_median">Round trips under %1$s in a straight line do not count. Of the others, the app takes the median of as many rides as “Basis” says.</string>
+    <plurals name="range_detour_info_default">
+        <item quantity="one">Until there is %1$d such ride, the factor is %2$s.</item>
+        <item quantity="other">Until there are %1$d such rides, the factor is %2$s.</item>
+    </plurals>
+    <string name="range_detour_info_manual">Switch off “Calculate from the ride log” to set the value yourself.</string>
 
     <string name="range_bands_title">Battery bands</string>
     <string name="range_bands_link_sub" formatted="false">How far each 10 % of battery takes you</string>

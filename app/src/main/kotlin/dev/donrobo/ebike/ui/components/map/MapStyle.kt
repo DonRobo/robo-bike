@@ -29,10 +29,11 @@ internal object MapStyle {
     const val HEAT_MAX_DP = 8f
     const val HEAT_MIN_ALPHA = 0.35f
     const val HEAT_MAX_ALPHA = 0.85f
-    const val RING_FILL_ALPHA = 0.12f
-    const val RING_LINE_DP = 2.5f
-    const val RING_DASH_DP = 7f
-    const val RING_GAP_DP = 6f
+    const val AREA_FILL_ALPHA = 0.12f
+    const val AREA_LINE_DP = 2f
+    /** The dotted guide: round dots of this diameter, [GUIDE_GAP_DP] apart (centre to centre). */
+    const val GUIDE_DOT_DP = 3f
+    const val GUIDE_GAP_DP = 7f
     /** Padding around the content when the camera fits it. */
     const val FIT_PADDING_DP = 28f
 

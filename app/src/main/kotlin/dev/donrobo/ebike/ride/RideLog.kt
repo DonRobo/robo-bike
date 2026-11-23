@@ -1,6 +1,7 @@
 package dev.donrobo.ebike.ride
 
 import dev.donrobo.ebike.battery.BatteryReadings
+import dev.donrobo.ebike.location.LocationFix
 import java.io.File
 import java.time.Instant
 import java.time.ZoneId
@@ -71,9 +72,10 @@ object RideCsv {
         }.getOrNull()
     }
 
-    /** Null for fewer than 2 samples. See [RideSummary] for what each field means. */
-    fun summarize(file: File, s: List<RideSample>): RideSummary? {
+    /** Null for fewer than 2 samples. See [RideSummary] for what each field means; [fixes] = the ride's [RideFixes]. */
+    fun summarize(file: File, s: List<RideSample>, fixes: List<LocationFix> = emptyList()): RideSummary? {
         if (s.size < 2) return null
+        val start = s.firstOrNull { it.speedKmh > 0 } ?: s.first()
         val end = s.lastOrNull { it.speedKmh > 0 } ?: s.last()
         val rest = BatteryReadings.restLevels(s)
         var movingS = 0.0
@@ -93,6 +95,7 @@ object RideCsv {
             climbM = climb(s),
             levels = RideStats.levelBreakdown(s),
             shape = RideShape.of(s),
+            ends = RideEndpoints.pick(RideEndpoints.observations(s, fixes), start.epochMs, end.epochMs),
         )
     }
 

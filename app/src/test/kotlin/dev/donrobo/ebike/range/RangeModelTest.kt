@@ -1,5 +1,6 @@
 package dev.donrobo.ebike.range
 
+import dev.donrobo.ebike.location.GeoPoint
 import dev.donrobo.ebike.ride.LevelStats
 import dev.donrobo.ebike.ride.RideCsv
 import dev.donrobo.ebike.ride.RideSample
@@ -416,7 +417,26 @@ class RangeCalcTest {
         assertEquals(e.remainingKm, RangeCalc.levels(curved, 30, 5, 0)[2].km!!, 1e-9)
     }
 
-    @Test fun ringIsHalfTheRoadRangeAsStraightLine() {
-        assertEquals(64.0 / 2 / 1.3, RangeCalc.ringRadiusKm(64.0), 1e-9)
+    @Test fun areaIsTheRangeLeftAfterTheReserveAsStraightLine() {
+        val bike = GeoPoint(48.2375, 16.3721); val home = GeoPoint(48.2085, 16.3721)
+        val a = RangeCalc.area(bike, home, 64.0, 10.0, 1.35)
+        assertEquals(54.0 / 1.35, a.sumKm, 1e-9)
+        assertTrue(a.reachable)
+        // the area ends exactly where the way home stops being OK (HomeLevel), as both use way + reserve
+        val way = HomeCalc.distanceKm(bike, home, 1.35)
+        assertTrue(RangeCalc.area(bike, home, way + 10.01, 10.0, 1.35).reachable)
+        assertFalse(RangeCalc.area(bike, home, way + 9.99, 10.0, 1.35).reachable)
+        assertEquals(0.0, RangeCalc.area(bike, home, 5.0, 10.0, 1.3).sumKm, 0.0)
+        assertFalse(RangeCalc.area(bike, home, 5.0, 10.0, 1.3).reachable)
+    }
+
+    @Test fun noAreaWithoutHomeOrWithTheFeatureOff() {
+        val bike = BikePosition(GeoPoint(48.2375, 16.3721), 0, BikePosition.Source.LIVE)
+        val home = GeoPoint(48.2085, 16.3721)
+        val learned = LearnedRange(10, 100.0, 120.0, 1.2, emptyList(), emptyList())
+        fun area(h: HomeSettings) = RangeEngine.compose(learned, 20, RangeReading(80, 0, 5, true), 10, bike, null, h).area
+        assertTrue(area(HomeSettings(true, home, 10.0)) != null)
+        assertNull(area(HomeSettings(true, null, 10.0)))
+        assertNull(area(HomeSettings(false, home, 10.0)))
     }
 }

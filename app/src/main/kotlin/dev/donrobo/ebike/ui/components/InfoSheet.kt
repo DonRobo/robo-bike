@@ -2,6 +2,7 @@ package dev.donrobo.ebike.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
@@ -51,6 +52,15 @@ fun InfoSheet(title: String, onDismiss: () -> Unit, openFully: Boolean = true, c
 /** One paragraph of an [InfoSheet]. */
 @Composable
 fun InfoParagraph(text: String, modifier: Modifier = Modifier) = Text(text, modifier, style = AppTheme.type.body)
+
+/** One point of a list inside an [InfoSheet]. */
+@Composable
+fun InfoBullet(text: String, modifier: Modifier = Modifier) {
+    Row(modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        Text("•", style = AppTheme.type.body)
+        Text(text, Modifier.weight(1f), style = AppTheme.type.body)
+    }
+}
 
 /** A small heading inside an [InfoSheet]. */
 @Composable

@@ -6,7 +6,10 @@ import android.os.Build
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -21,6 +24,7 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
@@ -112,18 +116,12 @@ private fun DrawScope.drawOverlays(content: MapContent, proj: MapGeometry.Projec
     content.heat?.lines?.sortedBy { it.weight }?.forEach { l ->
         drawPath(path(l.points), MapStyle.heatColor(l.weight, c), style = line(MapStyle.heatWidth(l.weight)))
     }
-    content.ring?.let { r ->
-        val o = Offset(proj.x(r.center), proj.y(r.center))
-        val rad = proj.px(r.radiusM, r.center.lat)
-        drawCircle(c.primary.copy(alpha = MapStyle.RING_FILL_ALPHA), rad, o)
-        drawCircle(
-            c.primary, rad, o,
-            style = Stroke(
-                MapStyle.RING_LINE_DP * density,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(MapStyle.RING_DASH_DP * density, MapStyle.RING_GAP_DP * density)),
-            ),
-        )
+    content.area?.let { a ->
+        val p = path(a.points).apply { close() }
+        drawPath(p, c.primary.copy(alpha = MapStyle.AREA_FILL_ALPHA))
+        drawPath(p, c.primary, style = Stroke(MapStyle.AREA_LINE_DP * density, join = StrokeJoin.Round))
     }
+    if (content.guide.size >= 2) drawGuide(path(content.guide), c.text)
     for (t in content.tracks) {
         if (t.points.size < 2) continue
         val p = path(t.points)
@@ -133,6 +131,18 @@ private fun DrawScope.drawOverlays(content: MapContent, proj: MapGeometry.Projec
     for (m in allMarkers(content)) drawMarker(m.kind, Offset(proj.x(m.position), proj.y(m.position)), c)
 }
 
+/** The dotted guide line (map and legend): round dots along [p]. */
+fun DrawScope.drawGuide(p: Path, color: Color) {
+    drawPath(
+        p, color,
+        style = Stroke(
+            MapStyle.GUIDE_DOT_DP * density, cap = StrokeCap.Round, join = StrokeJoin.Round,
+            // a zero-length dash with round caps is a dot
+            pathEffect = PathEffect.dashPathEffect(floatArrayOf(0.01f, MapStyle.GUIDE_GAP_DP * density)),
+        ),
+    )
+}
+
 /** Explicit markers plus the start/end dots of tracks, in drawing order (later = on top). */
 internal fun allMarkers(content: MapContent): List<MapMarker> {
     val ends = content.tracks.filter { it.showEnds && it.points.size >= 2 }.flatMap {
@@ -140,4 +150,31 @@ internal fun allMarkers(content: MapContent): List<MapMarker> {
     }
     val order = listOf(MarkerKind.HOME, MarkerKind.PARKED, MarkerKind.CURRENT)
     return ends + content.markers.sortedBy { order.indexOf(it.kind) }
+}
+
+/** A symbol of the map's legend: a marker as drawn on the map, or the dotted [MapContent.guide]. */
+sealed interface LegendSymbol {
+    data class Marker(val kind: MarkerKind) : LegendSymbol
+    data object Guide : LegendSymbol
+}
+
+/** One legend entry under a map: the symbol exactly as the map draws it (scaled down) and its label. */
+@Composable
+fun MapLegendItem(symbol: LegendSymbol, label: String, modifier: Modifier = Modifier) {
+    val c = AppTheme.colors
+    Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+        Canvas(Modifier.size(width = if (symbol == LegendSymbol.Guide) 22.dp else 18.dp, height = 18.dp)) {
+            when (symbol) {
+                LegendSymbol.Guide -> drawGuide(Path().apply { moveTo(1.5f * density, size.height / 2); lineTo(size.width, size.height / 2) }, c.text)
+                is LegendSymbol.Marker -> {
+                    val box = MapStyle.box(symbol.kind)
+                    val s = size.height / (maxOf(box.widthDp, box.heightDp) * density)
+                    // centre the marker's box, then place its anchor inside it
+                    val at = Offset(center.x + (box.anchorX - 0.5f) * box.widthDp * density * s, center.y + (box.anchorY - 0.5f) * box.heightDp * density * s)
+                    scale(s, at) { drawMarker(symbol.kind, at, c) }
+                }
+            }
+        }
+        Text(label, style = AppTheme.type.caption, color = c.textMuted)
+    }
 }

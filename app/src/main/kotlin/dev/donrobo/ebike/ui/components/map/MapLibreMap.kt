@@ -116,7 +116,7 @@ private class Overlays(private val c: AppColors, private val density: Density, p
     fun attach(v: MapView, m: NativeMap, s: Style) {
         view = v; map = m; style = s
         MarkerKind.entries.forEach { s.addImage(it.name, MapStyle.markerImage(it, c, density).asAndroidBitmap()) }
-        s.addSource(GeoJsonSource(HEAT)); s.addSource(GeoJsonSource(RING)); s.addSource(GeoJsonSource(TRACKS)); s.addSource(GeoJsonSource(MARKERS))
+        s.addSource(GeoJsonSource(HEAT)); s.addSource(GeoJsonSource(AREA)); s.addSource(GeoJsonSource(GUIDE)); s.addSource(GeoJsonSource(TRACKS)); s.addSource(GeoJsonSource(MARKERS))
         val w = Expression.get("w")
         s.addLayer(LineLayer("$HEAT-line", HEAT).withProperties(
             PropertyFactory.lineColor(Expression.interpolate(
@@ -126,13 +126,18 @@ private class Overlays(private val c: AppColors, private val density: Density, p
             PropertyFactory.lineCap(Property.LINE_CAP_ROUND), PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
             PropertyFactory.lineWidth(Expression.interpolate(Expression.linear(), w, Expression.stop(0f, MapStyle.HEAT_MIN_DP), Expression.stop(1f, MapStyle.HEAT_MAX_DP))),
         ))
-        s.addLayer(FillLayer("$RING-fill", RING).withProperties(
-            PropertyFactory.fillColor(c.primary.toArgb()), PropertyFactory.fillOpacity(MapStyle.RING_FILL_ALPHA),
+        s.addLayer(FillLayer("$AREA-fill", AREA).withProperties(
+            PropertyFactory.fillColor(c.primary.toArgb()), PropertyFactory.fillOpacity(MapStyle.AREA_FILL_ALPHA),
         ))
-        s.addLayer(LineLayer("$RING-line", RING).withProperties(
-            PropertyFactory.lineColor(c.primary.toArgb()), PropertyFactory.lineWidth(MapStyle.RING_LINE_DP),
-            // dash lengths are in line widths
-            PropertyFactory.lineDasharray(arrayOf(MapStyle.RING_DASH_DP / MapStyle.RING_LINE_DP, MapStyle.RING_GAP_DP / MapStyle.RING_LINE_DP)),
+        s.addLayer(LineLayer("$AREA-line", AREA).withProperties(
+            PropertyFactory.lineColor(c.primary.toArgb()), PropertyFactory.lineWidth(MapStyle.AREA_LINE_DP),
+            PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+        ))
+        s.addLayer(LineLayer("$GUIDE-line", GUIDE).withProperties(
+            PropertyFactory.lineColor(c.text.toArgb()), PropertyFactory.lineWidth(MapStyle.GUIDE_DOT_DP),
+            PropertyFactory.lineCap(Property.LINE_CAP_ROUND), PropertyFactory.lineJoin(Property.LINE_JOIN_ROUND),
+            // dash lengths are in line widths; a zero-length dash with round caps is a dot
+            PropertyFactory.lineDasharray(arrayOf(0f, MapStyle.GUIDE_GAP_DP / MapStyle.GUIDE_DOT_DP)),
         ))
         s.addLayer(LineLayer("$TRACKS-casing", TRACKS).withProperties(
             PropertyFactory.lineColor(Color.White.toArgb()), PropertyFactory.lineWidth(MapStyle.TRACK_CASING_DP),
@@ -162,8 +167,11 @@ private class Overlays(private val c: AppColors, private val density: Density, p
                 Feature.fromGeometry(LineString.fromLngLats(pts(it.points))).apply { addNumberProperty("w", it.weight) }
             },
         ))
-        s.getSourceAs<GeoJsonSource>(RING)?.setGeoJson(FeatureCollection.fromFeatures(
-            listOfNotNull(next.ring?.let { Feature.fromGeometry(Polygon.fromLngLats(listOf(pts(MapGeometry.circle(it.center, it.radiusM))))) }),
+        s.getSourceAs<GeoJsonSource>(AREA)?.setGeoJson(FeatureCollection.fromFeatures(
+            listOfNotNull(next.area?.let { Feature.fromGeometry(Polygon.fromLngLats(listOf(pts(it.points)))) }),
+        ))
+        s.getSourceAs<GeoJsonSource>(GUIDE)?.setGeoJson(FeatureCollection.fromFeatures(
+            listOfNotNull(next.guide.takeIf { it.size >= 2 }?.let { Feature.fromGeometry(LineString.fromLngLats(pts(it))) }),
         ))
         s.getSourceAs<GeoJsonSource>(TRACKS)?.setGeoJson(FeatureCollection.fromFeatures(
             next.tracks.filter { it.points.size >= 2 }.map { Feature.fromGeometry(LineString.fromLngLats(pts(it.points))) },
@@ -197,7 +205,8 @@ private class Overlays(private val c: AppColors, private val density: Density, p
 
     companion object {
         const val HEAT = "bm-heat"
-        const val RING = "bm-ring"
+        const val AREA = "bm-area"
+        const val GUIDE = "bm-guide"
         const val TRACKS = "bm-tracks"
         const val MARKERS = "bm-markers"
         const val POINT_ZOOM = 15.0

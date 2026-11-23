@@ -10,6 +10,8 @@ import dev.donrobo.ebike.ui.components.ConfirmDialog
 import dev.donrobo.ebike.ui.components.InfoSheet
 import dev.donrobo.ebike.ui.components.rememberUnitFormatter
 import dev.donrobo.ebike.ui.light.SunCurveInfo
+import dev.donrobo.ebike.ui.range.AreaInfo
+import dev.donrobo.ebike.ui.range.DetourInfo
 import dev.donrobo.ebike.ui.range.ModelInfo
 import dev.donrobo.ebike.ui.components.TextInputDialog
 import dev.donrobo.ebike.ui.rides.RidesScreen
@@ -58,6 +60,23 @@ class ScreensScreenshotTest {
     fun info_range_model_en() = compose.screenshotWindows("info_range_model_en", Tab.SETTINGS) {
         SettingsScreen(PreviewNavigator)
         InfoSheet(stringResource(R.string.range_model_title), {}) { ModelInfo(rememberUnitFormatter()) }
+    }
+
+    @Test fun info_range_area_de() = compose.screenshotWindows("info_range_area_de", Tab.SETTINGS) {
+        SettingsScreen(PreviewNavigator)
+        InfoSheet(stringResource(R.string.range_area_title), {}) { AreaInfo(1.27) }
+    }
+
+    @Test @Config(qualifiers = "de-w390dp-h1000dp-port-xhdpi")
+    fun info_range_detour_de() = compose.screenshotWindows("info_range_detour_de", Tab.SETTINGS) {
+        SettingsScreen(PreviewNavigator)
+        InfoSheet(stringResource(R.string.range_detour_sheet_title), {}) { DetourInfo(rememberUnitFormatter()) }
+    }
+
+    @Test @Config(qualifiers = "en-w390dp-h1000dp-port-xhdpi")
+    fun info_range_detour_en() = compose.screenshotWindows("info_range_detour_en", Tab.SETTINGS) {
+        SettingsScreen(PreviewNavigator)
+        InfoSheet(stringResource(R.string.range_detour_sheet_title), {}) { DetourInfo(rememberUnitFormatter()) }
     }
 
     @Test @Config(qualifiers = "de-w390dp-h1900dp-port-xhdpi")
