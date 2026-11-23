@@ -13,6 +13,8 @@ fun UnitLabel.res(): Int = when (this) {
     UnitLabel.MPH -> R.string.unit_mph
     UnitLabel.M -> R.string.unit_m
     UnitLabel.FT -> R.string.unit_ft
+    UnitLabel.CELSIUS -> R.string.unit_celsius
+    UnitLabel.FAHRENHEIT -> R.string.unit_fahrenheit
 }
 
 /** "4,2 km" as one string, outside Compose. */

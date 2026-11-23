@@ -7,7 +7,10 @@ import dev.donrobo.ebike.Repo
 import dev.donrobo.ebike.location.Locations
 import dev.donrobo.ebike.proto.BikeReport
 import dev.donrobo.ebike.settings.bikes
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.flow
@@ -39,7 +42,7 @@ object RideStore {
         return FileProvider.getUriForFile(ctx, "${ctx.packageName}.files", out)
     }
 
-    fun delete(ride: RideSummary) { ride.file.delete(); RideRepository.notifyChanged() }
+    fun delete(ride: RideSummary) { ride.file.delete(); RideTemperatures.file(ride.file).delete(); RideRepository.notifyChanged() }
 }
 
 /**
@@ -85,6 +88,7 @@ object RideRepository {
 class RideRecorder(private val ctx: Context) {
     private val tracker = RideTracker()
     private var out: Writer? = null
+    private var outFile: File? = null
     private var lastRefreshMs = 0L
 
     /** Collects [Repo.live] / Locations.fix until cancelled; maintains Repo.recording. Rides go to the connected bike. */
@@ -115,6 +119,8 @@ class RideRecorder(private val ctx: Context) {
         close("new ride")
         val f = File(RideStore.dir(ctx, bikeId), RideCsv.fileName(now))
         out = f.bufferedWriter().apply { write(RideCsv.HEADER + "\n"); flush() }
+        outFile = f
+        recordTemperature(f, RideTemperatures.Moment.START)
         _open.value = OpenRide(bikeId, now, r.odoKm)
         Repo.log("Ride started: ${f.name}")
         lastRefreshMs = now
@@ -133,15 +139,26 @@ class RideRecorder(private val ctx: Context) {
     private fun close(why: String) {
         val w = out ?: return
         out = null
+        outFile?.let { recordTemperature(it, RideTemperatures.Moment.END) }
+        outFile = null
         _open.value = null
         runCatching { w.close() }
         Repo.log("Ride closed: $why")
         RideRepository.notifyChanged()
     }
 
+    /** Outdoor temperature for the ride log, in [weatherScope]: it waits for position and network, the ride does not. */
+    private fun recordTemperature(csv: File, moment: RideTemperatures.Moment) {
+        val app = ctx.applicationContext
+        weatherScope.launch { RideTemperatures.record(app, csv, moment) }
+    }
+
     companion object {
         /** How often the growing current ride refreshes [RideRepository.summaries]. */
         const val REFRESH_MS = 30_000L
+
+        /** Process-wide: the end-of-ride reading outlives a recorder stopped right after the ride. */
+        private val weatherScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
         private val _open = MutableStateFlow<OpenRide?>(null)
         /** The ride being recorded now (null between rides); its start odometer is the ride file's first sample. */

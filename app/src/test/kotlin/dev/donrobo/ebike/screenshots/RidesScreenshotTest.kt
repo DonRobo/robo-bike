@@ -8,6 +8,7 @@ import dev.donrobo.ebike.location.LocationLimit
 import dev.donrobo.ebike.ride.RecurringRoute
 import dev.donrobo.ebike.ride.RideShape
 import dev.donrobo.ebike.ride.RideSummary
+import dev.donrobo.ebike.ride.RideTemperature
 import dev.donrobo.ebike.ride.RouteDef
 import dev.donrobo.ebike.ride.RouteGroups
 import dev.donrobo.ebike.ride.StatsPeriod
@@ -172,11 +173,11 @@ class RidesScreenshotTest {
         RideDetailContent(RideDetailUiState(detailRide, commute, charts), rideActions)
     }
 
-    /** A ride recorded without GPS: no map, no elevation, no GPX, not on a route. */
+    /** A ride recorded without GPS: no map, no elevation, no GPX, not on a route; outdoor temperature at start and end. */
     @Test @Config(qualifiers = "de-w390dp-h1100dp-port-xhdpi")
     fun ride_no_gps_de() = compose.screenshot("ride_no_gps_de") {
         val r = afternoon.copy(hasTrack = false, shape = null, endMs = afternoon.startMs + 21 * 60_000)
-        RideDetailContent(RideDetailUiState(r, null, charts.copy(distanceKm = 6.4, speed = speedCurve().map { it.copy(x = it.x * 6.4f / 10.6f) }, altitude = null, track = emptyList())), rideActions, initialChart = RideChart.ALTITUDE)
+        RideDetailContent(RideDetailUiState(r, null, charts.copy(distanceKm = 6.4, speed = speedCurve().map { it.copy(x = it.x * 6.4f / 10.6f) }, altitude = null, track = emptyList()), RideTemperature(-1.6, 2.3)), rideActions, initialChart = RideChart.ALTITUDE)
     }
 
     private val statsActions = object : StatsActions {
