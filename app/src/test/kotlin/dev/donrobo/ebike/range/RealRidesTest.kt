@@ -1,6 +1,7 @@
 package dev.donrobo.ebike.range
 
 import dev.donrobo.ebike.battery.BatteryReadings
+import dev.donrobo.ebike.battery.LiveCharge
 import dev.donrobo.ebike.battery.LiveRestLevel
 import dev.donrobo.ebike.location.LocationLimit
 import dev.donrobo.ebike.ride.RideCsv
@@ -17,6 +18,7 @@ import java.io.File
 import java.time.LocalDate
 import java.time.YearMonth
 import java.time.ZoneId
+import kotlin.math.abs
 
 /**
  * The owner's real rides (November 11-22 2026, a backup export), reduced to anonymous fixtures in
@@ -162,5 +164,32 @@ class RealRidesTest {
             assertTrue(live.all { it <= r.batteryStartPct })
             assertTrue("ride $n ends at ${live.last()} vs ${r.batteryEndPct}", live.last() in r.batteryEndPct - 2..r.batteryEndPct)
         }
+    }
+
+    @Test fun liveChargeEndsNearTheRestLevel() {
+        // every ride with a settled end: the live value at its last moving moment vs the rest level read at the next
+        // start, each ride replayed with the model learned from the other rides
+        var errRest = 0; var errCharge = 0; var n = 0
+        for (i in 0 until count) {
+            val r = settled[count - 1 - i]
+            if (!r.endSettled || r.distanceKm < RangeModel.MIN_RIDE_KM) continue
+            val l = RangeModel.learn(settled.filter { it !== r }, 20, month, zone)
+            val rate = RangeCalc.rateFor(l, 5)!!
+            val s = samples(i + 1)
+            val rest = LiveRestLevel()
+            val charge = LiveCharge()
+            val live = s.map { x -> rest.update(x.epochMs, x.batteryPct)!! to charge.update(x.epochMs, x.batteryPct, x.odoKm) { p -> rate / l.factor(p) }!! }
+            assertTrue("ride ${i + 1}", live.all { it.second <= r.batteryStartPct })
+            val (atStopRest, atStopCharge) = live[s.indexOfLast { it.speedKmh > 0 }]
+            println("ride ${i + 1}: %.1f km ${r.batteryStartPct} -> ${r.batteryEndPct}: trailing max $atStopRest, estimate $atStopCharge".format(r.distanceKm))
+            n++
+            errRest += abs(atStopRest - r.batteryEndPct)
+            errCharge += abs(atStopCharge - r.batteryEndPct)
+        }
+        assertEquals(22, n)
+        // the trailing maximum lagged by 3.7 points on average (always low); the estimate is off by under 2
+        println("mean error: trailing max %.2f, estimate %.2f".format(errRest.toDouble() / n, errCharge.toDouble() / n))
+        assertTrue(errRest.toDouble() / n > 3.5)
+        assertTrue(errCharge.toDouble() / n < 2.0)
     }
 }

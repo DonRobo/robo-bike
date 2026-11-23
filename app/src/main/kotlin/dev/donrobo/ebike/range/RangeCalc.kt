@@ -4,9 +4,9 @@ import dev.donrobo.ebike.location.GeoPoint
 import java.time.YearMonth
 
 /**
- * Battery and assist level the range is computed for. Live: the rest level of the live readings
- * ([dev.donrobo.ebike.battery.LiveRestLevel]), so the range does not follow every sag on a climb; else the
- * bike's last known reading.
+ * Battery and assist level the range is computed for. Live: the estimated charge
+ * ([dev.donrobo.ebike.battery.LiveCharge]), so the range does not follow the sag on a climb; else the bike's last
+ * known reading.
  */
 data class RangeReading(val batteryPct: Int, val level: Int, val levelCount: Int, val live: Boolean)
 
