@@ -1,5 +1,6 @@
 package dev.donrobo.ebike.ride
 
+import dev.donrobo.ebike.battery.BatteryReadings
 import dev.donrobo.ebike.location.GeoPoint
 import java.io.File
 
@@ -17,7 +18,11 @@ class RideIndex(private val dir: File) {
     /** [fixes] = size and mtime of the ride's [RideFixes] file ("" without one). */
     private class Entry(val size: Long, val mtime: Long, val fixes: String, val summary: RideSummary?)
 
-    /** Summaries of all ride files, newest first; files with fewer than 2 samples are left out. */
+    /**
+     * Summaries of all ride files, newest first; files with fewer than 2 samples are left out. End levels are
+     * settled across rides ([BatteryReadings.settleEnds]); the cache holds each file's own values, since a
+     * ride's settled end depends on the next file.
+     */
     @Synchronized
     fun load(): List<RideSummary> {
         val files = dir.listFiles { f -> f.isFile && f.name.endsWith(".csv") }.orEmpty()
@@ -34,7 +39,7 @@ class RideIndex(private val dir: File) {
             f.name to e
         }
         if (dirty) write(entries)
-        return entries.values.mapNotNull { it.summary }.sortedByDescending { it.startMs }
+        return BatteryReadings.settleEnds(entries.values.mapNotNull { it.summary }.sortedByDescending { it.startMs })
     }
 
     private val file get() = File(dir, FILE)

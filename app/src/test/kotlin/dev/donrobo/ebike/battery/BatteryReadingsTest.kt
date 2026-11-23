@@ -1,9 +1,13 @@
 package dev.donrobo.ebike.battery
 
 import dev.donrobo.ebike.ride.RideSample
+import dev.donrobo.ebike.ride.RideSummary
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
 class BatteryReadingsTest {
     private fun s(tS: Long, speed: Double, pct: Int) = RideSample(tS * 1000, null, null, speed, pct, 3, 0.0, 0.0)
@@ -46,5 +50,50 @@ class BatteryReadingsTest {
         assertEquals(76, f.update(150_000, 0))  // implausible reading ignored
         f.reset()
         assertEquals(60, f.update(160_000, 60))
+    }
+
+    private fun ride(i: Int, start: Int, end: Int) = RideSummary(File("r$i"), i * 3_600_000L, 1800, 5.0, start, end)
+
+    /** [rides] oldest first, as written; the result oldest first too. */
+    private fun settle(vararg rides: RideSummary) = BatteryReadings.settleEnds(rides.reversed()).reversed()
+
+    @Test fun endsSettleAtTheNextRidesStart() {
+        // 80 -> 70 (sagged), rested to 77; 77 -> 74, rested to 76; 76 -> 68, then charged to 100; 100 -> 92 (newest)
+        val s = settle(ride(0, 80, 70), ride(1, 77, 74), ride(2, 76, 68), ride(3, 100, 92))
+        assertEquals(listOf(true, true, false, false), s.map { it.endSettled })
+        // recoveries 7 and 2: the rides without a reading at rest after them get the median, 4 (whole percent)
+        assertEquals(listOf(77, 76, 72, 96), s.map { it.batteryEndPct })
+        assertEquals(listOf(3.0, 1.0, 4.0, 4.0), s.map { it.batteryUsedPct })
+    }
+
+    @Test fun oneStepAboveTheStartIsFlickerNotACharge() {
+        val s = settle(ride(0, 90, 80), ride(1, 91, 85))
+        assertTrue(s[0].endSettled)
+        assertEquals(90, s[0].batteryEndPct) // never above the ride's own start
+        assertFalse(settle(ride(0, 90, 80), ride(1, 92, 85))[0].endSettled)
+    }
+
+    @Test fun settledEndIsNeverBelowTheRidesOwnEnd() {
+        // the next ride starts lower than this one ended (days of standing): this ride did not use that
+        val s = settle(ride(0, 80, 72), ride(1, 70, 60))
+        assertTrue(s[0].endSettled)
+        assertEquals(72, s[0].batteryEndPct)
+    }
+
+    @Test fun estimatedEndIsNeverAboveTheStart() {
+        // recovery 10, then a ride of 2 % followed by a charge: estimated end capped at its start
+        val s = settle(ride(0, 80, 60), ride(1, 70, 68), ride(2, 100, 95))
+        assertEquals(70, s[1].batteryEndPct)
+        assertFalse(s[1].endSettled)
+    }
+
+    @Test fun withoutSettledRidesNothingIsAdded() {
+        val s = settle(ride(0, 80, 72))
+        assertEquals(72, s[0].batteryEndPct)
+        assertFalse(s[0].endSettled)
+        // no battery reading: left as it is, and settles nothing before it
+        val t = settle(ride(0, 80, 72), ride(1, 0, 0))
+        assertFalse(t[0].endSettled)
+        assertEquals(0, t[1].batteryEndPct)
     }
 }

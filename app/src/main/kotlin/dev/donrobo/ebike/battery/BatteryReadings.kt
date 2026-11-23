@@ -1,6 +1,7 @@
 package dev.donrobo.ebike.battery
 
 import dev.donrobo.ebike.ride.RideSample
+import dev.donrobo.ebike.ride.RideSummary
 
 /**
  * What the display's battery percent means, and how to read the true charge from it. One place for this
@@ -21,13 +22,18 @@ import dev.donrobo.ebike.ride.RideSample
  * - Consumption of a ride is the difference of these two rest levels, never a sum of single steps:
  *   one percent step is mostly sag noise.
  * - A rise is recovery, not charging, unless it exceeds anything recovery can do ([CHARGE_RISE_PCT]).
+ * - The end of a ride is not at rest yet: the standing phase is short (10-80 s on the owner's rides) and the
+ *   voltage keeps recovering for much longer. By the next ride the reading was back up by 1-5 points on most of
+ *   the owner's rides and by up to 13 (11 within half an hour), so the end-of-ride reading booked about twice the
+ *   real consumption. The true end level is the next ride's start level, as long as no charge came in between
+ *   ([settleEnds]).
  */
 object BatteryReadings {
     /**
      * A rise of the reading by at least this much over a lower reading means the battery was charged.
-     * Recovery from sag reached 7 points on the owner's rides (from the lowest reading under load back to
-     * rest, ride of 2026-11-11 evening) and at most 4 points between the end of one ride and the start of
-     * the next; 10 is clearly above both and far below any real top-up at the charger.
+     * Recovery from sag reached 7 points on the owner's first rides (from the lowest reading under load back to
+     * rest, ride of 2026-11-11 evening); 10 is above that and far below any real top-up at the charger. Between
+     * rides the reading later recovered by up to 13 points, so across rides [settleEnds] does not use this bound.
      */
     const val CHARGE_RISE_PCT = 10
 
@@ -38,6 +44,12 @@ object BatteryReadings {
      * 0.5 % per minute, so 2 minutes keep the lag at about one percent.
      */
     const val LIVE_WINDOW_MS = 120_000L
+
+    /**
+     * The display's percent flickers by one step, so the next ride may start one point above this ride's start
+     * without a charge.
+     */
+    const val FLICKER_PCT = 1
 
     /** The display reports 0 before it knows the battery; above 100 is not a percentage. */
     fun plausible(pct: Int) = pct in 1..100
@@ -61,6 +73,42 @@ object BatteryReadings {
         val start = readings.max()
         val end = tail.maxOrNull() ?: s.last { plausible(it.batteryPct) }.batteryPct
         return RestLevels(start, minOf(start, end))
+    }
+
+    /**
+     * Replaces each ride's end level by its rest level (see [BatteryReadings]): the next ride's start level, the first
+     * reading at rest after it, marked [RideSummary.endSettled]. Between two rides the charge can only fall unless the
+     * bike was charged, and recovery never lifts the reading above the charge, so the next ride starting at most
+     * [FLICKER_PCT] above this ride's start means no charge came in between. The settled end is never above the
+     * start and never below the ride's own end reading.
+     *
+     * A ride followed by a charge, and the newest ride, have no reading at rest after them. They get their own end
+     * reading plus the median recovery of the settled rides ([recoveryPct]), unsettled. Dropping them instead would
+     * lose exactly the rides deepest into the battery, the only data on its low bands.
+     *
+     * @param rides newest first, as [dev.donrobo.ebike.ride.RideIndex.load] lists them.
+     */
+    fun settleEnds(rides: List<RideSummary>): List<RideSummary> {
+        val rest = rides.mapIndexed { i, r ->
+            val nextStart = rides.getOrNull(i - 1)?.batteryStartPct?.takeIf(::plausible)
+            if (plausible(r.batteryStartPct) && nextStart != null && nextStart <= r.batteryStartPct + FLICKER_PCT)
+                nextStart.coerceIn(r.batteryEndPct, r.batteryStartPct) else null
+        }
+        val recovery = recoveryPct(rides.indices.mapNotNull { i -> rest[i]?.let { it - rides[i].batteryEndPct } })
+        return rides.mapIndexed { i, r ->
+            when {
+                rest[i] != null -> r.copy(batteryEndPct = rest[i]!!, endSettled = true)
+                plausible(r.batteryStartPct) -> r.copy(batteryEndPct = (r.batteryEndPct + recovery).coerceAtMost(r.batteryStartPct))
+                else -> r
+            }
+        }
+    }
+
+    /** Typical recovery from the end of a ride to rest: the median of [recoveries] (whole percent), 0 without any. */
+    fun recoveryPct(recoveries: List<Int>): Int {
+        if (recoveries.isEmpty()) return 0
+        val s = recoveries.sorted()
+        return if (s.size % 2 == 1) s[s.size / 2] else (s[s.size / 2 - 1] + s[s.size / 2]) / 2
     }
 }
 

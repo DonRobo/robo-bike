@@ -93,14 +93,18 @@ data class LearnedRange(
  *
  * Method:
  * - The only measurement is a ride's total use, [RideSummary.batteryUsedPct] (rest level before minus rest
- *   level after). Every ride with a plausible battery and enough distance counts ([use]); a rise of the
- *   reading within a ride is recovery from sag, already absorbed by the rest levels, not a reason to drop
- *   the ride (a ride file never spans a charge).
+ *   level after, the latter read at the start of the next ride, see
+ *   [dev.donrobo.ebike.battery.BatteryReadings.settleEnds]; for a ride followed by a charge, its end reading
+ *   plus the typical recovery). Every ride with a plausible battery and enough distance counts ([use]); a rise of
+ *   the reading within a ride is recovery from sag, already absorbed by the rest levels, not a reason to drop the
+ *   ride (a ride file never spans a charge).
  * - The newest [window] usable rides form the basis (R7).
  * - Consumption is a ratio of sums (battery % / km), so long rides weigh more than short ones: a ride's
  *   total is uncertain by about one display step whatever its length. One ride's weight is capped at
  *   [CAP_KM] km so a single long tour does not drown the everyday rides.
- * - With enough rides, rides consuming more than [OUTLIER_FACTOR] times the median rate are dropped.
+ * - With enough rides, rides consuming more than [OUTLIER_FACTOR] times the median rate are dropped, measured
+ *   against the discharge curve of the other rides so rides low in the battery are not mistaken for outliers
+ *   ([withoutOutliers]).
  *   Rides with very low consumption stay: riding without assist is real.
  * - Per level (R3): single percent steps are mostly sag noise, so they are not attributed to levels.
  *   Instead each ride's total is explained by the distance it spent in each level,
@@ -176,14 +180,25 @@ object RangeModel {
         return if (km <= 0) null else rides.sumOf { weight(it) * it.batteryUsedPct } / km
     }
 
-    /** Drops rides consuming far more than the median, once there are enough rides to tell. */
-    internal fun withoutOutliers(rides: List<RideSummary>): List<RideSummary> {
-        val rated = rides.filter { it.distanceKm >= OUTLIER_MIN_KM }
-        if (rated.size < OUTLIER_MIN_RIDES) return rides
-        val rates = rated.map { it.batteryUsedPct / it.distanceKm }.sorted()
+    /**
+     * Drops rides consuming far more than the median, once there are enough rides to tell. Consumption is
+     * measured in average percent per km ([LearnedRange.averagePct]) of the discharge curve [curveFor] gives for that
+     * ride ([LearnedRange.EMPTY] = linear), so a ride through bands where each percent goes less far is compared
+     * fairly with rides higher up the battery. [learn] passes the curve learned from all *other* rides: a single
+     * ride claiming a steep band nobody else visited would otherwise explain itself.
+     */
+    internal fun withoutOutliers(
+        rides: List<RideSummary>, curveFor: (RideSummary) -> LearnedRange = { LearnedRange.EMPTY },
+    ): List<RideSummary> {
+        if (rides.count { it.distanceKm >= OUTLIER_MIN_KM } < OUTLIER_MIN_RIDES) return rides
+        val rate = rides.map { r ->
+            if (r.distanceKm < OUTLIER_MIN_KM) null
+            else curveFor(r).let { c -> (c.averagePct(r.batteryStartPct) - c.averagePct(r.batteryEndPct)) / r.distanceKm }
+        }
+        val rates = rate.filterNotNull().sorted()
         val median = rates[rates.size / 2].let { if (rates.size % 2 == 0) (it + rates[rates.size / 2 - 1]) / 2 else it }
         if (median <= 0) return rides
-        return rides.filterNot { it.distanceKm >= OUTLIER_MIN_KM && it.batteryUsedPct / it.distanceKm > median * OUTLIER_FACTOR }
+        return rides.filterIndexed { i, _ -> rate[i]?.let { it > median * OUTLIER_FACTOR } != true }
     }
 
     /**
@@ -193,18 +208,25 @@ object RangeModel {
      */
     fun learn(rides: List<RideSummary>, window: Int, today: YearMonth, zone: ZoneId): LearnedRange {
         val usable = rides.filter { use(it) == RideUse.OK }
-        val basis = withoutOutliers(usable.take(window.coerceAtLeast(1)))
-        val km = basis.sumOf { it.distanceKm }
-        val pct = basis.sumOf { it.batteryUsedPct }
-        val overall = if (km >= READY_KM && pct >= READY_PCT) rate(basis) else null
-
+        val newest = usable.take(window.coerceAtLeast(1))
+        // each ride is judged against the discharge curve of the other rides: on a strongly non-linear battery the
+        // rides through the low bands are not outliers, as long as another ride saw those bands too
+        val learned = fitted(withoutOutliers(newest) { r -> fitted(newest.filter { it !== r }, emptyList()) }, emptyList())
         val byMonth = usable.groupBy { YearMonth.from(Instant.ofEpochMilli(it.startMs).atZone(zone)) }
         val months = (MONTHS - 1 downTo 0).map { back ->
             val m = today.minusMonths(back.toLong())
-            val list = withoutOutliers(byMonth[m].orEmpty())
+            val list = withoutOutliers(byMonth[m].orEmpty()) { learned }
             val ok = list.sumOf { it.distanceKm } >= MONTH_KM && list.sumOf { it.batteryUsedPct } >= MONTH_PCT
             MonthRate(m, if (ok) rate(list) else null)
         }
+        return learned.copy(months = months)
+    }
+
+    /** Overall rate, per-level rates and discharge curve of [basis] (with [months] as given). */
+    private fun fitted(basis: List<RideSummary>, months: List<MonthRate>): LearnedRange {
+        val km = basis.sumOf { it.distanceKm }
+        val pct = basis.sumOf { it.batteryUsedPct }
+        val overall = if (km >= READY_KM && pct >= READY_PCT) rate(basis) else null
         // level 0 (no assist) takes part in the fit, so its distance explains its (small) share of the use,
         // but it is not listed: the display's levels are 1..n
         val ids = basis.flatMap { r -> r.levels.filter { it.distanceKm > 0 }.map { it.level } }.distinct().sorted()

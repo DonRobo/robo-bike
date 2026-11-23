@@ -95,7 +95,7 @@
     <string name="range_model_margin">Sicherheitsabschlag</string>
     <string name="range_model_margin_value">%1$d %%</string>
     <string name="range_model_info">Mehr zur Berechnung</string>
-    <string name="range_model_info_rides">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht.</string>
+    <string name="range_model_info_rides">Nur Fahrten ab %1$s zählen. Jede zählt mit dem Akkustand in Ruhe vorher und nachher: Am Berg sinkt die Anzeige und kommt wieder, das gilt nicht als verbraucht. Den Stand in Ruhe nach einer Fahrt liest die App beim Start der nächsten, weil sich die Anzeige noch stundenlang erholt. Wurde danach geladen, rechnet sie die übliche Erholung dazu.</string>
     <string name="range_model_info_bands">Wie weit ein Prozent reicht, lernt die App je Akkustand, denn oben und unten muss es nicht gleich weit sein; wo noch keine Fahrten sind, setzt sie den Verlauf der gemessenen Bereiche fort.</string>
 
     <!-- R9 Umwegfaktor -->

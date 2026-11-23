@@ -1,5 +1,6 @@
 package dev.donrobo.ebike.range
 
+import dev.donrobo.ebike.battery.BatteryReadings
 import dev.donrobo.ebike.battery.LiveRestLevel
 import dev.donrobo.ebike.location.LocationLimit
 import dev.donrobo.ebike.ride.RideCsv
@@ -18,18 +19,20 @@ import java.time.YearMonth
 import java.time.ZoneId
 
 /**
- * The owner's first seven real rides (November 2026, all in assist level 5), reduced to anonymous
- * fixtures in `src/test/resources/real-rides/`: time since the ride's first sample, speed as recorded,
- * battery percent, assist level, odometer since the first sample. No positions, no absolute times.
+ * The owner's real rides (November 11-22 2026, a backup export), reduced to anonymous fixtures in
+ * `src/test/resources/real-rides/` (oldest first): time since the ride's first sample, speed as recorded, battery
+ * percent, assist level, odometer since the first sample. No positions, no absolute times. Rides 1-7 are all in
+ * assist level 5; rides 1-7 have speed in the old 10x scale (only "moving or not" matters here).
  *
- * The display's percent is voltage-derived: within a ride it went down and up dozens of times and
- * recovered by up to 7 points. Start-to-end over all rides is about 59 % for 49.4 km (1.2 %/km, about 84 km
- * on a full battery). The previous model booked the deepest sag as consumed and threw away four of the
- * seven rides as "charged" (1.62 %/km, 56 km); these tests pin the measurement that replaced it.
+ * The display's percent is voltage-derived: within a ride it went down and up dozens of times and recovered by up
+ * to 7 points, and between rides by up to 13 more. Taking each ride's end level at the end of the ride booked
+ * about 1.8 %/km (54 km on a full battery); the rest level read at the next ride's start
+ * ([dev.donrobo.ebike.battery.BatteryReadings.settleEnds]) shows about 1.0 %/km. These tests pin that.
  */
 class RealRidesTest {
     private val zone = ZoneId.of("Europe/Vienna")
     private val month = YearMonth.of(2026, 11)
+    private val count = 29
 
     private fun samples(n: Int): List<RideSample> {
         val base = LocalDate.of(2026, 11, 10).atStartOfDay(zone).toInstant().toEpochMilli() + n * 6 * 3_600_000L
@@ -40,77 +43,102 @@ class RealRidesTest {
         }.toList()
     }
 
-    /** Oldest first. */
-    private val rides: List<RideSummary> by lazy { (1..7).map { RideCsv.summarize(File("ride$it.csv"), samples(it))!! } }
+    /** Each file's own summary, oldest first (end = reading at the end of the ride). */
+    private val raw: List<RideSummary> by lazy { (1..count).map { RideCsv.summarize(File("ride$it.csv"), samples(it))!! } }
 
-    @Test fun eachRideIsRestToRest() {
+    /** Newest first with settled ends, as [dev.donrobo.ebike.ride.RideIndex.load] delivers them. */
+    private val settled: List<RideSummary> by lazy { BatteryReadings.settleEnds(raw.reversed()) }
+
+    private fun learn(window: Int = 50) = RangeModel.learn(settled, window, month, zone)
+
+    /** Model distance between two battery levels at [l]'s level-5 rate, before the safety margin. */
+    private fun modelKm(l: LearnedRange, fromPct: Int, toPct: Int) = (l.averagePct(fromPct) - l.averagePct(toPct)) / RangeCalc.rateFor(l, 5)!!
+
+    @Test fun eachRideIsRestToRestWithinItsFile() {
         // highest reading of the ride -> highest reading of the final standing phase
-        assertEquals(listOf(100, 92, 88, 100, 93, 92, 88), rides.map { it.batteryStartPct })
-        assertEquals(listOf(88, 86, 75, 92, 91, 88, 73), rides.map { it.batteryEndPct })
-        assertEquals(listOf(12.0, 6.0, 13.0, 8.0, 2.0, 4.0, 15.0), rides.map { it.batteryUsedPct })
+        val first = raw.take(7)
+        assertEquals(listOf(100, 92, 88, 100, 93, 92, 88), first.map { it.batteryStartPct })
+        assertEquals(listOf(88, 86, 75, 92, 91, 88, 73), first.map { it.batteryEndPct })
         // the deepest sag (start - lowest reading: 15, 9, 20, 10, 4, 8, 15 = 81 %) is not booked as used
-        assertEquals(60.0, rides.sumOf { it.batteryUsedPct }, 1e-9)
-        assertEquals(49.4, rides.sumOf { it.distanceKm }, 0.05)
+        assertEquals(60.0, first.sumOf { it.batteryUsedPct }, 1e-9)
+        assertEquals(49.4, first.sumOf { it.distanceKm }, 0.05)
     }
 
-    @Test fun everyRideCountsAndTheRateIsAboutOnePointTwo() {
-        assertTrue(rides.all { RangeModel.use(it) == RideUse.OK })
-        val l = RangeModel.learn(rides.reversed(), 20, month, zone)
-        assertEquals(7, l.ridesUsed)
-        assertEquals(59.0, l.pct, 1.5)
-        assertEquals(1.2, l.pctPerKm!!, 0.03)
-        // all in level 5: that level is learned, at exactly the overall rate
-        val l5 = l.level(5)!!
-        assertEquals(Confidence.LEARNED, l5.confidence)
-        assertEquals(l.pctPerKm!!, l5.pctPerKm!!, 1e-9)
-        // full battery before the safety margin: the rides only cover 100..73 %, where each band went less far than
-        // the one above, so the bands below continue that (damped) instead of assuming the average: about 74 km,
-        // not the 84 a linear battery would give
-        assertEquals(74.0, RangeCalc.full(l, 5, 0)!!.fullKm, 3.0)
-        // one month with 49 km and 60 %: the R6 value is the same rate
-        assertEquals(l.pctPerKm!!, l.months.last().pctPerKm!!, 1e-9)
+    @Test fun endsSettleAtTheNextRidesStart() {
+        val s = settled.reversed()
+        // charged after rides 3, 12, 17 and 26 (each next ride starts above that ride's start); 29 is the newest
+        assertEquals(listOf(3, 12, 17, 26, 29), s.indices.filter { !s[it].endSettled }.map { it + 1 })
+        // the battery recovered by 3 points (median) from the end of a ride to the next ride's start
+        val recoveries = s.indices.filter { s[it].endSettled }.map { s[it].batteryEndPct - raw[it].batteryEndPct }
+        assertEquals(3, BatteryReadings.recoveryPct(recoveries))
+        assertEquals(13, recoveries.max())
+        // first seven rides: ends at the next start (ride 3: own end 75 + 3); ride 7 used 7 %, not 15
+        assertEquals(listOf(92, 88, 78, 93, 92, 88, 81), s.take(7).map { it.batteryEndPct })
+        // over all rides of 1 km or more: 165 % used instead of 263
+        val counted = s.indices.filter { s[it].distanceKm >= RangeModel.MIN_RIDE_KM }
+        assertEquals(263.0, counted.sumOf { raw[it].batteryUsedPct }, 1e-9)
+        assertEquals(165.0, counted.sumOf { s[it].batteryUsedPct }, 1e-9)
+    }
+
+    @Test fun learnedRateMatchesWhatTheBatteryReallyDid() {
+        val l = learn(20)
+        assertEquals(20, l.ridesUsed)
+        assertEquals(1.33, l.pctPerKm!!, 0.03)
+        assertEquals(Confidence.LEARNED, l.level(5)!!.confidence)
+        val r = raw
+        // rides 18-25: from 100 % to 72 % at rest (ride 26's start) in 35.3 km
+        val topKm = (17..24).sumOf { r[it].distanceKm }
+        assertEquals(35.3, topKm, 0.1)
+        assertEquals(topKm, modelKm(l, r[17].batteryStartPct, r[25].batteryStartPct), 0.1 * topKm)
+        // rides 9-11: from 74 % to 35 % at rest (ride 12's start) in 19.7 km, lower in the battery. Only these rides
+        // and two others went there, so the band fit keeps those bands nearer the average: about 15 % optimistic
+        val midKm = (8..10).sumOf { r[it].distanceKm }
+        assertEquals(19.7, midKm, 0.1)
+        assertEquals(midKm * 1.15, modelKm(l, r[8].batteryStartPct, r[11].batteryStartPct), 0.05 * midKm)
+        // full battery about 80 km; with the end-of-ride readings it was under 40
+        assertEquals(80.0, RangeCalc.full(l, 5, 0)!!.fullKm, 4.0)
+        val sagged = RangeModel.learn(raw.reversed(), 20, month, zone)
+        assertTrue(RangeCalc.full(sagged, 5, 0)!!.fullKm < 40.0)
+        // the owner's case: 68 % left, 10 % margin: about 39 km, not 14
+        assertEquals(39.0, RangeCalc.estimate(l, RangeReading(68, 5, 5, false), 10)!!.remainingKm, 2.0)
+        assertTrue(RangeCalc.estimate(sagged, RangeReading(68, 5, 5, false), 10)!!.remainingKm < 16.0)
+    }
+
+    @Test fun lowBatteryRidesAreNotOutliers() {
+        // rides 10 and 11 (72 -> 46 and 46 -> 35) used 2.5 %/km, three times the top-of-battery rides: the battery's
+        // lower percents go less far, and ride 26 confirms it, so with the whole export in the window all rides count
+        val usable = settled.count { RangeModel.use(it) == RideUse.OK }
+        assertEquals(27, usable)
+        assertEquals(usable, learn(50).ridesUsed)
     }
 
     @Test fun dischargeCurveOfTheRealRides() {
-        // all seven rides lie between 100 and 73 %: only the top three bands have data, the rest continues their trend
-        val l = RangeModel.learn(rides.reversed(), 20, month, zone)
+        val l = learn(20)
         for (b in l.bands.reversed()) {
             println("band ${b.lowPct}-${b.highPct}: factor %.3f, %.1f %% own data, %s, %.2f km/%%".format(b.factor, b.pct, b.confidence, b.factor / l.pctPerKm!!))
         }
-        // 70-80 % was crossed by two rides only (5 and 7 of its percents): estimated, pulled towards the average
-        assertEquals(listOf(Confidence.ESTIMATED, Confidence.LEARNED, Confidence.LEARNED), l.bands.takeLast(3).map { it.confidence })
-        val unknown = l.bands.dropLast(3)
-        assertTrue(unknown.all { it.confidence == Confidence.UNKNOWN })
-        // they go less far than the learned bands above, and level off instead of running down to the bound
-        assertTrue(unknown.all { it.factor < l.bands[8].factor && it.factor > 0.75 })
-        assertTrue(unknown.zipWithNext().all { (lower, upper) -> lower.factor <= upper.factor + 1e-9 })
-        // the data do not show a strongly non-linear battery in 73..100 %: every band within 35 % of the average
-        assertTrue(l.bands.takeLast(3).all { it.factor in 0.65..1.35 })
-        val linearFull = 100 / l.pctPerKm!!
-        val full = RangeCalc.full(l, 5, 0)!!
-        println("full: linear %.1f km, curve %.1f km (%.3f vs %.3f %%/km)".format(linearFull, full.fullKm, l.pctPerKm, full.pctPerKm))
-        for (pct in listOf(88, 73, 50, 20)) {
-            val now = RangeCalc.estimate(l, RangeReading(pct, 5, 5, false), 10)!!.remainingKm
-            println("at $pct %%: linear %.1f km, curve %.1f km (10 %% margin)".format(linearFull * pct / 100 * 0.9, now))
-        }
-        assertEquals(linearFull, full.fullKm, 0.1 * linearFull)
+        // the top 30 % go further than the average percent, 50-70 % clearly less far
+        assertTrue(l.bands.takeLast(3).all { it.factor > 1.2 })
+        assertTrue(l.bands.subList(5, 7).all { it.factor < 0.75 })
+        // below the lowest ride nothing is known: no band goes further than the average
+        assertTrue(l.bands.filter { it.confidence == Confidence.UNKNOWN }.all { it.lowPct < 20 && it.factor in 0.8..1.1 })
     }
 
     @Test fun learnedButBatteryUnknownIsItsOwnState() {
         // the phone's situation: rides learned, but no battery report since the update
-        val l = RangeModel.learn(rides.reversed(), 20, month, zone)
+        val l = learn(20)
         val d = RangeEngine.compose(l, 20, null, 10, null, LocationLimit.NO_PERMISSION, HomeSettings(true, null, 10.0))
         assertNull(d.estimate)
         assertNotNull(d.full)
         val full = d.full!!
         assertEquals(l.averagePct(100) / l.pctPerKm!! * 0.9, full.fullKm, 1e-9)
         assertEquals(RangeSummaryMode.BATTERY_UNKNOWN, summaryMode(d))
-        // the per-level list is at a full battery then, and agrees with the full range
-        assertEquals(full.fullKm, d.levels.single { it.level == 5 }.km!!, 1e-9)
+        // the per-level list is at a full battery then, and agrees with the full range (nearly all km in level 5)
+        assertEquals(full.fullKm, d.levels.single { it.level == 5 }.km!!, 0.01 * full.fullKm)
         // with a reading the same rate and curve give the remaining range too
         val live = RangeEngine.compose(l, 20, RangeReading(80, 5, 5, true), 10, null, null, HomeSettings(false, null, 10.0))
         assertEquals(RangeSummaryMode.KNOWN, summaryMode(live))
-        assertEquals(l.averagePct(80) / l.pctPerKm!! * 0.9, live.estimate!!.remainingKm, 1e-9)
+        assertEquals(l.averagePct(80) / RangeCalc.rateFor(l, 5)!! * 0.9, live.estimate!!.remainingKm, 1e-9)
         // the top 20 % went further than the rest, so 80 % left is less than 80 % of the full range
         assertTrue(live.estimate!!.remainingKm < full.fullKm * 0.8)
         // nothing learned: learning
@@ -129,8 +157,8 @@ class RealRidesTest {
             val liveRises = live.zipWithNext().count { (a, b) -> b > a }
             assertTrue("ride $n: $liveChanges live vs $rawChanges raw changes", liveChanges * 2 <= rawChanges)
             assertTrue("ride $n: $liveRises rises", liveRises <= 4)
-            // never above the ride's start rest level, and ends at the end rest level or within one sag step of it
-            val r = rides[n - 1]
+            // never above the ride's start rest level, and ends at its own end reading or within one sag step of it
+            val r = raw[n - 1]
             assertTrue(live.all { it <= r.batteryStartPct })
             assertTrue("ride $n ends at ${live.last()} vs ${r.batteryEndPct}", live.last() in r.batteryEndPct - 2..r.batteryEndPct)
         }

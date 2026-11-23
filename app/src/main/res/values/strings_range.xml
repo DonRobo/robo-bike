@@ -95,7 +95,7 @@
     <string name="range_model_margin">Safety margin</string>
     <string name="range_model_margin_value">%1$d %%</string>
     <string name="range_model_info">More about the calculation</string>
-    <string name="range_model_info_rides">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used.</string>
+    <string name="range_model_info_rides">Only rides of %1$s or more count. Each counts with its battery level at rest before and after: the reading dips on climbs and comes back, so dips are not counted as used. The level at rest after a ride is read when the next ride starts, because the reading keeps recovering for hours. After a ride followed by a charge, the app adds the typical recovery instead.</string>
     <string name="range_model_info_bands">How far one percent goes is learned per battery level, as it need not be the same near full and near empty; where there are no rides yet, it continues the course of the measured ranges.</string>
 
     <!-- R9 detour factor -->
