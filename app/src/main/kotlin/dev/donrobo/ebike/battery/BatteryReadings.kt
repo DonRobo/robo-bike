@@ -2,6 +2,8 @@ package dev.donrobo.ebike.battery
 
 import dev.donrobo.ebike.ride.RideSample
 import dev.donrobo.ebike.ride.RideSummary
+import kotlin.math.ceil
+import kotlin.math.roundToInt
 
 /**
  * What the display's battery percent means, and how to read the true charge from it. One place for this
@@ -146,4 +148,64 @@ class LiveRestLevel(private val windowMs: Long = BatteryReadings.LIVE_WINDOW_MS)
 
     /** The live session ended (disconnected, other bike): the next one starts fresh. */
     fun reset() = window.clear()
+}
+
+/**
+ * Live estimate of the charge while riding, in display percent: dead reckoning from the rest level at the start
+ * of the session with the learned consumption, held within what the readings allow.
+ *
+ * - The readings alone cannot show the charge while riding: under sustained load (a long climb, a fast stretch)
+ *   the sag outlasts any window, and [LiveRestLevel] alone booked it as used (on the owner's rides the reading
+ *   lagged the true rest level by several points for minutes).
+ * - So the estimate starts at the highest reading of the session (at rest when the bike was switched on) and
+ *   goes down by the distance ridden times the consumption at the current battery level ([pctPerKm], from the
+ *   learned range: rate / discharge curve factor).
+ * - A reading is never above the charge (apart from flicker), so the estimate never drops below the trailing
+ *   maximum ([LiveRestLevel]); it never rises above the highest reading of the session (the charge only falls
+ *   while riding). If the learned rate is too high, the readings hold the estimate up; if it is too low, at most
+ *   [MAX_SAG_PCT] above the trailing maximum.
+ * - Without a learned consumption it is the trailing maximum, as before.
+ *
+ * Not thread-safe; one instance per live session.
+ */
+class LiveCharge(windowMs: Long = BatteryReadings.LIVE_WINDOW_MS) {
+    private val rest = LiveRestLevel(windowMs)
+    private var top: Int? = null
+    private var estimate: Double? = null
+    private var lastOdoKm: Double? = null
+
+    /**
+     * Adds the report at [nowMs] and returns the estimated charge (whole percent), null before any plausible
+     * reading. [pctPerKm] gives the consumption at a battery level (null = nothing learned).
+     */
+    fun update(nowMs: Long, pct: Int, odoKm: Double, pctPerKm: ((Int) -> Double?)?): Int? {
+        val floor = rest.update(nowMs, pct) ?: return null
+        if (BatteryReadings.plausible(pct)) top = maxOf(top ?: pct, pct)
+        val ceiling = top!!
+        val dKm = lastOdoKm?.let { odoKm - it }?.takeIf { it in 0.0..MAX_STEP_KM } ?: 0.0
+        lastOdoKm = odoKm
+        var e = estimate ?: ceiling.toDouble()
+        val rate = pctPerKm?.invoke(ceil(e).toInt().coerceIn(1, 100))
+        e = if (rate == null) floor.toDouble() else e - dKm * rate
+        e = e.coerceAtMost(floor + MAX_SAG_PCT.toDouble()).coerceIn(floor.toDouble(), ceiling.toDouble())
+        estimate = e
+        return e.roundToInt()
+    }
+
+    /** The live session ended (disconnected, other bike): the next one starts fresh. */
+    fun reset() {
+        rest.reset(); top = null; estimate = null; lastOdoKm = null
+    }
+
+    companion object {
+        /**
+         * How far the charge may lie above the trailing maximum of the readings: a bound for a learned rate that is
+         * too low. At the last moving moment of the owner's rides the trailing maximum lay 0-8 points below the rest
+         * level read at the next start, once 13; 10 lets nearly all real sag through and stops a runaway estimate.
+         */
+        const val MAX_SAG_PCT = 10
+
+        /** A bigger odometer step between two reports is a reconnect or a reset, not riding. */
+        const val MAX_STEP_KM = 0.5
+    }
 }

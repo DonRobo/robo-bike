@@ -112,4 +112,43 @@ class BatteryReadingsTest {
         assertFalse(t[0].endSettled)
         assertEquals(0, t[1].batteryEndPct)
     }
+
+    @Test fun liveChargeWithoutRateIsTheTrailingMaximum() {
+        val c = LiveCharge(windowMs = 120_000)
+        assertEquals(80, c.update(0, 80, 0.0, null))
+        assertEquals(80, c.update(30_000, 75, 0.5, null))
+        assertEquals(76, c.update(160_000, 76, 1.5, null))
+    }
+
+    @Test fun liveChargeCountsDownWithTheDistance() {
+        val c = LiveCharge(windowMs = 120_000)
+        val rate = { _: Int -> 1.0 } // 1 % per km
+        assertEquals(80, c.update(0, 80, 10.0, rate))
+        // 5 km in 0.1 km steps under a sustained sag to 72: the estimate follows the distance, not the sag
+        var t = 0L; var odo = 10.0; var last = 0
+        repeat(50) { t += 20_000; odo += 0.1; last = c.update(t, 72, odo, rate)!! }
+        // 80 - 5 = 75, but for the first two minutes the trailing maximum (still 80) holds it: 0.6 km not counted
+        assertEquals(76, last)
+    }
+
+    @Test fun liveChargeStaysWithinTheReadings() {
+        val c = LiveCharge(windowMs = 120_000)
+        // rate far too high: the readings hold the estimate up at the trailing maximum
+        assertEquals(80, c.update(0, 80, 0.0) { 10.0 })
+        assertEquals(78, c.update(10_000, 78, 0.4) { 10.0 }.let { c.update(200_000, 78, 0.8) { 10.0 } })
+        // rate zero: never more than MAX_SAG_PCT above the trailing maximum
+        val z = LiveCharge(windowMs = 120_000)
+        z.update(0, 90, 0.0) { 0.0 }
+        assertEquals(70 + LiveCharge.MAX_SAG_PCT, z.update(200_000, 70, 0.3) { 0.0 })
+        // never above the highest reading of the session
+        assertTrue(z.update(210_000, 85, 0.4) { 0.0 }!! <= 90)
+    }
+
+    @Test fun liveChargeIgnoresOdometerJumpsAndResets() {
+        val c = LiveCharge(windowMs = 120_000)
+        c.update(0, 80, 100.0) { 1.0 }
+        assertEquals(80, c.update(1_000, 80, 140.0) { 1.0 }) // reconnect with a new odometer: not 40 km ridden
+        c.reset()
+        assertEquals(60, c.update(2_000, 60, 140.0) { 1.0 })
+    }
 }

@@ -3,7 +3,7 @@ package dev.donrobo.ebike.range
 import android.content.Context
 import dev.donrobo.ebike.ConnState
 import dev.donrobo.ebike.Repo
-import dev.donrobo.ebike.battery.LiveRestLevel
+import dev.donrobo.ebike.battery.LiveCharge
 import dev.donrobo.ebike.location.GeoPoint
 import dev.donrobo.ebike.location.LocationLimit
 import dev.donrobo.ebike.location.LocationSettings
@@ -41,8 +41,9 @@ data class HomeSettings(val enabled: Boolean, val home: GeoPoint?, val reserveKm
  *
  * The learned part ([RangeModel.learn]) is recomputed only when the ride list or the window changes; while
  * riding, the ride list refreshes every 30 s but the ride being recorded is left out, so the result stays
- * the same and `distinctUntilChanged` stops it. Live reports (every 0.5 s) only pass on when battery or
- * assist level change, and then only the cheap [compose] runs.
+ * the same and `distinctUntilChanged` stops it. Live reports (every 0.5 s) feed the charge estimate
+ * ([LiveCharge]) and only pass on when the estimated battery or the assist level change; then only the cheap
+ * [compose] runs.
  */
 object RangeEngine {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -86,14 +87,18 @@ object RangeEngine {
                 DetourCalc.effective(auto, manual, rides, window)
             }.distinctUntilChanged().flowOn(Dispatchers.Default)
 
-            // live: the rest level of the last readings, not the momentary (sagging) one; reset per live session
-            val rest = LiveRestLevel()
-            val reading = Repo.snapshotFlow(settings, id).map { s ->
+            // live: the estimated charge (start level minus the learned consumption over the distance ridden, held
+            // within what the readings allow), not the momentary (sagging) reading; reset per live session
+            val charge = LiveCharge()
+            // one flow for both, so the model is learned once per change: the estimate needs its rate and curve
+            val learnedAndReading = combine(learned, Repo.snapshotFlow(settings, id)) { l, s ->
                 val r = s?.report
-                if (s?.live == true && r != null) {
-                    rest.update(System.currentTimeMillis(), r.batteryPct)?.let { RangeReading(it, r.gear, r.gears, live = true) }
+                l to if (s?.live == true && r != null) {
+                    val rate = RangeCalc.rateFor(l.first, r.gear)?.takeIf { it > 0 }
+                    charge.update(System.currentTimeMillis(), r.batteryPct, r.odoKm, rate?.let { { p: Int -> it / l.first.factor(p) } })
+                        ?.let { RangeReading(it, r.gear, r.gears, live = true) }
                 } else {
-                    rest.reset()
+                    charge.reset()
                     r?.let { RangeReading(it.batteryPct, it.gear, it.gears, live = false) }
                 }
             }.distinctUntilChanged()
@@ -107,9 +112,10 @@ object RangeEngine {
             )
 
             combine(
-                learned, reading, combine(settings.flow(RangeSettings.marginPct, id), detour, ::Pair),
+                learnedAndReading, combine(settings.flow(RangeSettings.marginPct, id), detour, ::Pair),
                 combine(position, Locations.status) { p, s -> p to s.limit }, home,
-            ) { l, r, md, pos, h ->
+            ) { lr, md, pos, h ->
+                val (l, r) = lr
                 compose(l.first, l.second, r, md.first, pos.first, pos.second, h, md.second)
             }.distinctUntilChanged().collect { d ->
                 publish(d)
