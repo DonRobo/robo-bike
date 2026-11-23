@@ -291,13 +291,30 @@ class RangeModelTest {
         assertEquals(full.fullKm, RangeCalc.estimate(l, RangeReading(100, 2, 5, true), 0)!!.remainingKm, 1e-9)
     }
 
-    @Test fun unvisitedBandsFallBackToTheAverage() {
-        // only ever ridden between 100 and 60 %: the lower bands are unknown and worth the average
+    @Test fun unvisitedBandsContinueAFlatCourse() {
+        // only ever ridden between 100 and 60 %, flat below 90 %: the unknown lower bands stay at that level,
+        // not at the average (which the far-reaching top band lifts)
         val l = learn(curveRides(20, seed = 5, chargeBelow = 70) { q -> if (q > 90) 1.2 else 0.8 }, window = 50)
         val low = l.bands.filter { it.highPct <= 50 }
-        assertTrue(low.all { it.confidence == Confidence.UNKNOWN && it.factor == 1.0 })
+        assertTrue(low.all { it.confidence == Confidence.UNKNOWN })
         assertEquals(Confidence.LEARNED, l.bands[9].confidence)
         assertTrue(l.bands[9].factor > l.bands[7].factor)
+        low.forEach { assertEquals("band ${it.lowPct}", l.bands[7].factor, it.factor, 0.08) }
+    }
+
+    @Test fun unvisitedBandsContinueAFallingTrendAndLevelOff() {
+        // ridden only between 100 and 50 %, each band going clearly less far than the one above
+        fun k(q: Int) = 0.6 + 0.01 * q // 1.6 km per % at the top, 1.1 at 50 %
+        val l = learn(curveRides(40, seed = 9, chargeBelow = 60, kmPerPct = ::k), window = 50)
+        val avg = 1 / l.pctPerKm!!
+        fun km(b: Int) = l.bands[b].factor * avg
+        val lowestLearned = l.bands.indexOfFirst { it.confidence == Confidence.LEARNED }
+        val below = (0 until lowestLearned).filter { l.bands[it].confidence == Confidence.UNKNOWN }
+        assertTrue(below.isNotEmpty())
+        // further down they go less far still, but the damped continuation levels off instead of running away
+        val chain = (below + lowestLearned).map(::km)
+        assertTrue(chain.toString(), chain.zipWithNext().all { (lower, upper) -> lower <= upper + 1e-9 })
+        assertTrue(chain.toString(), chain.first() > km(lowestLearned) - 0.3)
     }
 
     @Test fun oneOddRideInARareBandMovesItOnlyPartly() {
@@ -332,7 +349,8 @@ class RangeModelTest {
         val full = RangeCalc.months(learn(rides), marginPct = 0)
         // the month's rate over the learned discharge curve, as "Voll geladen" (100 km on a linear battery)
         assertEquals(learn(rides).averagePct(100) / 1.0, full.last().fullKm!!, 1e-9)
-        assertEquals(100.0, full.last().fullKm!!, 1.0)
+        // a few rides only: the curve is nearly linear (about 100 km on a linear battery)
+        assertEquals(100.0, full.last().fullKm!!, 5.0)
     }
 }
 

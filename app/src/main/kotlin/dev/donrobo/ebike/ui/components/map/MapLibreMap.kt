@@ -33,6 +33,7 @@ import org.maplibre.android.maps.Style
 import org.maplibre.android.style.expressions.Expression
 import org.maplibre.android.style.layers.BackgroundLayer
 import org.maplibre.android.style.layers.FillLayer
+import org.maplibre.android.style.layers.Layer
 import org.maplibre.android.style.layers.LineLayer
 import org.maplibre.android.style.layers.Property
 import org.maplibre.android.style.layers.PropertyFactory
@@ -214,24 +215,28 @@ private class Overlays(private val c: AppColors, private val density: Density, p
 
 /** Brings the Positron base style to the artboard map colours (land, parks, water, white roads). */
 private fun recolor(style: Style, c: AppColors) {
-    val land = c.mapLand.toArgb(); val park = c.mapPark.toArgb(); val water = c.mapWater.toArgb()
-    val road = Color.White.toArgb(); val casing = c.border.toArgb(); val building = c.track.toArgb()
-    for (l in style.layers) {
-        val id = l.id
-        when (l) {
-            is BackgroundLayer -> l.setProperties(PropertyFactory.backgroundColor(land))
-            is FillLayer -> when {
-                id == "water" -> l.setProperties(PropertyFactory.fillColor(water))
-                id == "park" || id.startsWith("landcover_wood") || id.contains("grass") -> l.setProperties(PropertyFactory.fillColor(park))
-                id == "landuse_residential" || id.startsWith("road_area") -> l.setProperties(PropertyFactory.fillColor(land))
-                id == "building" -> l.setProperties(PropertyFactory.fillColor(building), PropertyFactory.fillOutlineColor(casing))
-            }
-            is LineLayer -> when {
-                id.startsWith("waterway") -> l.setProperties(PropertyFactory.lineColor(water))
-                id.startsWith("highway") || id.startsWith("tunnel") -> l.setProperties(
-                    PropertyFactory.lineColor(if (id.contains("casing")) casing else road),
-                )
-            }
+    val p = MapPalette.of(c)
+    for (l in style.layers) recolorLayer(l, p)
+}
+
+/** Recolours one layer of the Positron style to [p] (other layers stay as they are). */
+internal fun recolorLayer(l: Layer, p: MapPalette) {
+    val land = p.land.toArgb(); val park = p.park.toArgb(); val water = p.water.toArgb()
+    val road = p.road.toArgb(); val casing = p.casing.toArgb(); val building = p.building.toArgb()
+    val id = l.id
+    when (l) {
+        is BackgroundLayer -> l.setProperties(PropertyFactory.backgroundColor(land))
+        is FillLayer -> when {
+            id == "water" -> l.setProperties(PropertyFactory.fillColor(water))
+            id == "park" || id.startsWith("landcover_wood") || id.contains("grass") -> l.setProperties(PropertyFactory.fillColor(park))
+            id == "landuse_residential" || id.startsWith("road_area") -> l.setProperties(PropertyFactory.fillColor(land))
+            id == "building" -> l.setProperties(PropertyFactory.fillColor(building), PropertyFactory.fillOutlineColor(casing))
+        }
+        is LineLayer -> when {
+            id.startsWith("waterway") -> l.setProperties(PropertyFactory.lineColor(water))
+            id.startsWith("highway") || id.startsWith("tunnel") -> l.setProperties(
+                PropertyFactory.lineColor(if (id.contains("casing")) casing else road),
+            )
         }
     }
 }

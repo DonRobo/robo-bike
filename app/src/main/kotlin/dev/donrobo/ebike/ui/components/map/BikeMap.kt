@@ -72,7 +72,8 @@ fun BikeMap(
     }
 }
 
-private val isRobolectric: Boolean = Build.FINGERPRINT == "robolectric"
+/** True under Robolectric, which cannot render MapLibre (screenshot tests get stand-ins instead). */
+internal val isRobolectric: Boolean = Build.FINGERPRINT == "robolectric"
 
 /** OpenStreetMap/OpenMapTiles credit; in interactive mode it opens the OSM copyright page. */
 @Composable

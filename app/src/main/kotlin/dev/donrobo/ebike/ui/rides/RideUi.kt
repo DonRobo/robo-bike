@@ -1,6 +1,7 @@
 package dev.donrobo.ebike.ui.rides
 
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -29,6 +30,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.StrokeJoin
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -42,6 +44,7 @@ import dev.donrobo.ebike.ui.components.AppIcon
 import dev.donrobo.ebike.ui.components.AppIcons
 import dev.donrobo.ebike.ui.components.map.GeoBounds
 import dev.donrobo.ebike.ui.components.map.MapGeometry
+import dev.donrobo.ebike.ui.components.map.rememberMapThumbnail
 import dev.donrobo.ebike.ui.theme.AppTheme
 import java.time.Instant
 import java.time.LocalDate
@@ -83,24 +86,27 @@ fun clockText(epochMs: Long, zone: ZoneId = ZoneId.systemDefault()): String =
     DateTimeFormatter.ofPattern(stringResource(R.string.rides_time_pattern), currentLocale()).format(Instant.ofEpochMilli(epochMs).atZone(zone))
 
 /**
- * Small map-like thumbnail of a ride (84 dp, radius 14): the outline on the map land colour, like the
- * artboard's list icons. Drawn from [RideShape] (from the index), so the list never parses tracks.
+ * Small map thumbnail of a ride (84 dp, radius 14): a static snapshot of the real map
+ * ([rememberMapThumbnail], rendered once and cached) with the ride's outline drawn on top, so the route stays
+ * crisp. Until the snapshot exists (or offline, or if it failed) the outline sits on the plain map land colour.
+ * Drawn from [RideShape] (from the index), so the list never parses tracks.
  * Without a track: a muted route icon on the same ground.
  */
 @Composable
-fun RideThumbnail(shape: RideShape?, modifier: Modifier = Modifier, size: Dp = 84.dp) {
+fun RideThumbnail(rideId: String, shape: RideShape?, modifier: Modifier = Modifier, size: Dp = 84.dp) {
     val c = AppTheme.colors
     Box(modifier.size(size).clip(RoundedCornerShape(14.dp)).background(c.mapLand), contentAlignment = Alignment.Center) {
         if (shape == null) {
             AppIcon(AppIcons.TabRides, null, size = 28.dp, tint = c.neutral)
             return@Box
         }
+        rememberMapThumbnail(rideId, shape.points, size, THUMBNAIL_PADDING)?.let {
+            Image(it, contentDescription = null, modifier = Modifier.matchParentSize(), contentScale = ContentScale.FillBounds)
+        }
         Canvas(Modifier.matchParentSize()) {
-            // two light "streets" for the map look, then the outline fitted into the tile
-            drawLine(c.surface, Offset(0f, this.size.height * 0.36f), Offset(this.size.width, this.size.height * 0.26f), 4.dp.toPx())
-            drawLine(c.surface, Offset(this.size.width * 0.36f, 0f), Offset(this.size.width * 0.45f, this.size.height), 4.dp.toPx())
+            // same projection as the snapshot's camera (MapThumbnailSpec), so the outline lies on its streets
             val b = GeoBounds.of(shape.points) ?: return@Canvas
-            val proj = MapGeometry.Projection(b, this.size.width, this.size.height, 14.dp.toPx())
+            val proj = MapGeometry.Projection(b, this.size.width, this.size.height, THUMBNAIL_PADDING.toPx())
             val p = Path()
             shape.points.forEachIndexed { i, g -> if (i == 0) p.moveTo(proj.x(g), proj.y(g)) else p.lineTo(proj.x(g), proj.y(g)) }
             drawPath(p, c.primary, style = Stroke(4.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round))
@@ -108,3 +114,6 @@ fun RideThumbnail(shape: RideShape?, modifier: Modifier = Modifier, size: Dp = 8
         }
     }
 }
+
+/** Space between the outline's bounds and the thumbnail's edge (overlay and snapshot camera). */
+private val THUMBNAIL_PADDING = 14.dp

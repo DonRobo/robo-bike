@@ -15,7 +15,10 @@ data class LocationPermissions(val coarse: Boolean, val fine: Boolean, val backg
 enum class LocationMode {
     /** No location requests. */
     OFF,
-    /** A low-power fix on connect and every [LocationPolicy.OCCASIONAL_INTERVAL_MS] (home warning, sun, parked bike). */
+    /**
+     * A low-power fix when the bike connects; further ones every [LocationPolicy.OCCASIONAL_INTERVAL_MS] only while
+     * "Komme ich heim?" needs them ([LocationPolicy.periodicFixesWanted], [LocationPolicy.occasionalFixDue]).
+     */
     OCCASIONAL,
     /** GPS every second, for the ride track (only while the track setting is on, Q3). */
     CONTINUOUS,
@@ -105,6 +108,22 @@ object LocationPolicy {
     /** OCCASIONAL: request a new fix when the newest one is older than the interval (or there is none). */
     fun needsOccasionalFix(last: LocationFix?, nowMs: Long): Boolean =
         last == null || last.ageMs(nowMs) >= OCCASIONAL_INTERVAL_MS
+
+    /**
+     * Whether OCCASIONAL keeps taking a fix every [OCCASIONAL_INTERVAL_MS] while connected: only for the in-ride
+     * "Komme ich heim?" warning, which needs a recent position ([dev.donrobo.ebike.range.HomeCalc.MAX_FIX_AGE_MS]),
+     * i.e. when it is enabled and a home is set. Otherwise the fix at connect is the only one (the track, when on,
+     * uses CONTINUOUS instead).
+     */
+    fun periodicFixesWanted(homeEnabled: Boolean, home: GeoPoint?): Boolean = homeEnabled && home != null
+
+    /**
+     * OCCASIONAL: whether to request a fix now. [firstOfConnection] = the first check since the bike connected (the
+     * switch-on fix), later checks only while [periodic] ([periodicFixesWanted]); either way only when the newest fix
+     * is stale ([needsOccasionalFix]).
+     */
+    fun occasionalFixDue(last: LocationFix?, nowMs: Long, firstOfConnection: Boolean, periodic: Boolean): Boolean =
+        (firstOfConnection || periodic) && needsOccasionalFix(last, nowMs)
 
     /** At disconnect a fresh fix is worth requesting when the newest one is older than this. */
     const val PARKED_FRESH_MS = 60_000L

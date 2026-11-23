@@ -3,6 +3,7 @@ package dev.donrobo.ebike.screenshots
 import androidx.compose.ui.test.junit4.createComposeRule
 import dev.donrobo.ebike.location.GeoPoint
 import dev.donrobo.ebike.location.LocationLimit
+import dev.donrobo.ebike.range.BandRate
 import dev.donrobo.ebike.range.BikePosition
 import dev.donrobo.ebike.range.Confidence
 import dev.donrobo.ebike.range.Detour
@@ -38,6 +39,7 @@ class RangeScreenshotTest {
         override fun setHomeEnabled(on: Boolean) {}
         override fun setReserveKm(km: Double) {}
         override fun pickHome() {}
+        override fun openBands() {}
         override fun setDetourAuto(on: Boolean) {}
         override fun setDetourManual(factor: Double) {}
     }
@@ -51,6 +53,9 @@ class RangeScreenshotTest {
         ridesUsed = 20, km = 260.0, pct = 312.0, pctPerKm = 1.2,
         levels = listOf(118.0, 89.0, 64.0, 48.0, 37.0).mapIndexed { i, km -> LevelRate(i + 1, 40.0, 40.0, 75 * 0.9 / km, Confidence.LEARNED) },
         months = (5 downTo 0).map { back -> MonthRate(nov.minusMonths(back.toLong()), 90.0 / (91.0 - (5 - back)) ) },
+        // a linear battery (every band at the average), so the numbers above stay as on the artboard; the bands only
+        // make the Akku-Bänder link appear
+        bands = (0 until 10).map { BandRate(it * 10, it * 10 + 10, 20.0, 1.0, if (it < 2) Confidence.UNKNOWN else Confidence.LEARNED) },
     )
 
     private fun state(

@@ -152,8 +152,9 @@ One provider (`LocationProvider`, run by `BikeService`) for all features; read i
 
 - `Locations.fix: StateFlow<LocationFix?>`: newest fix of this process (point, time, accuracy, altitude).
   `Locations.best(ctx)`: newest of live fix, system last known and the persisted last position.
-- `Locations.status: StateFlow<LocationStatus>`: `mode` (`OFF`; `OCCASIONAL` = low-power fix on connect and every
-  10 min while connected; `CONTINUOUS` = GPS, only while `RideSettings.gpsTrack` is on, Q3) and `limit`, what is
+- `Locations.status: StateFlow<LocationStatus>`: `mode` (`OFF`; `OCCASIONAL` = one low-power fix on connect, and
+  every 10 min while connected only while "Komme ich heim?" is on and a home is set
+  (`LocationPolicy.periodicFixesWanted`); `CONTINUOUS` = GPS, only while `RideSettings.gpsTrack` is on, Q3) and `limit`, what is
   missing: `NO_PERMISSION`, `SYSTEM_LOCATION_OFF`, `NEEDS_BACKGROUND` (service started in the background with only
   "while in use": Android grants no location; fix = "allow all the time" or open the app), `TRACK_NEEDS_PRECISE`.
   `Locations.permissions(ctx)` works without the service. The decision is the pure `LocationPolicy.decide`.
@@ -369,7 +370,7 @@ Location comes from the emulator: `adb emu geo fix <lon> <lat>` (longitude first
    (GOOGLE_MAPS)`, `TX 11->f1 op=03 reg=0 [01 01]`, `sim display: shows navigation open, no update yet`,
    `TX 11->f1 op=03 reg=0 [02 02 96 00 00 02 …]`, `sim display: shows LEFT in 150 m (box 150 m), 3400 m to go`.
    Repeat with other texts to move along; `sim nav-maps-end` → 10 s later `nav: end`, `TX … [.. 03]`,
-   `sim display: shows no navigation`. ("Hinweis zeigen ab" filters Maps hints by distance; default "always".)
+   `sim display: shows no navigation`. (Every Maps hint goes to the display, however far away the turn is.)
 6. `sim drop` → `sim: link lost (simulated link loss)`; ~5 s later `sim: connecting …`, `sim: link up`, the whole
    connect sequence again (the ride continues; it is the same display).
 7. `sim off` → `sim: display switched off`, `sim: link lost (display switched off)`; the parked position is stored

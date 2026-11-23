@@ -39,9 +39,14 @@ data class MonthRate(val month: YearMonth, val pctPerKm: Double?)
 /**
  * How far one display percent in the battery band ([lowPct], [highPct]] goes, relative to the average percent:
  * [factor] 1 = as far as the overall consumption says, 2 = twice as far. [pct] = the band's own data (effective
- * display percent observed in it, see [RangeModel.bands]); [factor] is 1 for [Confidence.UNKNOWN].
+ * display percent observed in it, see [RangeModel.bands]). A band without data ([Confidence.UNKNOWN]) continues
+ * the course of its measured neighbours. [km] and [rides] = distance ridden in the band (each ride's distance
+ * shared out over the percents it used) and the rides that crossed it, for the R8 screen.
  */
-data class BandRate(val lowPct: Int, val highPct: Int, val pct: Double, val factor: Double, val confidence: Confidence)
+data class BandRate(
+    val lowPct: Int, val highPct: Int, val pct: Double, val factor: Double, val confidence: Confidence,
+    val km: Double = 0.0, val rides: Int = 0,
+)
 
 /**
  * The learned part of the range model of one bike. Recomputed only when the ride list or the model
@@ -138,8 +143,15 @@ object RangeModel {
     const val MONTHS = 6
     /** Width of one battery band of the discharge curve, in display percent. */
     const val BAND_PCT = 10
-    /** Pseudo-data per band at factor 1 (ridge term of the band fit), in display percent. */
+    /** Pseudo-data per band at its prior (ridge term of the band fit, see [bands]), in display percent. */
     const val BAND_SHRINK_PCT = 10.0
+    /**
+     * Below (or above) the measured bands the prior continues their slope, damped by this factor per band, so the
+     * trend levels off: the whole continuation adds at most about one more band-to-band step.
+     */
+    const val BAND_TREND_DAMPING = 0.5
+    /** The slope continued into bands without data is fitted through this many learned bands next to them. */
+    const val TREND_BANDS = 3
     /** A band is learned from its own data from this many effective display percent on. */
     const val BAND_LEARNED_PCT = 10.0
     /** A band's factor stays within these bounds, whatever a few odd rides say. */
@@ -215,10 +227,15 @@ object RangeModel {
      * factors of those percents, `P_i = sum_b c_ib f_b` (c_ib = its percents in band b). For a linear battery
      * every f_b is 1. Rides covering different bands tell the bands apart. Weighted least squares, weight = ride
      * weight / percents used (one band gives the ratio of sums), plus a ridge of [BAND_SHRINK_PCT] percent of
-     * pseudo-data at factor 1 per band: bands never visited stay at 1 (the overall consumption), rarely
-     * visited ones move only part of the way, and [BAND_FACTOR_MIN]..[BAND_FACTOR_MAX] bound the rest. A band
-     * is LEARNED from [BAND_LEARNED_PCT] effective percent of its own on, UNKNOWN without any. Empty while
-     * nothing is learned (= linear).
+     * pseudo-data per band at a prior. The prior is not the average: a battery whose lower bands go less and
+     * less far is expected to keep doing so below the lowest band ridden. So the fit runs twice: first with the
+     * prior at factor 1, which finds the well-measured (LEARNED) bands; then with the prior at those bands' own
+     * factors, and for every other band at the nearest LEARNED band continued with the slope of the [TREND_BANDS] LEARNED
+     * bands next to it on that side, damped by [BAND_TREND_DAMPING] per band ([trendPrior]). Bands without data
+     * take that prior as they are, rarely visited ones move from it only part of the way, and
+     * [BAND_FACTOR_MIN]..[BAND_FACTOR_MAX] bound the rest; a band without data finally keeps the prior's shape
+     * shifted towards the nearest band with data (as far as that band is measured), so it continues what was ridden. A band is LEARNED from [BAND_LEARNED_PCT] effective
+     * percent of its own on, UNKNOWN without any. Empty while nothing is learned (= linear).
      */
     internal fun bands(basis: List<RideSummary>, overall: Double?, rates: Map<Int, Double>?): List<BandRate> {
         if (overall == null) return emptyList()
@@ -228,10 +245,13 @@ object RangeModel {
         val b = DoubleArray(n)
         val info = DoubleArray(n)
         val seen = DoubleArray(n)
+        val km = DoubleArray(n)
+        val rides = IntArray(n)
         for (r in basis) {
             val used = r.batteryUsedPct
             if (used < 1) continue
             val c = DoubleArray(n) { covered(r, lows[it]).toDouble() }
+            for (i in 0 until n) if (c[i] > 0) { km[i] += r.distanceKm * c[i] / used; rides[i]++ }
             val v = weight(r) / used
             val p = predictedPct(r, overall, rates)
             for (i in 0 until n) {
@@ -241,16 +261,61 @@ object RangeModel {
                 for (j in 0 until n) a[i][j] += v * c[i] * c[j]
             }
         }
-        for (i in 0 until n) { a[i][i] += BAND_SHRINK_PCT; b[i] += BAND_SHRINK_PCT }
-        val f = solve(a, b)
-        return lows.indices.map { i ->
-            val confidence = when {
+        val confidence = List(n) { i ->
+            when {
                 seen[i] <= 0 -> Confidence.UNKNOWN
                 info[i] >= BAND_LEARNED_PCT -> Confidence.LEARNED
                 else -> Confidence.ESTIMATED
             }
-            val factor = if (confidence == Confidence.UNKNOWN) 1.0 else f[i].coerceIn(BAND_FACTOR_MIN, BAND_FACTOR_MAX)
-            BandRate(lows[i], lows[i] + BAND_PCT, info[i], factor, confidence)
+        }
+        fun fit(prior: List<Double>): List<Double> {
+            val ar = Array(n) { a[it].copyOf() }
+            val br = b.copyOf()
+            for (i in 0 until n) { ar[i][i] += BAND_SHRINK_PCT; br[i] += BAND_SHRINK_PCT * prior[i] }
+            return solve(ar, br).map { it.coerceIn(BAND_FACTOR_MIN, BAND_FACTOR_MAX) }
+        }
+        val first = fit(List(n) { 1.0 })
+        val learned = first.mapIndexed { i, f -> f.takeIf { confidence[i] == Confidence.LEARNED } }
+        val prior = trendPrior(learned)
+        val fitted = fit(prior)
+        // a band without data keeps the prior's shape, shifted towards the level of the nearest band with data, as
+        // far as that band is measured (fully from BAND_LEARNED_PCT of its own data on): one or two rides through
+        // an edge band do not move the whole rest of the battery
+        val data = lows.indices.filter { confidence[it] != Confidence.UNKNOWN }
+        val f = fitted.mapIndexed { i, v ->
+            if (confidence[i] != Confidence.UNKNOWN) v
+            else data.minByOrNull { kotlin.math.abs(it - i) }?.let { d ->
+                val trust = (info[d] / BAND_LEARNED_PCT).coerceAtMost(1.0)
+                (prior[i] + (fitted[d] - prior[d]) * trust).coerceIn(BAND_FACTOR_MIN, BAND_FACTOR_MAX)
+            } ?: v
+        }
+        return lows.indices.map { i -> BandRate(lows[i], lows[i] + BAND_PCT, info[i], f[i], confidence[i], km[i], rides[i]) }
+    }
+
+    /**
+     * Prior of the second band fit ([bands]): a LEARNED band's own factor ([learned], null = not learned); any
+     * other band continues the nearest learned band with the slope of a line through it and the next learned
+     * bands further in (up to [TREND_BANDS]), damped by [BAND_TREND_DAMPING] per band. One learned band: flat at its factor. None: 1 everywhere.
+     * Between two learned bands: the nearer one's slope towards the other, which ends up close to a line.
+     */
+    internal fun trendPrior(learned: List<Double?>): List<Double> {
+        val idx = learned.indices.filter { learned[it] != null }
+        if (idx.isEmpty()) return learned.map { 1.0 }
+        return learned.indices.map { i ->
+            learned[i] ?: run {
+                val near = idx.minBy { kotlin.math.abs(it - i) }
+                val dir = if (i < near) -1 else 1 // which way i lies from the nearest learned band
+                // slope per band going outwards (towards i): a line through the nearest TREND_BANDS learned bands,
+                // so one noisy edge band does not set the direction
+                val pts = idx.filter { (it - near) * dir <= 0 }.sortedBy { kotlin.math.abs(it - near) }.take(TREND_BANDS)
+                val slope = if (pts.size < 2) 0.0 else {
+                    val mx = pts.average(); val my = pts.map { learned[it]!! }.average()
+                    pts.sumOf { (it - mx) * (learned[it]!! - my) } / pts.sumOf { (it - mx) * (it - mx) } * dir
+                }
+                var v = learned[near]!!; var step = slope
+                repeat(kotlin.math.abs(i - near)) { step *= BAND_TREND_DAMPING; v += step }
+                v.coerceIn(BAND_FACTOR_MIN, BAND_FACTOR_MAX)
+            }
         }
     }
 

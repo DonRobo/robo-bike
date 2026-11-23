@@ -60,6 +60,9 @@ import dev.donrobo.ebike.range.RangeState
 import dev.donrobo.ebike.settings.Setting
 import dev.donrobo.ebike.settings.settings
 import dev.donrobo.ebike.ui.AppNavigator
+import dev.donrobo.ebike.ui.Routes
+import dev.donrobo.ebike.ui.components.ListRow
+import dev.donrobo.ebike.ui.components.ListGroup
 import dev.donrobo.ebike.ui.components.InfoParagraph
 import dev.donrobo.ebike.ui.components.InfoButton
 import dev.donrobo.ebike.ui.components.AppCard
@@ -110,6 +113,7 @@ interface RangeActions {
     fun setHomeEnabled(on: Boolean)
     fun setReserveKm(km: Double)
     fun pickHome()
+    fun openBands()
     fun setDetourAuto(on: Boolean)
     fun setDetourManual(factor: Double)
 }
@@ -154,6 +158,7 @@ fun RangeScreen(nav: AppNavigator) {
             override fun setHomeEnabled(on: Boolean) { settings[RangeSettings.homeEnabled] = on }
             override fun setReserveKm(km: Double) { settings[RangeSettings.reserveKm] = km }
             override fun pickHome() { picking = true }
+            override fun openBands() = nav.open(Routes.RANGE_BANDS)
             override fun setDetourAuto(on: Boolean) { id?.let { settings.set(RangeSettings.detourAuto, it, on) } }
             override fun setDetourManual(factor: Double) { id?.let { settings.set(RangeSettings.detourManual, it, factor) } }
         }
@@ -176,6 +181,16 @@ fun RangeContent(state: RangeUiState, actions: RangeActions, modifier: Modifier 
     Screen(header = { BackHeader(stringResource(R.string.range_title), actions::back) }, modifier = modifier) {
         val d = state.detail
         SummaryCard(d, fmt)
+        if (d?.learned?.bands?.isNotEmpty() == true) {
+            ListGroup {
+                item {
+                    ListRow(
+                        stringResource(R.string.range_bands_title), actions::openBands,
+                        subtitle = stringResource(R.string.range_bands_link_sub), icon = AppIcons.Bands,
+                    )
+                }
+            }
+        }
         LevelsCard(d, fmt)
         // the map is the picture of "Komme ich heim?": off, it goes too
         if (state.homeEnabled) AreaCard(d, state.home)

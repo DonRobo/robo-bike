@@ -44,7 +44,10 @@ sealed interface HomeStatus {
 
 /** Pure decisions of "Komme ich heim?" (unit-tested). */
 object HomeCalc {
-    /** A live fix older than this is not "where I am now" (occasional fixes come every 10 min while connected). */
+    /**
+     * A live fix older than this is not "where I am now". While this feature is on and a home is set, occasional
+     * fixes come every 10 min while connected ([dev.donrobo.ebike.location.LocationPolicy.periodicFixesWanted]).
+     */
     const val MAX_FIX_AGE_MS = 20 * 60_000L
 
     /** Closer to home than this (straight line) counts as at home: the way-home check says nothing there. */

@@ -31,6 +31,7 @@ import dev.donrobo.ebike.ui.handlebar.HandlebarScreen
 import dev.donrobo.ebike.ui.handlebar.HandlebarTilesScreen
 import dev.donrobo.ebike.ui.light.LightScreen
 import dev.donrobo.ebike.ui.nav.NavigationScreen
+import dev.donrobo.ebike.ui.range.BandsScreen
 import dev.donrobo.ebike.ui.range.RangeScreen
 import dev.donrobo.ebike.ui.rides.RideScreen
 import dev.donrobo.ebike.ui.rides.RidesScreen
@@ -77,6 +78,7 @@ fun AppShell(startRoute: String = Routes.START, requestedRoute: String? = null, 
             NavHost(nav, startDestination = startRoute) {
                 composable(Routes.START) { StartScreen(navigator) }
                 composable(Routes.RANGE) { RangeScreen(navigator) }
+                composable(Routes.RANGE_BANDS) { BandsScreen(navigator) }
                 composable(Routes.LIGHT) { LightScreen(navigator) }
                 composable(Routes.NAVIGATION) { NavigationScreen(navigator) }
                 composable(Routes.HANDLEBAR) { HandlebarScreen(navigator) }

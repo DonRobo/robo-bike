@@ -63,21 +63,27 @@ class RealRidesTest {
         val l5 = l.level(5)!!
         assertEquals(Confidence.LEARNED, l5.confidence)
         assertEquals(l.pctPerKm!!, l5.pctPerKm!!, 1e-9)
-        // full battery: about 82 km before the safety margin (the start-to-end figure gives 84)
-        assertEquals(84.0, RangeCalc.full(l, 5, 0)!!.fullKm, 3.0)
+        // full battery before the safety margin: the rides only cover 100..73 %, where each band went less far than
+        // the one above, so the bands below continue that (damped) instead of assuming the average: about 74 km,
+        // not the 84 a linear battery would give
+        assertEquals(74.0, RangeCalc.full(l, 5, 0)!!.fullKm, 3.0)
         // one month with 49 km and 60 %: the R6 value is the same rate
         assertEquals(l.pctPerKm!!, l.months.last().pctPerKm!!, 1e-9)
     }
 
     @Test fun dischargeCurveOfTheRealRides() {
-        // all seven rides lie between 100 and 73 %: only the top three bands have data, the rest is the average
+        // all seven rides lie between 100 and 73 %: only the top three bands have data, the rest continues their trend
         val l = RangeModel.learn(rides.reversed(), 20, month, zone)
         for (b in l.bands.reversed()) {
             println("band ${b.lowPct}-${b.highPct}: factor %.3f, %.1f %% own data, %s, %.2f km/%%".format(b.factor, b.pct, b.confidence, b.factor / l.pctPerKm!!))
         }
         // 70-80 % was crossed by two rides only (5 and 7 of its percents): estimated, pulled towards the average
         assertEquals(listOf(Confidence.ESTIMATED, Confidence.LEARNED, Confidence.LEARNED), l.bands.takeLast(3).map { it.confidence })
-        assertTrue(l.bands.dropLast(3).all { it.confidence == Confidence.UNKNOWN && it.factor == 1.0 })
+        val unknown = l.bands.dropLast(3)
+        assertTrue(unknown.all { it.confidence == Confidence.UNKNOWN })
+        // they go less far than the learned bands above, and level off instead of running down to the bound
+        assertTrue(unknown.all { it.factor < l.bands[8].factor && it.factor > 0.75 })
+        assertTrue(unknown.zipWithNext().all { (lower, upper) -> lower.factor <= upper.factor + 1e-9 })
         // the data do not show a strongly non-linear battery in 73..100 %: every band within 35 % of the average
         assertTrue(l.bands.takeLast(3).all { it.factor in 0.65..1.35 })
         val linearFull = 100 / l.pctPerKm!!
@@ -105,7 +111,8 @@ class RealRidesTest {
         val live = RangeEngine.compose(l, 20, RangeReading(80, 5, 5, true), 10, null, null, HomeSettings(false, null, 10.0))
         assertEquals(RangeSummaryMode.KNOWN, summaryMode(live))
         assertEquals(l.averagePct(80) / l.pctPerKm!! * 0.9, live.estimate!!.remainingKm, 1e-9)
-        assertEquals(full.fullKm * 0.8, live.estimate!!.remainingKm, 0.02 * full.fullKm)
+        // the top 20 % went further than the rest, so 80 % left is less than 80 % of the full range
+        assertTrue(live.estimate!!.remainingKm < full.fullKm * 0.8)
         // nothing learned: learning
         val none = RangeEngine.compose(LearnedRange.EMPTY, 20, RangeReading(80, 5, 5, true), 10, null, null, HomeSettings(false, null, 10.0))
         assertEquals(RangeSummaryMode.LEARNING, summaryMode(none))

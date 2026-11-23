@@ -1,5 +1,6 @@
 package dev.donrobo.ebike.ui.components.map
 
+import androidx.compose.runtime.Immutable
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
@@ -12,6 +13,7 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
 import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import dev.donrobo.ebike.ui.theme.AppColors
@@ -103,5 +105,22 @@ internal object MapStyle {
             drawMarker(kind, Offset(w * b.anchorX, h * b.anchorY), c)
         }
         return img
+    }
+}
+
+/**
+ * Colours the base map is drawn in (land, parks, water, white roads; casings and buildings from the scheme).
+ * The live map and the ride thumbnails both recolour the Positron style with it, and a thumbnail's cache key
+ * includes [key], so a change of theme (dark mode, wallpaper colours) never reuses an old snapshot.
+ */
+@Immutable
+internal data class MapPalette(
+    val land: Color, val park: Color, val water: Color, val road: Color, val casing: Color, val building: Color,
+) {
+    /** Stable text form of all colours, for cache keys. */
+    val key: String get() = listOf(land, park, water, road, casing, building).joinToString("-") { "%08x".format(it.toArgb()) }
+
+    companion object {
+        fun of(c: AppColors) = MapPalette(c.mapLand, c.mapPark, c.mapWater, Color.White, c.border, c.track)
     }
 }
