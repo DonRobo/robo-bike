@@ -3,12 +3,15 @@ package dev.donrobo.ebike.ui.components.map
 import androidx.compose.runtime.Immutable
 import dev.donrobo.ebike.location.GeoPoint
 import kotlin.math.PI
+import kotlin.math.atan
 import kotlin.math.cos
 import kotlin.math.floor
 import kotlin.math.ln
+import kotlin.math.log2
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.sin
+import kotlin.math.sinh
 import kotlin.math.tan
 
 /**
@@ -105,6 +108,13 @@ object MapGeometry {
         return (1 - ln(tan(r) + 1 / cos(r)) / PI) / 2
     }
 
+    /** Inverses of [mercX] and [mercY]. */
+    fun lonOfMercX(x: Double) = x * 360.0 - 180.0
+    fun latOfMercY(y: Double) = Math.toDegrees(atan(sinh(PI * (1 - 2 * y))))
+
+    /** MapLibre's world size at zoom 0, in logical pixels (512 px tiles). */
+    const val TILE_SIZE = 512.0
+
     /**
      * Maps points into a [width] x [height] pixel box so that [b] fits inside [padding] px (uniform scale,
      * centred). A point-sized box is shown about 400 m wide.
@@ -129,6 +139,16 @@ object MapGeometry {
         fun y(p: GeoPoint) = (height / 2 + (mercY(p.lat) - cy) * scale).toFloat()
         /** Metres to pixels at latitude [lat]. */
         fun px(meters: Double, lat: Double) = (meters / (2 * PI * GeoPoint.EARTH_RADIUS_M * cos(Math.toRadians(lat))) * scale).toFloat()
+
+        /** Geographic point at the centre of the box. */
+        val center: GeoPoint get() = GeoPoint(latOfMercY(cy), lonOfMercX(cx))
+
+        /**
+         * MapLibre zoom that shows this projection's scale when one MapLibre logical pixel is [pxPerLogical]
+         * of this projection's pixels (its world is [TILE_SIZE] logical px wide at zoom 0). With [center],
+         * a MapLibre camera then puts every point exactly where [x]/[y] draw it.
+         */
+        fun zoom(pxPerLogical: Double = 1.0) = log2(scale / (TILE_SIZE * pxPerLogical))
     }
 
 }
