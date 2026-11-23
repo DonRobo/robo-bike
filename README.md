@@ -28,8 +28,13 @@ Requires Android 12 or newer and a display that advertises as `EKD01…`.
 
 ## Install
 
-- **GitHub Releases**: download the APK from the [releases page](https://github.com/DonRobo/robo-bike/releases).
-- **IzzyOnDroid** and **F-Droid**: planned; links follow once the app is listed.
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22dev.donrobo.ebike%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FDonRobo%2Frobo-bike%22%2C%22author%22%3A%22DonRobo%22%2C%22name%22%3A%22Robo%20Bike%22%7D"><img src="docs/images/badge_obtainium.png" width="160" alt="Get it on Obtainium"></a>
+
+- **Obtainium** (recommended): installs the APK from GitHub Releases and keeps it updated. Tap the badge above on
+  your phone, or add `https://github.com/DonRobo/robo-bike` in [Obtainium](https://obtainium.imranr.dev/).
+- **GitHub Releases**: download the APK from the [releases page](https://github.com/DonRobo/robo-bike/releases);
+  no automatic updates.
+- **F-Droid**: planned.
 
 There is no Google Play version.
 
