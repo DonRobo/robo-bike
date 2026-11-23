@@ -5,7 +5,6 @@ import dev.donrobo.ebike.display.DisplayCapabilities
 import dev.donrobo.ebike.light.LightMode
 import dev.donrobo.ebike.light.LightSettings
 import dev.donrobo.ebike.nav.NavSettings
-import dev.donrobo.ebike.nav.ShowFrom
 import dev.donrobo.ebike.notify.NotifySettings
 import dev.donrobo.ebike.proto.MeterConfig
 import dev.donrobo.ebike.range.RangeSettings
@@ -35,14 +34,14 @@ class SettingsStateTest {
         s.set(RangeSettings.window, "b1", 50)
         s.set(RangeSettings.marginPct, "b1", 15)
         s[RangeSettings.homeEnabled] = false
-        s[NavSettings.showFrom] = ShowFrom.M200
+        s[NavSettings.forward] = false
         s[RideSettings.gpsTrack] = true
         s[NotifySettings.charge] = false
         s[ConnectionSettings.autoConnect] = false
         val st = settingsUiState(s, listOf(Bike("b1", "Stadtrad", null), Bike("b2", "MTB", null)), "b1", DisplayCapabilities.UNKNOWN, AppLanguage.SYSTEM)
         assertEquals(LightSummary(LightMode.ALWAYS_ON, rain = false), st.light)
         assertEquals(RangeSummary(50, 15, home = false), st.range)
-        assertEquals(NavSummary(true, ShowFrom.M200), st.nav)
+        assertFalse(st.navForward)
         assertTrue(st.gpsTrack)
         assertEquals(Reminders(homeRange = true, charge = false, maintenance = true), st.reminders)
         assertEquals(listOf("Stadtrad", "MTB"), st.bikeNames)

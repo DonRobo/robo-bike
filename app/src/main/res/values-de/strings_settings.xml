@@ -21,7 +21,6 @@
     <string name="settings_range_sub_home">Letzte %1$d Fahrten, %2$d %% Abschlag, Heimweg</string>
     <string name="settings_nav_off">Aus: Das Display bekommt nichts</string>
     <string name="settings_nav_always">Google Maps, jeder Hinweis</string>
-    <string name="settings_nav_from">Google Maps, Hinweis ab %1$s</string>
     <string name="settings_handlebar_sub">Kacheln wählen, automatisch starten</string>
     <string name="settings_rides">Fahrtenbuch</string>
     <string name="settings_rides_gps_on">Strecke per GPS aufzeichnen: an</string>

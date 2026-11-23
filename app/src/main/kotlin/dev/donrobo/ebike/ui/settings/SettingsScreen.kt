@@ -48,8 +48,6 @@ import dev.donrobo.ebike.ui.components.Screen
 import dev.donrobo.ebike.ui.components.RowTint
 import dev.donrobo.ebike.ui.components.SectionLabel
 import dev.donrobo.ebike.ui.components.SwitchRow
-import dev.donrobo.ebike.ui.components.rememberUnitFormatter
-import dev.donrobo.ebike.ui.components.text
 import dev.donrobo.ebike.ui.stats.ElectricityPriceDialog
 import dev.donrobo.ebike.ui.stats.formatPrice
 import dev.donrobo.ebike.ui.theme.AppTheme
@@ -142,7 +140,6 @@ private enum class SettingsDialog { LANGUAGE, UNITS, PRICE, REMINDERS, START_COU
 /** Stateless Einstellungen list (used by the screenshot test with fixed data). */
 @Composable
 fun SettingsContent(state: SettingsUiState, actions: SettingsActions, modifier: Modifier = Modifier) {
-    val fmt = rememberUnitFormatter()
     Screen(header = { PageHeader(stringResource(R.string.settings_title)) }, modifier = modifier, bodyTop = 4.dp, gap = 8.dp) {
         SectionLabel(stringResource(R.string.settings_group_driving))
         ListGroup {
@@ -156,12 +153,7 @@ fun SettingsContent(state: SettingsUiState, actions: SettingsActions, modifier: 
                 )
             }
             item {
-                val n = state.nav
-                val sub = when {
-                    !n.forward -> stringResource(R.string.settings_nav_off)
-                    n.showFrom.meters == null -> stringResource(R.string.settings_nav_always)
-                    else -> stringResource(R.string.settings_nav_from, fmt.shortDistance(n.showFrom.meters.toDouble()).text())
-                }
+                val sub = stringResource(if (state.navForward) R.string.settings_nav_always else R.string.settings_nav_off)
                 ListRow(stringResource(R.string.nav_title), { actions.open(Routes.NAVIGATION) }, subtitle = sub, icon = AppIcons.TurnLeft, tint = RowTint.TERTIARY)
             }
             item { ListRow(stringResource(R.string.handlebar_title), { actions.open(Routes.HANDLEBAR_TILES) }, subtitle = stringResource(R.string.settings_handlebar_sub), icon = AppIcons.HandlebarMode, tint = RowTint.SECONDARY) }

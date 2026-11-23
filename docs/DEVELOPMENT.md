@@ -365,7 +365,7 @@ Location comes from the emulator: `adb emu geo fix <lon> <lat>` (longitude first
    (GOOGLE_MAPS)`, `TX 11->f1 op=03 reg=0 [01 01]`, `sim display: shows navigation open, no update yet`,
    `TX 11->f1 op=03 reg=0 [02 02 96 00 00 02 …]`, `sim display: shows LEFT in 150 m (box 150 m), 3400 m to go`.
    Repeat with other texts to move along; `sim nav-maps-end` → 10 s later `nav: end`, `TX … [.. 03]`,
-   `sim display: shows no navigation`. ("Hinweis zeigen ab" filters Maps hints by distance; default "always".)
+   `sim display: shows no navigation`. (Every Maps hint goes to the display, however far away the turn is.)
 6. `sim drop` → `sim: link lost (simulated link loss)`; ~5 s later `sim: connecting …`, `sim: link up`, the whole
    connect sequence again (the ride continues; it is the same display).
 7. `sim off` → `sim: display switched off`, `sim: link lost (display switched off)`; the parked position is stored
