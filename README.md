@@ -1,5 +1,7 @@
 # Robo Bike
 
+<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22dev.donrobo.ebike%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FDonRobo%2Frobo-bike%22%2C%22author%22%3A%22DonRobo%22%2C%22name%22%3A%22Robo%20Bike%22%7D"><img src="docs/images/badge_obtainium.png" width="160" alt="Get it on Obtainium"></a>
+
 An unofficial Android companion app for e-bikes with an **EKD01** display, as used on some Bafang drive systems.
 It talks to the display over Bluetooth LE, needs no account and sends nothing to a cloud.
 
@@ -28,9 +30,7 @@ Requires Android 12 or newer and a display that advertises as `EKD01…`.
 
 ## Install
 
-<a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://app/%7B%22id%22%3A%22dev.donrobo.ebike%22%2C%22url%22%3A%22https%3A%2F%2Fgithub.com%2FDonRobo%2Frobo-bike%22%2C%22author%22%3A%22DonRobo%22%2C%22name%22%3A%22Robo%20Bike%22%7D"><img src="docs/images/badge_obtainium.png" width="160" alt="Get it on Obtainium"></a>
-
-- **Obtainium** (recommended): installs the APK from GitHub Releases and keeps it updated. Tap the badge above on
+- **Obtainium** (recommended): installs the APK from GitHub Releases and keeps it updated. Tap the badge at the top on
   your phone, or add `https://github.com/DonRobo/robo-bike` in [Obtainium](https://obtainium.imranr.dev/).
 - **GitHub Releases**: download the APK from the [releases page](https://github.com/DonRobo/robo-bike/releases);
   no automatic updates.
