@@ -11,6 +11,7 @@ import dev.donrobo.ebike.ui.components.LineIcon
 object Routes {
     const val START = "start"                 // Main
     const val RANGE = "range"                 // Reichweite
+    const val RANGE_BANDS = "range/bands"     // Akku-Bänder
     const val LIGHT = "light"                 // Licht
     const val NAVIGATION = "navigation"       // Navigation
     const val HANDLEBAR = "handlebar"         // Lenkermodus
