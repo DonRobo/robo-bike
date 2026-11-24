@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.remember
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLocale
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.donrobo.ebike.settings.Bike
 import dev.donrobo.ebike.settings.bikes
@@ -18,7 +18,7 @@ import java.util.Locale
 
 /** The UI locale (the app language, Einstellungen) in Compose; recomposes when it changes. */
 @Composable
-fun currentLocale(): Locale = LocalConfiguration.current.locales[0] ?: Locale.getDefault()
+fun currentLocale(): Locale = LocalLocale.current.platformLocale
 
 /** The UI locale outside Compose (widget, notifications): the same one [currentLocale] gives. */
 fun Context.uiLocale(): Locale = resources.configuration.locales[0] ?: Locale.getDefault()
