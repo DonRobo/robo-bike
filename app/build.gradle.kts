@@ -2,7 +2,6 @@ import java.util.Properties
 
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("io.github.takahirom.roborazzi")
 }
@@ -111,7 +110,7 @@ val robolectricAndroidAll = mapOf(
     }
 }
 val robolectricJarsDir = layout.buildDirectory.dir("robolectric-android-all")
-val prepareRobolectricJars by tasks.registering(Sync::class) {
+val prepareRobolectricJars = tasks.register<Sync>("prepareRobolectricJars") {
     from(robolectricAndroidAll)
     into(robolectricJarsDir)
 }
