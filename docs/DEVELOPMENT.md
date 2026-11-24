@@ -3,7 +3,7 @@
 Kotlin + Jetpack Compose, minSdk 31. Protocol notes: [PROTOCOL.md](PROTOCOL.md). Build: `./gradlew :app:assembleDebug`. Unit tests: `./gradlew :app:testDebugUnitTest`.
 A unit test lives in the package of the code it tests and is named after it (`maintenance/Maintenance.kt` →
 `maintenance/MaintenanceTest`); screenshot tests stay in `screenshots/`.
-Gradle runs on the JDK on PATH (17 or newer; CI uses 21, 24 works with Gradle 8.14.7 / AGP 8.13). The Android SDK
+Gradle runs on the JDK on PATH (17 or newer; CI uses 21, 24 and 25 work with Gradle 9.9 / AGP 9.5). The Android SDK
 location goes into `local.properties` (`sdk.dir=...`, gitignored) or `ANDROID_HOME`.
 
 Before a pull request, run what CI runs (`.github/workflows/android.yml`):
