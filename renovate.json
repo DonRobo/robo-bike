@@ -19,28 +19,6 @@
         "com.android.application"
       ],
       "separateMajorMinor": false
-    },
-    {
-      "description": "androidx.core 1.19+ needs compileSdk 37 and AGP 9.1; hold until the app moves to them",
-      "matchPackageNames": [
-        "androidx.core:core-ktx",
-        "androidx.core:core"
-      ],
-      "allowedVersions": "<1.19.0"
-    },
-    {
-      "description": "lifecycle 2.11+ needs compileSdk 37 and AGP 9.1; hold until the app moves to them",
-      "matchPackageNames": [
-        "androidx.lifecycle:**"
-      ],
-      "allowedVersions": "<2.11.0"
-    },
-    {
-      "description": "navigation 2.10+ needs compileSdk 37 and AGP 9.1; hold until the app moves to them",
-      "matchPackageNames": [
-        "androidx.navigation:**"
-      ],
-      "allowedVersions": "<2.10.0"
     }
   ]
 }

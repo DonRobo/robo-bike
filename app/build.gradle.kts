@@ -29,7 +29,7 @@ val appVersionCode = Regex("""^(\d+)\.(\d+)\.(\d+)""").find(appVersionName)?.des
 
 android {
     namespace = "dev.donrobo.ebike"
-    compileSdk = 36
+    compileSdk { version = release(37) { minorApiLevel = 1 } }
     defaultConfig {
         applicationId = "dev.donrobo.ebike"
         minSdk = 31
@@ -122,7 +122,7 @@ tasks.withType<Test>().configureEach {
 }
 
 dependencies {
-    implementation(platform("androidx.compose:compose-bom:2025.12.01"))
+    implementation(platform("androidx.compose:compose-bom:2026.11.01"))
     implementation("androidx.compose.material3:material3")
     implementation("com.materialkolor:material-kolor:4.1.1") // colour scheme from the Robo Bike green, harmonized fixed colours
     implementation("androidx.compose.ui:ui")
@@ -138,7 +138,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation(platform("androidx.compose:compose-bom:2025.12.01"))
+    testImplementation(platform("androidx.compose:compose-bom:2026.11.01"))
     testImplementation("androidx.compose.ui:ui-test-junit4")
     testImplementation("org.robolectric:robolectric:4.18.1")
     testImplementation("io.github.takahirom.roborazzi:roborazzi:1.79.0")
