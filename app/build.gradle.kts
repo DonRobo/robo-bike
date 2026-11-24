@@ -131,7 +131,7 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.8.0") // per-app language on API 31/32 (AppCompatDelegate)
     implementation("androidx.navigation:navigation-compose:2.9.8")
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.11.1")
-    implementation("androidx.core:core-ktx:1.18.0")
+    implementation("androidx.core:core-ktx:1.19.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
     implementation("org.maplibre.gl:android-sdk:13.7.1") // map component (ui/components/map), OpenFreeMap tiles
     debugImplementation("androidx.compose.ui:ui-tooling")
