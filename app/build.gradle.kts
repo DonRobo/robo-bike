@@ -29,7 +29,7 @@ val appVersionCode = Regex("""^(\d+)\.(\d+)\.(\d+)""").find(appVersionName)?.des
 
 android {
     namespace = "dev.donrobo.ebike"
-    compileSdk = 36
+    compileSdk { version = release(37) { minorApiLevel = 1 } }
     defaultConfig {
         applicationId = "dev.donrobo.ebike"
         minSdk = 31
