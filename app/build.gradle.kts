@@ -124,7 +124,7 @@ tasks.withType<Test>().configureEach {
 dependencies {
     implementation(platform("androidx.compose:compose-bom:2026.11.01"))
     implementation("androidx.compose.material3:material3")
-    implementation("com.materialkolor:material-kolor:4.1.1") // colour scheme from the Robo Bike green, harmonized fixed colours
+    implementation("com.materialkolor:material-kolor:5.0.1") // colour scheme from the Robo Bike green, harmonized fixed colours
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.activity:activity-compose:1.13.0")
