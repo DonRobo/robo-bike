@@ -1,10 +1,11 @@
 name: Release
 
-# Builds the signed release APK for a version tag (v0.1.0, ...) and attaches it to a GitHub Release.
-# Runs only for pushed tags, never for pull requests. Secrets: see docs/DEVELOPMENT.md ("Releases").
+# Builds the signed release APK when a GitHub Release is published and attaches it to that release.
+# The version comes from the release's tag (v1.2.3), the notes are what was written in the release.
+# Never runs for pull requests. Secrets: see docs/DEVELOPMENT.md ("Releases").
 on:
-  push:
-    tags: ['v*']
+  release:
+    types: [published]
 
 concurrency:
   group: release-${{ github.ref }}
@@ -28,17 +29,17 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      # The tag must match versionName in app/build.gradle.kts (F-Droid reads the version from there).
-      - name: Check tag against versionName
+      # app/build.gradle.kts turns the tag into versionName/versionCode; only plain v<major>.<minor>.<patch> is a release.
+      - name: Check tag
         id: version
+        env:
+          TAG: ${{ github.event.release.tag_name }}
         run: |
-          name=$(sed -n 's/^ *versionName = "\(.*\)"/\1/p' app/build.gradle.kts)
-          code=$(sed -n 's/^ *versionCode = \([0-9]*\)/\1/p' app/build.gradle.kts)
-          if [ "v$name" != "$GITHUB_REF_NAME" ]; then
-            echo "::error::tag $GITHUB_REF_NAME does not match versionName $name"; exit 1
+          if ! [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::release tag $TAG is not v<major>.<minor>.<patch>"; exit 1
           fi
-          echo "name=$name" >> "$GITHUB_OUTPUT"
-          echo "code=$code" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "name=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: Restore keystore
         env:
@@ -53,7 +54,7 @@ jobs:
           ROBOBIKE_KEYSTORE_PASSWORD: ${{ secrets.ROBOBIKE_KEYSTORE_PASSWORD }}
           ROBOBIKE_KEY_ALIAS: ${{ secrets.ROBOBIKE_KEY_ALIAS }}
           ROBOBIKE_KEY_PASSWORD: ${{ secrets.ROBOBIKE_KEY_PASSWORD }}
-        run: ./gradlew --stacktrace :app:testDebugUnitTest :app:assembleRelease
+        run: ./gradlew --stacktrace -PreleaseTag=${{ steps.version.outputs.tag }} :app:testDebugUnitTest :app:assembleRelease
 
       - name: Verify signature
         run: |
@@ -63,14 +64,11 @@ jobs:
           cp "$apk" "robo-bike-${{ steps.version.outputs.name }}.apk"
           sha256sum "robo-bike-${{ steps.version.outputs.name }}.apk" > "robo-bike-${{ steps.version.outputs.name }}.apk.sha256"
 
-      - name: Create GitHub Release
+      - name: Attach APK to the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          notes=fastlane/metadata/android/en-US/changelogs/${{ steps.version.outputs.code }}.txt
-          test -f "$notes" || notes=/dev/null
-          gh release create "$GITHUB_REF_NAME" --verify-tag --title "Robo Bike ${{ steps.version.outputs.name }}" \
-            --notes-file "$notes" \
+          gh release upload "${{ steps.version.outputs.tag }}" \
             "robo-bike-${{ steps.version.outputs.name }}.apk" "robo-bike-${{ steps.version.outputs.name }}.apk.sha256"
 
       - name: Remove keystore
