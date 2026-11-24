@@ -387,13 +387,17 @@ background and not on the power allowlist: open the app or rerun the `deviceidle
 
 ## Releases
 
-Version: `versionCode` and `versionName` in `app/build.gradle.kts`, written as literals because F-Droid's
-checkupdates reads them there. For a release: bump both, add
-`fastlane/metadata/android/{en-US,de-DE}/changelogs/<versionCode>.txt`, commit, then tag `v<versionName>`
-(e.g. `v0.1.0`) and push the tag. `.github/workflows/release.yml` runs only for `v*` tags (never for pull
-requests): it checks that the tag matches `versionName`, runs the unit tests, builds the signed release APK,
-verifies the signature and attaches `robo-bike-<version>.apk` plus its SHA-256 to a GitHub Release whose notes are
-the en-US changelog.
+For a release, create a GitHub Release with a new tag `v<major>.<minor>.<patch>` (e.g. `v0.1.2`) on master and
+write the notes there; nothing is bumped or committed by hand. Publishing it starts `.github/workflows/release.yml`
+(never for pull requests): it checks the tag, runs the unit tests, builds the signed release APK, verifies the
+signature and attaches `robo-bike-<version>.apk` plus its SHA-256 to that release. Obtainium picks it up from there.
+
+Version: `app/build.gradle.kts` derives it from the tag. versionName is the tag without `v`, versionCode is
+major·10000 + minor·100 + patch (so minor and patch stay below 100). The workflow passes the tag as
+`-PreleaseTag`; any other build uses the nearest `v*` tag from `git describe` (e.g. `0.1.1-3-gabc1234`, with the
+versionCode of 0.1.1), or `0.0.0-dev` when there is no tag. Changelog files under
+`fastlane/metadata/android/*/changelogs/` are optional (store listings); the release notes live in the GitHub
+Release.
 
 Creating a release key (once; keep the keystore and its password safe — every future update must be signed with
 the same key):

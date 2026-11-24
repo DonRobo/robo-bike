@@ -7,6 +7,27 @@ plugins {
     id("io.github.takahirom.roborazzi")
 }
 
+// The version comes from the git tag, nothing to bump by hand: v1.2.3 -> versionName 1.2.3, versionCode 10203.
+// The release workflow passes the release's tag as -PreleaseTag. Otherwise the nearest v* tag is used (git describe),
+// so a local build reads e.g. 0.1.1-3-gabc1234 with the versionCode of 0.1.1 and installs over that release.
+// Without any tag (shallow CI checkout) the build is 0.0.0-dev with versionCode 1.
+val versionTag: String = providers.gradleProperty("releaseTag")
+    .orElse(
+        providers.exec {
+            commandLine("git", "describe", "--tags", "--match", "v[0-9]*")
+            isIgnoreExitValue = true
+        }.standardOutput.asText.map { it.trim() },
+    )
+    .get()
+    .ifBlank { "v0.0.0-dev" }
+val appVersionName = versionTag.removePrefix("v")
+val appVersionCode = Regex("""^(\d+)\.(\d+)\.(\d+)""").find(appVersionName)?.destructured
+    ?.let { (major, minor, patch) ->
+        require(minor.toInt() < 100 && patch.toInt() < 100) { "minor and patch must stay below 100: $versionTag" }
+        maxOf(1, major.toInt() * 10000 + minor.toInt() * 100 + patch.toInt())
+    }
+    ?: error("version tag $versionTag is not v<major>.<minor>.<patch>")
+
 android {
     namespace = "dev.donrobo.ebike"
     compileSdk = 36
@@ -14,9 +35,8 @@ android {
         applicationId = "dev.donrobo.ebike"
         minSdk = 31
         targetSdk = 36
-        // Read by F-Droid's checkupdates: keep both literal here and bump them for every release tag (v<versionName>).
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = appVersionCode
+        versionName = appVersionName
     }
 
     // Release signing from the environment (CI) or keystore.properties (local, gitignored). Without either the release
