@@ -133,7 +133,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-compose:2.11.1")
     implementation("androidx.core:core-ktx:1.19.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.11.0")
-    implementation("org.maplibre.gl:android-sdk:13.7.1") // map component (ui/components/map), OpenFreeMap tiles
+    implementation("org.maplibre.gl:android-sdk:13.8.0") // map component (ui/components/map), OpenFreeMap tiles
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
